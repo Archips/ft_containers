@@ -27,57 +27,57 @@ namespace ft {
         typedef typename Container::size_type 	size_type;
         typedef Container 						container_type;
 
-        explicit stack(const Container &cntr = Container()): c(cntr) {}
+        explicit stack(const Container &cntr = Container()): _c(cntr) {}
 
         ~stack(void){}
 
         // TOP
 
         value_type& top() {
-            return (c.back());
+            return (_c.back());
         }
 
         const value_type& top() const {
-            return (c.back());
+            return (_c.back());
         }
 
         // EMPTY
 
         bool empty() const {
-            return (c.empty());
+            return (_c.empty());
         }
 
         //SIZE
 
         size_type size() const {
-            return (c.size());
+            return (_c.size());
         }
 
         //PUSH
 
         void push(const value_type& val) {
-            c.push_back(val);
+            _c.push_back(val);
         }
 
         //POP
 
         void pop() {
-            c.pop_back();
+            _c.pop_back();
         }
 
 		//OPERATORS
 
         friend bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-            return (lhs.c == rhs.c);
+            return (lhs._c == rhs._c);
         }
 
         friend bool operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-            return (lhs.c < rhs.c);
+            return (lhs._c < rhs._c);
         }
 
     protected:
 
-        container_type c;
+        container_type _c;
 
     };
 

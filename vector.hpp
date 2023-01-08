@@ -21,18 +21,18 @@ namespace ft {
 
         public:
 
-			typedef T												value_type;
-			typedef Alloc											allocator_type;
-			typedef value_type&								 		reference;		
-			typedef const value_type&								const_reference;
-			typedef	typename allocator::pointer						pointer;
-			typedef typename allocator::const_pointer				const_pointer;
-			typedef typename std::size_t							size_type;
-			typedef typename std::ptrdiff_t							difference_type;
-			typedef typename std::random_access_iterator<value_type> iterator
-			typedef typename std::random_access_iterator<const value_type> const_iterator
-			typedef typename std::reverse_iterator<iterator>		reverse_iterator;
-			typedef typename std::reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef T												        value_type;
+			typedef Alloc											        allocator_type;
+			typedef value_type&								 		        reference;
+			typedef const value_type&								        const_reference;
+			typedef	typename allocator::pointer						        pointer;
+			typedef typename allocator::const_pointer				        const_pointer;
+			typedef typename std::size_t							        size_type;
+			typedef typename std::ptrdiff_t							        difference_type;
+			typedef typename std::random_access_iterator<value_type>        iterator
+			typedef typename std::random_access_iterator<const value_type>  const_iterator
+			typedef typename std::reverse_iterator<iterator>		        reverse_iterator;
+			typedef typename std::reverse_iterator<const_iterator>	        const_reverse_iterator;
 
 
 
@@ -47,10 +47,10 @@ namespace ft {
 
 		private:
 
-			alloc
-			start
-			end
-			capacity
+            allocator_type  _alloc;
+			pointer         _start;
+			pointer         _end;
+			size_type       _capacity;
 
     };
 }
