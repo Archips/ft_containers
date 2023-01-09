@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 10:22:53 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/09 10:26:28 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/09 15:38:37 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@
 
 namespace ft {
 
-    template< class Iter >
+    template< class iterator >
     struct iterator_traits {
 
-		typedef typename 	Iter::difference_type				difference_type;
-		typedef typename	Iter::value_type					value_type;
-		typedef typename 	Iter::pointer						pointer;
-		typedef typename 	Iter::reference						reference;
-		typedef typename 	Iter::iterator_category				iterator_category;
+		typedef typename 	iterator::difference_type				difference_type;
+		typedef typename	iterator::value_type					value_type;
+		typedef typename 	iterator::pointer						pointer;
+		typedef typename 	iterator::reference						reference;
+		typedef typename 	iterator::iterator_category				iterator_category;
 	};
 
     template< class T >
@@ -48,6 +48,15 @@ namespace ft {
 		typedef typename	std::random_access_iterator_tag		iterator_category;
 	};
 
+	template < class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
+	struct iterator {
+
+		typedef				T									value_type;
+		typedef				Distance							difference_type;
+		typedef				Pointer								pointer;
+		typedef				Reference							reference;
+		typedef				Category							iterator_category;
+	};
 }
 
 #endif
