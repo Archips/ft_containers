@@ -1,5 +1,5 @@
 #include <deque>
-#include "stack.hpp"
+#include "../stack.hpp"
 #include <iostream>
 
 void test_stack()

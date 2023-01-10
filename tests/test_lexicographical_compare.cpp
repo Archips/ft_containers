@@ -1,4 +1,4 @@
-#include "lexicographical_compare.hpp"
+#include "../lexicographical_compare.hpp"
 #include <iostream>
 #include <algorithm>
 #include <vector>

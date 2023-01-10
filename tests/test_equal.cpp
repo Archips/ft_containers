@@ -1,4 +1,4 @@
-#include "equal.hpp"
+#include "../equal.hpp"
 #include <iostream>     // std::cout
 #include <vector>       // std::vector
 
