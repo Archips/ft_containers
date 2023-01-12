@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/12 15:18:22 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/12 16:56:25 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ namespace ft {
 			typedef const T* 											 	const_iterator;
 			typedef T&										 		        reference;
 			typedef const T&										        const_reference;
-			/* typedef value_type&								 		        reference; */
-			/* typedef const value_type&								        const_reference; */
 			typedef Alloc											        allocator_type;
 			typedef	typename Alloc::pointer							        pointer;
 			typedef typename Alloc::const_pointer					        const_pointer;
@@ -41,33 +39,43 @@ namespace ft {
 
 			/* CONSTRUCTOR */
 
-			vector(): _alloc(), _start(0), _end(0), _capacity(0), _size(0) {
+			vector(): _size(0), _capacity(0), _alloc(), _start(0), _end(0) {
 
 				std::cout << "Vector default constructor called" << std::endl;
 			}
 
-			explicit vector(const Alloc& alloc): _alloc(alloc), _start(0), _end(0), _capacity(0), _size(0) {};
+			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {};
 
 			explicit vector(size_type count, const T& value = T(), const Alloc& alloc = Alloc()) :
-				_alloc(alloc), _size(count), _capacity(count), _start(_alloc.allocate(_capacity)), _end(0) {
+				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(0) {
 
 				for (size_type i = 0; i < this->_size; i++) {
-					_alloc.construct(&_start[i], value);
+					this->_alloc.construct(&this->_start[i], value);
 				}
 			}
 
 			/* COPY CONSTRUCTOR */
 
-			vector(const vector& x): _alloc(x._alloc), _size(x._size), _capacity(x._capacity),  _start(_alloc.allocate(x._capacity)), _end(x._end) {
-
+			vector(const vector& x) {
+	
+							this->_size = x._size;
+				this->_capacity = x._capacity;
+				this->_alloc = x._alloc;
+				this->_start = _alloc.allocate(this->_capacity);
+				this->_end = 0;
+				for (size_type i = 0; i < this->_size; i ++)
+					this->_alloc.construct(&this->_start[i], x[i]);
 				std::cout << "Vector copy constructor called" << std::endl;
 				std::cout << "Vector _size: " << x._size << " copy _size: " << this->_size << std::endl;
+		
+
 			}
 
 			/* OPERATORS */
 
 			vector&	operator=(const vector& x) {
 
+				std::cout << "Vector _size: " << x._size << " copy= _size: " << this->_size << std::endl;
 				if (this != &x) {
 
 					this->_alloc = x._alloc;
@@ -76,7 +84,6 @@ namespace ft {
 					this->_size  = x._size;
 					this->_capacity = x._capacity;
 				}
-				std::cout << "Vector _size: " << x._size << " copy= _size: " << this->_size << std::endl;
 				return (*this);
 			}
 
@@ -117,11 +124,11 @@ namespace ft {
 
 		private:
 
+			size_type		_size;
+			size_type       _capacity;
             allocator_type  _alloc;
 			pointer         _start;
 			pointer         _end;
-			size_type       _capacity;
-			size_type		_size;
 
     };
 }
