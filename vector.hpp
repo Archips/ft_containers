@@ -58,7 +58,7 @@ namespace ft {
 
 			vector(const vector& x) {
 	
-							this->_size = x._size;
+                this->_size = x._size;
 				this->_capacity = x._capacity;
 				this->_alloc = x._alloc;
 				this->_start = _alloc.allocate(this->_capacity);
@@ -77,7 +77,7 @@ namespace ft {
 
 				std::cout << "Vector _size: " << x._size << " copy= _size: " << this->_size << std::endl;
 				if (this != &x) {
-
+                    clear();
 					this->_alloc = x._alloc;
 					this->_start = x._start;
 					this->_end   = x._end;
@@ -107,20 +107,42 @@ namespace ft {
 				
 			/* MEMBER FUNCTIONS */
 
+            // ALLOCATOR
+
 			allocator_type get_allocator() const {
 
 				return (this->_alloc);
 			}
+
+            // CAPACITY
 
 			size_type	size() const {
 
 				return (this->_size);
 			}
 
+            size_type  max_size() const {
+
+                return (this->_alloc.max_size());
+            }
+
+            size_type capacity() const {
+
+                return (this->_capacity);
+            }
+
 			bool		empty() const {
 
 				return (!(this->_size));
 			}
+
+            // MODIFIERS
+
+            void        clear() {
+                for (size_type i = 0; i < this->_size; i++) {
+                    this->_alloc.destroy(&this->_start[i]);
+                }
+            }
 
 		private:
 
