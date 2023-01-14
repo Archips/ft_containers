@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/14 14:41:26 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/14 15:04:43 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,56 +128,62 @@ namespace ft {
 				return (*(this->_start + n));
 			}
 
-			reference front() {
+			reference front(void) {
 
 				return (*(this->_start));
 			}
 	
-			const_reference front() const {
+			const_reference front(void) const {
 
 				return (*(this->_start));
 			}
 
-			reference back() {
+			reference back(void) {
 
 				return (*(this->_start + this->_size - 1));
 			}
 
-			const_reference back() const {
+			const_reference back(void) const {
 
 				return (*(this->_start + this->_size - 1));
 			}
 
 			// ALLOCATOR
 
-			allocator_type get_allocator() const {
+			allocator_type get_allocator(void) const {
 
 				return (this->_alloc);
 			}
 
             // CAPACITY
 
-			size_type	size() const {
+			size_type	size(void) const {
 
 				return (this->_size);
 			}
 
-            size_type  max_size() const {
+            size_type  max_size(void) const {
 
                 return (this->_alloc.max_size());
             }
 
-            size_type capacity() const {
+            size_type capacity(void) const {
 
                 return (this->_capacity);
             }
 
-			bool		empty() const {
+			bool		empty(void) const {
 
 				return (!(this->_size));
 			}
 
             // MODIFIERS
+
+			void		pop_back(void) {
+
+				this->_alloc.destroy(&this->back());
+				this->_size --;
+			}
 
             void        clear() {
                 for (size_type i = 0; i < this->_size; i++) {

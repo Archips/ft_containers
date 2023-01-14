@@ -56,7 +56,10 @@ int main(void)
 
 		std::cout << "First of myvector is: " << myvector.front() << std::endl;
 		std::cout << "Last of myvector is: " << myvector.back() << std::endl;
-
+		std::cout << "Size of myvector is: " << myvector.size() << std::endl;
+		myvector.pop_back();
+		std::cout << "Last of myvector is: " << myvector.back() << std::endl;
+		std::cout << "Size of myvector is: " << myvector.size() << std::endl;
 	}
 
 	{
