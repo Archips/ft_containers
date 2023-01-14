@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/12 16:56:25 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/14 14:41:26 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define VECTOR_HPP
 
 #include <iostream>
+#include <stdexcept>
+#include <string>
 #include "iterator_traits.hpp"
 #include "reverse_iterator.hpp"
 
@@ -87,6 +89,21 @@ namespace ft {
 				return (*this);
 			}
 
+
+			/* DESTRUCTOR */
+
+			~vector() {
+				clear();
+				if (this->_start)
+					this->_alloc.deallocate(this->_start, this->_capacity);
+				std::cout << "Vector destructor called" << std::endl;
+			}
+
+				
+			/* MEMBER FUNCTIONS */
+
+			// ELEMENT ACCESS
+
 			reference operator[](size_type pos) {
 
 				return (*(this->_start + pos));
@@ -96,18 +113,42 @@ namespace ft {
 
 				return (*(this->_start + pos));
 			}
-
-			/* DESTRUCTOR */
-
-			~vector() {
-
-				std::cout << "Vector destructor called" << std::endl;
+			
+			reference at(size_type n) {
+		
+				if (n < 0 || n >= this->_size)
+					throw std::out_of_range("vector::_M_range_check");
+				return (*(this->_start + n));
 			}
 
-				
-			/* MEMBER FUNCTIONS */
+			const_reference at(size_type n) const {
 
-            // ALLOCATOR
+				if (n < 0 || n >= this->_size)
+					throw std::out_of_range("vector::_M_range_check");
+				return (*(this->_start + n));
+			}
+
+			reference front() {
+
+				return (*(this->_start));
+			}
+	
+			const_reference front() const {
+
+				return (*(this->_start));
+			}
+
+			reference back() {
+
+				return (*(this->_start + this->_size - 1));
+			}
+
+			const_reference back() const {
+
+				return (*(this->_start + this->_size - 1));
+			}
+
+			// ALLOCATOR
 
 			allocator_type get_allocator() const {
 
