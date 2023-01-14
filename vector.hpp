@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/14 15:04:43 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/14 16:18:51 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ namespace ft {
 
 			/* DESTRUCTOR */
 
-			~vector() {
+			~vector(void) {
 				clear();
 				if (this->_start)
 					this->_alloc.deallocate(this->_start, this->_capacity);
@@ -185,7 +185,7 @@ namespace ft {
 				this->_size --;
 			}
 
-            void        clear() {
+            void        clear(void) {
                 for (size_type i = 0; i < this->_size; i++) {
                     this->_alloc.destroy(&this->_start[i]);
                 }
