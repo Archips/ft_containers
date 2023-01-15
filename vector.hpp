@@ -49,10 +49,11 @@ namespace ft {
 			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {};
 
 			explicit vector(size_type count, const T& value = T(), const Alloc& alloc = Alloc()) :
-				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(0) {
+				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start) {
 
 				for (size_type i = 0; i < this->_size; i++) {
 					this->_alloc.construct(&this->_start[i], value);
+                    this->_end ++;
 				}
 			}
 
@@ -64,7 +65,7 @@ namespace ft {
 				this->_capacity = x._capacity;
 				this->_alloc = x._alloc;
 				this->_start = _alloc.allocate(this->_capacity);
-				this->_end = 0;
+				this->_end = x._end;
 				for (size_type i = 0; i < this->_size; i ++)
 					this->_alloc.construct(&this->_start[i], x[i]);
 				std::cout << "Vector copy constructor called" << std::endl;
@@ -167,6 +168,8 @@ namespace ft {
                 return (this->_alloc.max_size());
             }
 
+            void    resize(size_type n, value_type val = value_type());
+
             size_type capacity(void) const {
 
                 return (this->_capacity);
@@ -176,6 +179,26 @@ namespace ft {
 
 				return (!(this->_size));
 			}
+
+            void    reserve(size_type n) {
+
+                if (n > this->max_size()) {
+                    throw std::length_error("vector::_M_fill_insert");
+                }
+                else if (n > this->_capacity) {
+                    pointer new_alloc = _alloc.allocate(n, this->_start);
+                    pointer end = new_alloc;
+                    for (size_type i = 0; i < this->_size; i++) {
+                        this->_alloc.construct(&new_alloc[i], this->_start[i]);
+                        this->_alloc.destroy(&this->_start[i]);
+                        end ++;
+                    }
+                    this->_alloc.deallocate(this->_start, this->_capacity);
+                    this->_start = new_alloc;
+                    this->_end = end;
+                    this->_capacity = this->_start + n;
+                }
+            }
 
             // MODIFIERS
 
