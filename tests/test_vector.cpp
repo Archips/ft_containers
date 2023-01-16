@@ -179,16 +179,17 @@ int main(void)
 		std::cout << "Rev_from: " << *rev_from << std::endl;
 
   		std::cout << "myvector:";
-  		/* while (rev_from != rev_until) */
-		/* { */
-			/* std::cout << ' ' << *rev_from++; */
-			/* *rev_from++; */	
-			/* std::cout << "Rev_from: " << *rev_from << std::endl; */
-		/* } */
-		/* std::cout << '\n'; */
+  		while (rev_from != rev_until)
+		{
+			std::cout << ' ' << *rev_from++;
+		}
+		std::cout << '\n';
 		
-		/* myvector.pop_back(); */
-
+		std::cout << "vector -> ";
+		iter_type it = myvector.begin();
+		for (; it != myvector.end(); ++it)
+			std::cout << ' ' << *it;
+		std::cout << std::endl;
 
 	}	
 
