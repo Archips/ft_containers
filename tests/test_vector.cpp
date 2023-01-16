@@ -168,17 +168,27 @@ int main(void)
                                                          	//         ------>
   		iter_type until (myvector.end());               	//                       ^
                                                          	//
-  		std::reverse_iterator<iter_type> rev_until (from);  // ^
+  		ft::reverse_iterator<iter_type> rev_until (from);  // ^
                                                          	//         <------
-  		std::reverse_iterator<iter_type> rev_from (until);  //                     ^
+  		ft::reverse_iterator<iter_type> rev_from (until);  //                     ^
 
 		std::cout << "From: " << *from << std::endl;
 		std::cout << "Until: " << *until << std::endl;
 
+		std::cout << "Rev_until: " << *rev_until << std::endl;
+		std::cout << "Rev_from: " << *rev_from << std::endl;
+
   		std::cout << "myvector:";
-  		while (rev_from != rev_until)
-    		std::cout << ' ' << *rev_from++;
-  		std::cout << '\n';
+  		/* while (rev_from != rev_until) */
+		/* { */
+			/* std::cout << ' ' << *rev_from++; */
+			/* *rev_from++; */	
+			/* std::cout << "Rev_from: " << *rev_from << std::endl; */
+		/* } */
+		/* std::cout << '\n'; */
+		
+		/* myvector.pop_back(); */
+
 
 	}	
 
