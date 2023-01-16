@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/16 11:56:58 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/16 13:30:39 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,6 +216,16 @@ namespace ft {
             }
 
             // MODIFIERS
+
+			void		push_back(const value_type& val) {
+
+				if (this->_size + 1 > this->_capacity)
+					this->reserve(this->_size + 1);
+				this->_size ++;
+				this->_end = this->_start + this->_size - 1;
+				this->_alloc.construct(&this->_start[this->_size - 1], val);
+
+			}
 
 			void		pop_back(void) {
 

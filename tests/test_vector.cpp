@@ -122,8 +122,40 @@ int main(void)
 		
 		std::cout << std::endl;
 
+		myvector.resize(3);
+		myvector.push_back(-8);
 
+		for (unsigned i = 0; i < myvector.size(); i ++)
+			std::cout << ' ' << myvector.at(i);
+		
+		std::cout << std::endl;
+
+
+		std::cout << "Last of myvector is: " << myvector.back() << std::endl;
+
+		std::cout << "Size of myvector is: " << myvector.size() << std::endl;
+
+		std::cout << "Capacity of myvector is: " << myvector.capacity() << std::endl;
 	}
+
+	{
+		ft::vector<int> myvector;
+  		int myint;
+
+  		std::cout << "Please enter some integers (enter 0 to end):\n";
+
+  		do {
+    		std::cin >> myint;
+    		myvector.push_back (myint);
+  		} while (myint);
+
+  		std::cout << "myvector stores " << int(myvector.size()) << " numbers.\n";
+		std::cout << "Last of myvector is: " << myvector.back() << std::endl;
+		for (unsigned i = 0; i < myvector.size(); i ++)
+			std::cout << ' ' << myvector.at(i);
+		std::cout << std::endl;	
+		
+	}	
 
 	return (0);
 }
