@@ -138,25 +138,49 @@ int main(void)
 		std::cout << "Capacity of myvector is: " << myvector.capacity() << std::endl;
 	}
 
-	{
-		ft::vector<int> myvector;
-  		int myint;
+	/* { */
+	/* 	ft::vector<int> myvector; */
+  		/* int myint; */
 
-  		std::cout << "Please enter some integers (enter 0 to end):\n";
+  		/* std::cout << "Please enter some integers (enter 0 to end):\n"; */
 
-  		do {
-    		std::cin >> myint;
-    		myvector.push_back (myint);
-  		} while (myint);
+  		/* do { */
+    		/* std::cin >> myint; */
+    		/* myvector.push_back (myint); */
+  		/* } while (myint); */
 
-  		std::cout << "myvector stores " << int(myvector.size()) << " numbers.\n";
-		std::cout << "Last of myvector is: " << myvector.back() << std::endl;
-		for (unsigned i = 0; i < myvector.size(); i ++)
-			std::cout << ' ' << myvector.at(i);
-		std::cout << std::endl;	
+  		/* std::cout << "myvector stores " << int(myvector.size()) << " numbers.\n"; */
+	/* 	std::cout << "Last of myvector is: " << myvector.back() << std::endl; */
+	/* 	for (unsigned i = 0; i < myvector.size(); i ++) */
+	/* 		std::cout << ' ' << myvector.at(i); */
+	/* 	std::cout << std::endl; */	
 		
+	/* } */	
+
+	{
+
+		ft::vector<int> myvector;
+  		for (int i=0; i<10; i++) myvector.push_back(i);
+
+  		typedef ft::vector<int>::iterator iter_type;
+                                                         	// ? 0 1 2 3 4 5 6 7 8 9 ?
+  		iter_type from (myvector.begin());               	//   ^
+                                                         	//         ------>
+  		iter_type until (myvector.end());               	//                       ^
+                                                         	//
+  		std::reverse_iterator<iter_type> rev_until (from);  // ^
+                                                         	//         <------
+  		std::reverse_iterator<iter_type> rev_from (until);  //                     ^
+
+		std::cout << "From: " << *from << std::endl;
+		std::cout << "Until: " << *until << std::endl;
+
+  		std::cout << "myvector:";
+  		while (rev_from != rev_until)
+    		std::cout << ' ' << *rev_from++;
+  		std::cout << '\n';
+
 	}	
 
 	return (0);
 }
-

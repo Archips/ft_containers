@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/16 13:30:39 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/16 14:45:56 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ namespace ft {
 				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start) {
 
 				for (size_type i = 0; i < this->_size; i++) {
+
 					this->_alloc.construct(&this->_start[i], value);
 				}
+
 				this->_end = this->_start + this->_size - 1;
 			}
 
@@ -70,8 +72,6 @@ namespace ft {
 					this->_alloc.construct(&this->_start[i], x[i]);
 				std::cout << "Vector copy constructor called" << std::endl;
 				std::cout << "Vector _size: " << x._size << " copy _size: " << this->_size << std::endl;
-		
-
 			}
 
 			/* OPERATORS */
@@ -94,6 +94,7 @@ namespace ft {
 			/* DESTRUCTOR */
 
 			~vector(void) {
+
 				clear();
 				if (this->_start)
 					this->_alloc.deallocate(this->_start, this->_capacity);
@@ -102,6 +103,48 @@ namespace ft {
 
 				
 			/* MEMBER FUNCTIONS */
+
+			// ITERATORS
+			
+			iterator begin(void) {
+
+				return (iterator(this->_start));
+			}
+
+			const_iterator begin(void) const {
+
+				return (const_iterator(this->_start));
+			}
+
+			iterator end(void) {
+
+				return (iterator(this->_end + 1));
+			}
+
+			const_iterator end(void) const {
+
+				return (const_iterator(this->_end + 1));
+			}
+
+			reverse_iterator rbegin(void) {
+				
+				return (reverse_iterator(this->_end));
+			}
+
+			const_reverse_iterator rbegin(void) const {
+
+				return (const_reverse_iterator(this->_end));
+			}
+
+			reverse_iterator rend(void) {
+
+				return (reverse_iterator(this->_start - 1));
+			}
+
+			const_reverse_iterator rend(void) const {
+
+				return (const_reverse_iterator(this->_start - 1));
+			}
 
 			// ELEMENT ACCESS
 
@@ -170,14 +213,18 @@ namespace ft {
 
             void    resize(size_type n, value_type val = value_type()) {
 
-				if (n > this->max_size()) 
+				if (n > this->max_size()) {
+				
 					throw std::length_error("vector::_m_fill_insert");
+				}
 				else if (n < this->_size) {
+				
 					for (size_type i = n; i < this->_size; i ++)
 						this->_alloc.destroy(&this->_start[i]);
 					this->_size = n;
 				}
 				else if (n > this->_size) {
+					
 					this->reserve(n);
 					for (size_type i = this->_size; i < n; i ++)
 						this->_alloc.construct(&this->_start[i], val);
@@ -198,17 +245,21 @@ namespace ft {
             void    reserve(size_type n) {
 
                 if (n > this->max_size()) {
-                    throw std::length_error("vector::_M_fill_insert");
+                    
+					throw std::length_error("vector::_M_fill_insert");
                 }
                 else if (n > this->_capacity) {
-                    pointer new_alloc = _alloc.allocate(n, this->_start);
+                
+					pointer new_alloc = _alloc.allocate(n, this->_start);
                     pointer end = new_alloc;
-                    for (size_type i = 0; i < this->_size; i++) {
+                    
+					for (size_type i = 0; i < this->_size; i++) {
                         this->_alloc.construct(&new_alloc[i], this->_start[i]);
                         this->_alloc.destroy(&this->_start[i]);
                         end ++;
                     }
-                    this->_alloc.deallocate(this->_start, this->_capacity);
+                    
+					this->_alloc.deallocate(this->_start, this->_capacity);
                     this->_start = new_alloc;
                     this->_end = end;
                     this->_capacity = n;
@@ -235,9 +286,12 @@ namespace ft {
 			}
 
             void        clear(void) {
-                for (size_type i = 0; i < this->_size; i++) {
-                    this->_alloc.destroy(&this->_start[i]);
+                
+				for (size_type i = 0; i < this->_size; i++) {
+                    
+					this->_alloc.destroy(&this->_start[i]);
                 }
+				
 				this->_size = 0;
 				this->_end = this->_start;
             }
