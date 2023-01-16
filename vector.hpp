@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/14 16:18:51 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/16 11:56:58 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ namespace ft {
 
 				for (size_type i = 0; i < this->_size; i++) {
 					this->_alloc.construct(&this->_start[i], value);
-                    this->_end ++;
 				}
+				this->_end = this->_start + this->_size - 1;
 			}
 
 			/* COPY CONSTRUCTOR */
@@ -141,12 +141,12 @@ namespace ft {
 
 			reference back(void) {
 
-				return (*(this->_start + this->_size - 1));
+				return (*(this->_end));
 			}
 
 			const_reference back(void) const {
 
-				return (*(this->_start + this->_size - 1));
+				return (*(this->_end));
 			}
 
 			// ALLOCATOR
@@ -168,7 +168,22 @@ namespace ft {
                 return (this->_alloc.max_size());
             }
 
-            void    resize(size_type n, value_type val = value_type());
+            void    resize(size_type n, value_type val = value_type()) {
+
+				if (n > this->max_size()) 
+					throw std::length_error("vector::_m_fill_insert");
+				else if (n < this->_size) {
+					for (size_type i = n; i < this->_size; i ++)
+						this->_alloc.destroy(&this->_start[i]);
+					this->_size = n;
+				}
+				else if (n > this->_size) {
+					this->reserve(n);
+					for (size_type i = this->_size; i < n; i ++)
+						this->_alloc.construct(&this->_start[i], val);
+					this->_size = n;
+				}
+			}
 
             size_type capacity(void) const {
 
@@ -196,7 +211,7 @@ namespace ft {
                     this->_alloc.deallocate(this->_start, this->_capacity);
                     this->_start = new_alloc;
                     this->_end = end;
-                    this->_capacity = this->_start + n;
+                    this->_capacity = n;
                 }
             }
 
@@ -206,12 +221,15 @@ namespace ft {
 
 				this->_alloc.destroy(&this->back());
 				this->_size --;
+				this->_end = this->_start + this->_size - 1;
 			}
 
             void        clear(void) {
                 for (size_type i = 0; i < this->_size; i++) {
                     this->_alloc.destroy(&this->_start[i]);
                 }
+				this->_size = 0;
+				this->_end = this->_start;
             }
 
 		private:

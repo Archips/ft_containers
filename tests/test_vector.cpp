@@ -60,10 +60,69 @@ int main(void)
 		myvector.pop_back();
 		std::cout << "Last of myvector is: " << myvector.back() << std::endl;
 		std::cout << "Size of myvector is: " << myvector.size() << std::endl;
+		
+		myvector.clear();
+
+		for (unsigned i=0; i<myvector.size(); i++)
+   			myvector.at(i)=i;
+		std::cout << "-------------------------------" << std::endl;
+		std::cout << "First of myvector is: " << myvector.front() << std::endl;
+		std::cout << "Last of myvector is: " << myvector.back() << std::endl;
+		std::cout << "Size of myvector is: " << myvector.size() << std::endl;
+		std::cout << "-------------------------------" << std::endl;
+
+		std::cout << "End of scope" << std::endl;
 	}
 
 	{
 		ft::vector<int> vectoooor;
+	}
+
+	{
+		ft::vector<int> myvector(5);
+		myvector[0] = 1; 
+		myvector[1] = 2;
+		myvector[2] = 3;
+		myvector[3] = 0;
+		myvector[4] = 0;
+
+		for (unsigned i = 0; i < myvector.size(); i ++)
+			std::cout << ' ' << myvector.at(i);
+
+		std::cout << std::endl;
+
+		std::cout << "my vector capacity : " << myvector.capacity() << std::endl;
+
+		myvector.resize(2);
+
+		for (unsigned i = 0; i < myvector.size(); i ++)
+			std::cout << ' ' << myvector.at(i);
+	
+		std::cout << std::endl;
+
+		std::cout << "my vector capacity : " << myvector.capacity() << std::endl;
+
+		myvector.resize(5);
+
+		for (unsigned i = 0; i < myvector.size(); i ++)
+			std::cout << ' ' << myvector.at(i);
+
+		std::cout << std::endl;
+		
+		std::cout << "my vector capacity : " << myvector.capacity() << std::endl;
+		
+		myvector.resize(7, 10);
+
+		for (unsigned i = 0; i < myvector.size(); i ++)
+			std::cout << ' ' << myvector.at(i);
+		
+		std::cout << std::endl;
+
+		std::cout << "my vector capacity : " << myvector.capacity() << std::endl;
+		
+		std::cout << std::endl;
+
+
 	}
 
 	return (0);
