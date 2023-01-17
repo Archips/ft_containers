@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/17 14:34:21 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/17 15:52:28 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,6 +361,12 @@ namespace ft {
 
 		return (!(lhs < rhs));
 	}
+
+	/* template < Class T, class Alloc > */
+	/* void	swap(vector<T, Alloc>& x, vector<T, Alloc>& y) { */
+
+
+	/* } */
 
 }
 
