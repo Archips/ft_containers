@@ -1,8 +1,8 @@
 // reverse_iterator::operator- example
 #include <iostream>     // std::cout
 #include "../reverse_iterator.hpp"     // std::reverse_iterator
-#include <vector>       // std::vector
-
+#include "../vector.hpp"       // std::vector
+#include "../iterator_traits.hpp"
 
 int main()
 {
@@ -11,11 +11,11 @@ int main()
     short a3[]{40, 41, 42};
 
     ft::reverse_iterator<const int*> it1{std::crbegin(a1)};
-    it1 = ft::reverse_iterator<int*>{std::rbegin(a2)};   // OK
+    it1 = ft::reverse_iterator<int*>{ft::rbegin(a2)};   // OK
 //  it1 = std::reverse_iterator<short*>{std::rbegin(a3)}; // compilation error:
                                                           // incompatible pointer types
     ft::reverse_iterator<short const*> it2{nullptr};
-    it2 = std::rbegin(a3); // OK
+    it2 = ft::rbegin(a3); // OK
 //  it2 = std::begin(a3);  // compilation error: no viable overloaded '='
     std::cout << *it2 << '\n';
 }

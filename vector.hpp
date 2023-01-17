@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/16 14:45:56 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/17 14:34:21 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 # define VECTOR_HPP
 
 #include <iostream>
+#include <iterator> // std::distance
 #include <stdexcept>
 #include <string>
+#include "equal.hpp"
 #include "iterator_traits.hpp"
+#include "lexicographical_compare.hpp"
 #include "reverse_iterator.hpp"
 
 namespace ft {
@@ -58,6 +61,12 @@ namespace ft {
 
 				this->_end = this->_start + this->_size - 1;
 			}
+
+			/* template <class InputIterator> */
+			/* vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) { */
+							
+	
+			/* } */
 
 			/* COPY CONSTRUCTOR */
 
@@ -268,6 +277,10 @@ namespace ft {
 
             // MODIFIERS
 
+			template < class InputIterator >
+			void	assign(InputIterator first, InputIterator last); 
+			void	assign(size_type n, const value_type& val);
+
 			void		push_back(const value_type& val) {
 
 				if (this->_size + 1 > this->_capacity)
@@ -284,6 +297,11 @@ namespace ft {
 				this->_size --;
 				this->_end = this->_start + this->_size - 1;
 			}
+
+			iterator insert(iterator position, const value_type& val);
+			void	insert(iterator position, size_type n, const value_type& val);
+			template < class InputIterator >
+			void insert(iterator position, InputIterator first, InputIterator last);
 
             void        clear(void) {
                 
@@ -305,6 +323,45 @@ namespace ft {
 			pointer         _end;
 
     };
+
+	template < class T, class Alloc >
+	bool operator==(const ft::vector<T, Alloc>&lhs, const ft::vector<T, Alloc>&rhs) {
+	
+		if (lhs.size() != rhs.size())
+			return (false);
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+
+	template < class T, class Alloc >
+	bool operator!=(const ft::vector<T, Alloc>&lhs, const ft::vector<T, Alloc>&rhs) {
+
+		return (!(lhs == rhs));
+	}
+
+	template < class T, class Alloc >
+	bool operator<(const ft::vector<T, Alloc>&lhs, const ft::vector<T, Alloc>&rhs) {
+
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+
+	template < class T, class Alloc >
+	bool operator<=(const ft::vector<T, Alloc>&lhs, const ft::vector<T, Alloc>&rhs) {
+
+		return (!(rhs < lhs));
+	}
+
+	template < class T, class Alloc >
+	bool operator>(const ft::vector<T, Alloc>&lhs, const ft::vector<T, Alloc>&rhs) {
+
+		return (rhs < lhs);
+	}
+
+	template < class T, class Alloc >
+	bool operator>=(const ft::vector<T, Alloc>&lhs, const ft::vector<T, Alloc>&rhs) {
+
+		return (!(lhs < rhs));
+	}
+
 }
 
 #endif
