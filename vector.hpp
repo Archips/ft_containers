@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/17 15:52:28 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/18 13:08:47 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,6 +314,27 @@ namespace ft {
 				this->_end = this->_start;
             }
 
+			void		swap(vector& x) {
+			
+				size_type 		temp_size = this->_size;
+				size_type		temp_capacity = this->_capacity;
+				allocator_type	temp_alloc = this->_alloc;
+				pointer			temp_start = this->_start;
+				pointer			temp_end = this->_end;
+
+				this->_size = x._size;
+				this->_capacity = x._capacity;
+				this->_alloc = x._alloc;
+				this->_start = x._start;
+				this->_end = x._end;
+
+				x._size = temp_size;
+				x._capacity = temp_capacity;
+				x._alloc = temp_alloc;
+				x._start = temp_start;
+				x._end = temp_end;
+			}
+
 		private:
 
 			size_type		_size;
@@ -362,11 +383,11 @@ namespace ft {
 		return (!(lhs < rhs));
 	}
 
-	/* template < Class T, class Alloc > */
-	/* void	swap(vector<T, Alloc>& x, vector<T, Alloc>& y) { */
+	template < class T, class Alloc >
+	void	swap(vector<T, Alloc>& x, vector<T, Alloc>& y) {
 
-
-	/* } */
+		x.swap(y);
+	}
 
 }
 

@@ -215,5 +215,38 @@ int main(void)
 
 	}
 
+	{
+
+		ft::vector<int> a(3, 100);
+		ft::vector<int> b(2, 200);
+
+		std::cout << "a -> ";
+		ft::vector<int>::iterator it = a.begin();
+		for (; it != a.end(); ++it)
+			std::cout << ' ' << *it;
+		std::cout << std::endl;
+
+		std::cout << "b -> ";
+		it = b.begin();
+		for (; it != b.end(); ++it)
+			std::cout << ' ' << *it;
+		std::cout << std::endl;
+
+		ft::swap(a, b);
+
+		std::cout << "a -> ";
+		it = a.begin();
+		for (; it != a.end(); ++it)
+			std::cout << ' ' << *it;
+		std::cout << std::endl;
+
+		std::cout << "b -> ";
+		it = b.begin();
+		for (; it != b.end(); ++it)
+			std::cout << ' ' << *it;
+		std::cout << std::endl;
+
+	}	
+
 	return (0);
 }
