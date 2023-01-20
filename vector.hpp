@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/18 13:08:47 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/20 17:42:45 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #include "iterator_traits.hpp"
 #include "lexicographical_compare.hpp"
 #include "reverse_iterator.hpp"
+#include "enable_if.hpp"
+#include "is_integral.hpp"
 
 namespace ft {
     
@@ -32,8 +34,8 @@ namespace ft {
 			typedef T												        value_type;
 			typedef T* 			 									      	iterator;
 			typedef const T* 											 	const_iterator;
-			typedef T&										 		        reference;
-			typedef const T&										        const_reference;
+			typedef typename Alloc::reference				 		        reference;
+			typedef typename Alloc::const_reference					        const_reference;
 			typedef Alloc											        allocator_type;
 			typedef	typename Alloc::pointer							        pointer;
 			typedef typename Alloc::const_pointer					        const_pointer;
@@ -44,12 +46,9 @@ namespace ft {
 
 			/* CONSTRUCTOR */
 
-			vector(): _size(0), _capacity(0), _alloc(), _start(0), _end(0) {
+			vector(): _size(0), _capacity(0), _alloc(), _start(0), _end(0) {}
 
-				std::cout << "Vector default constructor called" << std::endl;
-			}
-
-			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {};
+			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {}
 
 			explicit vector(size_type count, const T& value = T(), const Alloc& alloc = Alloc()) :
 				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start) {
@@ -62,32 +61,33 @@ namespace ft {
 				this->_end = this->_start + this->_size - 1;
 			}
 
-			/* template <class InputIterator> */
-			/* vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) { */
-							
-	
-			/* } */
+			template <class InputIterator>
+			vector (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last, const allocator_type& alloc = allocator_type()):
+			_size(std::distance(first, last)), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)) {
+				
+				for (size_type i = 0; i < this->_size; i ++)
+					this->_alloc.construct(&this->_start[i], *(first++));
+				this->_end = this->_start + this->_size - 1;	
+			}
 
 			/* COPY CONSTRUCTOR */
 
 			vector(const vector& x) {
-	
+
                 this->_size = x._size;
 				this->_capacity = x._capacity;
 				this->_alloc = x._alloc;
-				this->_start = _alloc.allocate(this->_capacity);
+				this->_start = this->_alloc.allocate(this->_capacity);
 				this->_end = x._end;
 				for (size_type i = 0; i < this->_size; i ++)
 					this->_alloc.construct(&this->_start[i], x[i]);
-				std::cout << "Vector copy constructor called" << std::endl;
-				std::cout << "Vector _size: " << x._size << " copy _size: " << this->_size << std::endl;
 			}
 
 			/* OPERATORS */
 
 			vector&	operator=(const vector& x) {
 
-				std::cout << "Vector _size: " << x._size << " copy= _size: " << this->_size << std::endl;
+				/* std::cout << "Vector _size: " << x._size << " copy= _size: " << this->_size << std::endl; */
 				if (this != &x) {
                     clear();
 					this->_alloc = x._alloc;
@@ -104,10 +104,10 @@ namespace ft {
 
 			~vector(void) {
 
-				clear();
-				if (this->_start)
-					this->_alloc.deallocate(this->_start, this->_capacity);
-				std::cout << "Vector destructor called" << std::endl;
+				/* std::cout << "Vector destructor called" << std::endl; */
+				/* clear(); */
+				/* if (this->_start) */
+				/* 	this->_alloc.deallocate(this->_start, this->_capacity); */
 			}
 
 				
@@ -127,32 +127,32 @@ namespace ft {
 
 			iterator end(void) {
 
-				return (iterator(this->_end + 1));
+				return (this->_start + this->_size);
 			}
 
 			const_iterator end(void) const {
 
-				return (const_iterator(this->_end + 1));
+				return (this->_start + this->_size);
 			}
 
 			reverse_iterator rbegin(void) {
 				
-				return (reverse_iterator(this->_end));
+				return (reverse_iterator(this->end()));
 			}
 
 			const_reverse_iterator rbegin(void) const {
 
-				return (const_reverse_iterator(this->_end));
+				return (const_reverse_iterator(this->end()));
 			}
 
 			reverse_iterator rend(void) {
 
-				return (reverse_iterator(this->_start - 1));
+				return (reverse_iterator(this->begin()));
 			}
 
 			const_reverse_iterator rend(void) const {
 
-				return (const_reverse_iterator(this->_start - 1));
+				return (const_reverse_iterator(this->begin()));
 			}
 
 			// ELEMENT ACCESS
@@ -228,15 +228,21 @@ namespace ft {
 				}
 				else if (n < this->_size) {
 				
+					/* for (; n < this->_size; this->_size --) */
+					/* 	this->_alloc.destroy(&this->_start[this->_size - 1]); */
+					/* this->_size = n; */
 					for (size_type i = n; i < this->_size; i ++)
 						this->_alloc.destroy(&this->_start[i]);
 					this->_size = n;
 				}
 				else if (n > this->_size) {
 					
+					/* this->reserve(std::max(this->_size * 2, n)); */
 					this->reserve(n);
 					for (size_type i = this->_size; i < n; i ++)
 						this->_alloc.construct(&this->_start[i], val);
+					/* for (; this->_size < n; this->_size ++) */
+					/* 	this->_alloc.construct(&this->_start[this->_size], val); */
 					this->_size = n;
 				}
 			}
@@ -268,7 +274,7 @@ namespace ft {
                         end ++;
                     }
                     
-					this->_alloc.deallocate(this->_start, this->_capacity);
+					/* this->_alloc.deallocate(this->_start, this->_capacity); */
                     this->_start = new_alloc;
                     this->_end = end;
                     this->_capacity = n;
@@ -379,7 +385,7 @@ namespace ft {
 
 	template < class T, class Alloc >
 	bool operator>=(const ft::vector<T, Alloc>&lhs, const ft::vector<T, Alloc>&rhs) {
-
+		
 		return (!(lhs < rhs));
 	}
 

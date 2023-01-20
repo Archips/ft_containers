@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 10:22:53 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/09 15:38:37 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/20 17:49:32 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ namespace ft {
     template< class T >
     struct iterator_traits<const T*> {
 
-		typedef typename	std::ptrdiff_t						difference_value;
+		typedef typename	std::ptrdiff_t						difference_type;
 		typedef				T									value_type;
 		typedef				const T*							pointer;
 		typedef				const T&							reference;

@@ -16,13 +16,7 @@
 namespace ft {
 
 	template < class InputI1, class InputI2 >
-	bool cmp(const InputI1 &a, InputI2 &b) {
-		return (a < b);
-	}
-
-	template < class InputI1, class InputI2 >
 	bool lexicographical_compare(InputI1 first1, InputI1 last1, InputI2 first2, InputI2 last2) {
-
 		for (; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2) {
 			if (*first1 < *first2)
 				return (true);
