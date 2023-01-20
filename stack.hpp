@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:33:30 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/20 10:10:45 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/20 18:26:57 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 namespace ft {
 
-    template < class T, class Container = std::vector <T> >
+    template < class T, class Container = ft::vector <T> >
     class stack {
 
 
