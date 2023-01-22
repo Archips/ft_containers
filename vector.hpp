@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/20 17:42:45 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/22 17:02:09 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,13 @@ namespace ft {
 			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {}
 
 			explicit vector(size_type count, const T& value = T(), const Alloc& alloc = Alloc()) :
-				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start) {
+				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start + _size - 1) {
 
 				for (size_type i = 0; i < this->_size; i++) {
 
 					this->_alloc.construct(&this->_start[i], value);
 				}
 
-				this->_end = this->_start + this->_size - 1;
 			}
 
 			template <class InputIterator>
@@ -74,13 +73,14 @@ namespace ft {
 
 			vector(const vector& x) {
 
-                this->_size = x._size;
-				this->_capacity = x._capacity;
-				this->_alloc = x._alloc;
-				this->_start = this->_alloc.allocate(this->_capacity);
-				this->_end = x._end;
-				for (size_type i = 0; i < this->_size; i ++)
-					this->_alloc.construct(&this->_start[i], x[i]);
+				*this = x;
+                /* this->_size = x._size; */
+				/* this->_capacity = x._capacity; */
+				/* this->_alloc = x._alloc; */
+				/* this->_start = this->_alloc.allocate(this->_capacity); */
+				/* this->_end = this->_start + this->_size - 1; */
+				/* for (size_type i = 0; i < this->_size; i ++) */
+					/* this->_alloc.construct(&this->_start[i], x[i]); */
 			}
 
 			/* OPERATORS */
@@ -89,12 +89,14 @@ namespace ft {
 
 				/* std::cout << "Vector _size: " << x._size << " copy= _size: " << this->_size << std::endl; */
 				if (this != &x) {
-                    clear();
+                    this->clear();
 					this->_alloc = x._alloc;
-					this->_start = x._start;
-					this->_end   = x._end;
-					this->_size  = x._size;
 					this->_capacity = x._capacity;
+					this->_start = this->_alloc.allocate(this->_capacity);
+					this->_size = x._size;
+					this->_end = this->_start + this->_size - 1;
+					for (size_type i = 0; i < this->_size; i ++)
+						this->_alloc.construct(&this->_start[i], x[i]);
 				}
 				return (*this);
 			}
@@ -104,10 +106,9 @@ namespace ft {
 
 			~vector(void) {
 
-				/* std::cout << "Vector destructor called" << std::endl; */
-				/* clear(); */
-				/* if (this->_start) */
-				/* 	this->_alloc.deallocate(this->_start, this->_capacity); */
+				clear();
+				if (this->_start)
+					this->_alloc.deallocate(this->_start, this->_capacity);
 			}
 
 				
@@ -228,22 +229,18 @@ namespace ft {
 				}
 				else if (n < this->_size) {
 				
-					/* for (; n < this->_size; this->_size --) */
-					/* 	this->_alloc.destroy(&this->_start[this->_size - 1]); */
-					/* this->_size = n; */
 					for (size_type i = n; i < this->_size; i ++)
 						this->_alloc.destroy(&this->_start[i]);
 					this->_size = n;
+					this->_end = this->_start + this->_size - 1;
 				}
 				else if (n > this->_size) {
 					
-					/* this->reserve(std::max(this->_size * 2, n)); */
 					this->reserve(n);
 					for (size_type i = this->_size; i < n; i ++)
 						this->_alloc.construct(&this->_start[i], val);
-					/* for (; this->_size < n; this->_size ++) */
-					/* 	this->_alloc.construct(&this->_start[this->_size], val); */
 					this->_size = n;
+					this->_end = this->_start + this->_size - 1;
 				}
 			}
 
@@ -265,17 +262,15 @@ namespace ft {
                 }
                 else if (n > this->_capacity) {
                 
-					pointer new_alloc = _alloc.allocate(n, this->_start);
+					pointer new_alloc = _alloc.allocate(n);
                     pointer end = new_alloc;
-                    
 					for (size_type i = 0; i < this->_size; i++) {
                         this->_alloc.construct(&new_alloc[i], this->_start[i]);
                         this->_alloc.destroy(&this->_start[i]);
                         end ++;
                     }
-                    
-					/* this->_alloc.deallocate(this->_start, this->_capacity); */
-                    this->_start = new_alloc;
+					this->_alloc.deallocate(this->_start, this->capacity());
+					this->_start = new_alloc;
                     this->_end = end;
                     this->_capacity = n;
                 }
@@ -291,10 +286,9 @@ namespace ft {
 
 				if (this->_size + 1 > this->_capacity)
 					this->reserve(this->_size + 1);
-				this->_size ++;
+				this->_size += 1;
 				this->_end = this->_start + this->_size - 1;
 				this->_alloc.construct(&this->_start[this->_size - 1], val);
-
 			}
 
 			void		pop_back(void) {
@@ -310,12 +304,16 @@ namespace ft {
 			void insert(iterator position, InputIterator first, InputIterator last);
 
             void        clear(void) {
-                
-				for (size_type i = 0; i < this->_size; i++) {
-                    
-					this->_alloc.destroy(&this->_start[i]);
-                }
-				
+               
+				std::cout << "Size: " << this->_size << std::endl;
+				if (this->_size) {
+					for (size_type i = 0; i < this->_size; i++) {
+                   	 	
+						std::cout << "Elem : " << i << ": " << &this->_start[i] << std::cout;
+						this->_alloc.destroy(&this->_start[i]);
+                	}
+					std::cout << std::endl;
+				}
 				this->_size = 0;
 				this->_end = this->_start;
             }

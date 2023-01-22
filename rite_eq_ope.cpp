@@ -1,16 +1,18 @@
 #include "common.hpp"
+/* #include <vector> */
 #include "vector.hpp"
 
 # define TESTED_NAMESPACE ft
+/* # define TESTED_NAMESPACE std */
 #define TESTED_TYPE foo<int>
 
 template <typename Ite_1, typename Ite_2>
 void ft_eq_ope(const Ite_1 &first, const Ite_2 &second, const bool redo = 1)
 {
-	std::cout << (first < second) << std::endl;
-	std::cout << (first <= second) << std::endl;
-	std::cout << (first > second) << std::endl;
-	std::cout << (first >= second) << std::endl;
+	std::cout << "< : " << (first < second) << std::endl;
+	std::cout << "<= : " << (first <= second) << std::endl;
+	std::cout << "> : " << (first > second) << std::endl;
+	std::cout << ">= : " << (first >= second) << std::endl;
 	if (redo)
 		ft_eq_ope(second, first, 0);
 }

@@ -43,6 +43,7 @@ int		main(void)
 	is_empty(vct2);
 	vct.reserve(vct.capacity() + 1);
 	printSize(vct, true);
+	std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 	printSize(vct2, true);
 
 	vct2.resize(0);

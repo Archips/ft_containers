@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 15:59:08 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/20 18:07:44 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/22 14:29:15 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,19 +138,19 @@ namespace ft {
 	template < class Iterator1, class Iterator2 >
 	bool operator<=( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) {
 
-		return (!(lhs < rhs));
+		return (!(rhs < lhs));
 	}
 
 	template < class Iterator1, class Iterator2 >
 	bool operator>( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) {
 
-		return (lhs < rhs);
+		return (lhs.base() < rhs.base());
 	}
 
 	template < class Iterator1, class Iterator2 >
 	bool operator>=( const ft::reverse_iterator<Iterator1>& lhs, const ft::reverse_iterator<Iterator2>& rhs) {
 
-		return (!(rhs < lhs));
+		return (!(lhs < rhs));
 	}
 
 	template < class iterator >
