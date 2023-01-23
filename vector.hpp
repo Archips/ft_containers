@@ -376,7 +376,6 @@ namespace ft {
 
 			iterator erase(iterator position) {
 
-				std::cout << "ERASE 1" << std::endl;
 				ft::vector<value_type> temp = *this;
 				iterator pos = temp.begin() + std::distance(this->begin(), position);
 				this->clear();
@@ -384,6 +383,8 @@ namespace ft {
 				for (; it != pos; it ++)
 					this->push_back(*it);
 				it++;
+                this->push_back(*it);
+                this->pop_back();
 				for (; it != temp.end(); it ++)
 					this->push_back(*it);
 				return (position);
@@ -391,31 +392,15 @@ namespace ft {
 
 
 			iterator erase(iterator first, iterator last) {
-			
 				if (first == last)
 					return (first);
-				ft::vector<value_type> temp = *this;
-				iterator pos = temp.begin() + std::distance(temp.begin(), first);
-				this->clear();
-				iterator it = temp.begin();
-				for (; it != pos; it++) {
-							
-					std::cout << "ERASE 2" << std::endl;
-					this->push_back(*it);
-				}
-				for (; it != last; it ++) {
-					/* this->push_back(*it); */
-					/* std::cout << "*it -> [" << *it << "]" << std::endl; */
-					/* std::cout << "this->back() -> [" << this->back() << "]" << std::endl; */
-					/* iterator it_temp = it; */
-					/* it_temp ++; */
-					/* this->pop_back(); */
-					/* it = it_temp; */
-				}
-				/* it = last; */
-				for (; it != temp.end(); it ++)
-					this->push_back(*it);
-				return (last);
+                size_type dist = std::distance(first, last);
+				iterator it = first;
+                while (dist) {
+                    it = erase(it);
+                    dist--;
+                }
+				return (it);
 			}
 
             void        clear(void) {
