@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/23 15:49:41 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/23 17:41:45 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ namespace ft {
             void    resize(size_type n, value_type val = value_type()) {
 
 				if (n > this->max_size()) {
-				
+					
 					throw std::length_error("vector::_m_fill_insert");
 				}
 				else if (n < this->_size) {
@@ -291,7 +291,7 @@ namespace ft {
 			}
 
 			void		pop_back(void) {
-
+				
 				this->_alloc.destroy(&this->back());
 				this->_size --;
 				this->_end = this->_start + this->_size - 1;
@@ -356,33 +356,63 @@ namespace ft {
 				}
 			}
 
+			/* iterator erase(iterator position) { */
+
+			/* 	ft::vector<value_type> temp = *this; */
+			/* 	iterator pos = temp.begin() + std::distance(this->begin(), position); */
+			/* 	this->clear(); */
+			/* 	iterator it = temp.begin(); */
+			/* 	for (; it != pos; it ++) */
+			/* 		this->push_back(*it); */
+			/* 	iterator it_temp = it; */
+			/* 	it_temp ++; */
+			/* 	temp.get_allocator().destroy(it); */
+			/* 	it = it_temp; */
+			/* 	for (it = pos; it != temp.end(); it ++) */
+			/* 		this->push_back(*it); */
+			/* 	this->_size --; */
+			/* 	return (position); */
+			/* } */
+
 			iterator erase(iterator position) {
 
+				std::cout << "ERASE 1" << std::endl;
 				ft::vector<value_type> temp = *this;
 				iterator pos = temp.begin() + std::distance(this->begin(), position);
 				this->clear();
 				iterator it = temp.begin();
 				for (; it != pos; it ++)
 					this->push_back(*it);
-				iterator it_temp = it;
-				it_temp ++;
-				temp.get_allocator().destroy(it);
-				it = it_temp;
-				for (it = pos; it != temp.end(); it ++)
+				it++;
+				for (; it != temp.end(); it ++)
 					this->push_back(*it);
 				return (position);
 			}
 
-			iterator erase(iterator first, iterator last) {
 
+			iterator erase(iterator first, iterator last) {
+			
+				if (first == last)
+					return (first);
 				ft::vector<value_type> temp = *this;
+				iterator pos = temp.begin() + std::distance(temp.begin(), first);
 				this->clear();
 				iterator it = temp.begin();
-				for (; it != first; it ++)
+				for (; it != pos; it++) {
+							
+					std::cout << "ERASE 2" << std::endl;
 					this->push_back(*it);
-				for (; it != last; it ++)
-					temp.get_allocator().destroy(it);
-				it = last;
+				}
+				for (; it != last; it ++) {
+					/* this->push_back(*it); */
+					/* std::cout << "*it -> [" << *it << "]" << std::endl; */
+					/* std::cout << "this->back() -> [" << this->back() << "]" << std::endl; */
+					/* iterator it_temp = it; */
+					/* it_temp ++; */
+					/* this->pop_back(); */
+					/* it = it_temp; */
+				}
+				/* it = last; */
 				for (; it != temp.end(); it ++)
 					this->push_back(*it);
 				return (last);
