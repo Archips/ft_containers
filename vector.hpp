@@ -278,8 +278,18 @@ namespace ft {
             // MODIFIERS
 
 			template < class InputIterator >
-			void	assign(InputIterator first, InputIterator last); 
-			void	assign(size_type n, const value_type& val);
+			void	assign(InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last) {
+                this->clear();
+                this->insert(this->begin(), first, last);
+            }
+
+			void	assign(size_type n, const value_type& val) {
+                this->clear();
+                if (n > this->_capacity)
+                    this->reserve(n);
+                for (size_type i = 0; i < n; i ++)
+                    this->push_back(val);
+            }
 
 			void		push_back(const value_type& val) {
 
@@ -356,24 +366,6 @@ namespace ft {
 				}
 			}
 
-			/* iterator erase(iterator position) { */
-
-			/* 	ft::vector<value_type> temp = *this; */
-			/* 	iterator pos = temp.begin() + std::distance(this->begin(), position); */
-			/* 	this->clear(); */
-			/* 	iterator it = temp.begin(); */
-			/* 	for (; it != pos; it ++) */
-			/* 		this->push_back(*it); */
-			/* 	iterator it_temp = it; */
-			/* 	it_temp ++; */
-			/* 	temp.get_allocator().destroy(it); */
-			/* 	it = it_temp; */
-			/* 	for (it = pos; it != temp.end(); it ++) */
-			/* 		this->push_back(*it); */
-			/* 	this->_size --; */
-			/* 	return (position); */
-			/* } */
-
 			iterator erase(iterator position) {
 
 				ft::vector<value_type> temp = *this;
@@ -389,7 +381,6 @@ namespace ft {
 					this->push_back(*it);
 				return (position);
 			}
-
 
 			iterator erase(iterator first, iterator last) {
 				if (first == last)
