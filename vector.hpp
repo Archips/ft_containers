@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/23 15:23:50 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/23 15:49:41 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,6 +354,38 @@ namespace ft {
 				for (iterator it = pos; it != temp.end(); it ++) {
 					this->push_back(*it);
 				}
+			}
+
+			iterator erase(iterator position) {
+
+				ft::vector<value_type> temp = *this;
+				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				this->clear();
+				iterator it = temp.begin();
+				for (; it != pos; it ++)
+					this->push_back(*it);
+				iterator it_temp = it;
+				it_temp ++;
+				temp.get_allocator().destroy(it);
+				it = it_temp;
+				for (it = pos; it != temp.end(); it ++)
+					this->push_back(*it);
+				return (position);
+			}
+
+			iterator erase(iterator first, iterator last) {
+
+				ft::vector<value_type> temp = *this;
+				this->clear();
+				iterator it = temp.begin();
+				for (; it != first; it ++)
+					this->push_back(*it);
+				for (; it != last; it ++)
+					temp.get_allocator().destroy(it);
+				it = last;
+				for (; it != temp.end(); it ++)
+					this->push_back(*it);
+				return (last);
 			}
 
             void        clear(void) {
