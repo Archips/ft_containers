@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/22 17:02:09 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/23 15:23:50 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,23 +73,22 @@ namespace ft {
 
 			vector(const vector& x) {
 
-				*this = x;
-                /* this->_size = x._size; */
-				/* this->_capacity = x._capacity; */
-				/* this->_alloc = x._alloc; */
-				/* this->_start = this->_alloc.allocate(this->_capacity); */
-				/* this->_end = this->_start + this->_size - 1; */
-				/* for (size_type i = 0; i < this->_size; i ++) */
-					/* this->_alloc.construct(&this->_start[i], x[i]); */
+				/* *this = x; */
+                this->_size = x._size;
+				this->_capacity = x._capacity;
+				this->_alloc = x._alloc;
+				this->_start = this->_alloc.allocate(this->_capacity);
+				this->_end = this->_start + this->_size - 1;
+				for (size_type i = 0; i < this->_size; i ++)
+					this->_alloc.construct(&this->_start[i], x[i]);
 			}
 
 			/* OPERATORS */
 
 			vector&	operator=(const vector& x) {
 
-				/* std::cout << "Vector _size: " << x._size << " copy= _size: " << this->_size << std::endl; */
 				if (this != &x) {
-                    this->clear();
+					this->clear();
 					this->_alloc = x._alloc;
 					this->_capacity = x._capacity;
 					this->_start = this->_alloc.allocate(this->_capacity);
@@ -298,21 +297,72 @@ namespace ft {
 				this->_end = this->_start + this->_size - 1;
 			}
 
-			iterator insert(iterator position, const value_type& val);
-			void	insert(iterator position, size_type n, const value_type& val);
+			iterator insert(iterator position, const value_type& val) {
+				
+				ft::vector<value_type> temp = *this;
+				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				size_type new_elem = std::distance(this->begin(), position);
+				if (this->_size + 1 > this->_capacity)
+					this->reserve(this->_size + 1);
+				this->clear();
+				for (iterator it = temp.begin(); it != pos; it ++) {
+					this->push_back(*it);
+				}
+				this->push_back(val);
+				for (iterator it = pos; it != temp.end(); it ++) {
+					this->push_back(*it);
+				}
+				return (&this->_start[new_elem]);
+			}
+			
+			void	insert(iterator position, size_type n, const value_type& val) {
+				
+				if (!n)
+					return ;
+				ft::vector<value_type> temp = *this;
+				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				if (this->_size + n > this->_capacity)
+					this->reserve(this->_size + n);
+				this->clear();
+				for (iterator it = temp.begin(); it != pos; it ++) {
+					this->push_back(*it);
+				}
+				for (size_type i = 0; i < n; i ++) {
+					this->push_back(val);
+				}
+				for (iterator it = pos; it != temp.end(); it ++) {
+					this->push_back(*it);
+				}
+			}
+
 			template < class InputIterator >
-			void insert(iterator position, InputIterator first, InputIterator last);
+			void insert(iterator position, InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last) {
+
+				size_type count = std::distance(first, last);
+
+				ft::vector<value_type> temp = *this;
+				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				if (this->_size + count > this->_capacity)
+					this->reserve(this->_size + count);
+				this->clear();
+				for (iterator it = temp.begin(); it != pos; it ++) {
+					this->push_back(*it);
+				}
+				for (InputIterator it = first; it != last; it ++) {
+					this->push_back(*it);
+				}
+				for (iterator it = pos; it != temp.end(); it ++) {
+					this->push_back(*it);
+				}
+			}
 
             void        clear(void) {
                
-				std::cout << "Size: " << this->_size << std::endl;
 				if (this->_size) {
 					for (size_type i = 0; i < this->_size; i++) {
                    	 	
-						std::cout << "Elem : " << i << ": " << &this->_start[i] << std::cout;
 						this->_alloc.destroy(&this->_start[i]);
                 	}
-					std::cout << std::endl;
 				}
 				this->_size = 0;
 				this->_end = this->_start;

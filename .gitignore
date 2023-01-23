@@ -3,3 +3,4 @@ doc/
 a.out
 containers_test
 42TESTERS-CONTAINERS
+.nfs*
