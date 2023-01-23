@@ -382,9 +382,9 @@ namespace ft {
 				iterator it = temp.begin();
 				for (; it != pos; it ++)
 					this->push_back(*it);
+                iterator it_temp = it;
+                temp._alloc.destroy(it_temp);
 				it++;
-                this->push_back(*it);
-                this->pop_back();
 				for (; it != temp.end(); it ++)
 					this->push_back(*it);
 				return (position);
