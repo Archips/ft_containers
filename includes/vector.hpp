@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/23 17:41:45 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/24 14:25:27 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,14 @@ namespace ft {
 
 				if (this != &x) {
 					this->clear();
-					this->_alloc = x._alloc;
-					this->_capacity = x._capacity;
-					this->_start = this->_alloc.allocate(this->_capacity);
-					this->_size = x._size;
-					this->_end = this->_start + this->_size - 1;
-					for (size_type i = 0; i < this->_size; i ++)
-						this->_alloc.construct(&this->_start[i], x[i]);
+					this->insert(this->begin(), x.begin(), x.end());
+					/* this->_alloc = x._alloc; */
+					/* this->_capacity = x._capacity; */
+					/* this->_start = this->_alloc.allocate(this->_capacity); */
+					/* this->_size = x._size; */
+					/* this->_end = this->_start + this->_size - 1; */
+					/* for (size_type i = 0; i < this->_size; i ++) */
+					/* 	this->_alloc.construct(&this->_start[i], x[i]); */
 				}
 				return (*this);
 			}
@@ -309,7 +310,7 @@ namespace ft {
 
 			iterator insert(iterator position, const value_type& val) {
 				
-				ft::vector<value_type> temp = *this;
+				ft::vector<value_type> temp(*this);
 				iterator pos = temp.begin() + std::distance(this->begin(), position);
 				size_type new_elem = std::distance(this->begin(), position);
 				if (this->_size + 1 > this->_capacity)
@@ -329,7 +330,7 @@ namespace ft {
 				
 				if (!n)
 					return ;
-				ft::vector<value_type> temp = *this;
+				ft::vector<value_type> temp(*this);
 				iterator pos = temp.begin() + std::distance(this->begin(), position);
 				if (this->_size + n > this->_capacity)
 					this->reserve(this->_size + n);
@@ -350,7 +351,7 @@ namespace ft {
 
 				size_type count = std::distance(first, last);
 
-				ft::vector<value_type> temp = *this;
+				ft::vector<value_type> temp(*this);
 				iterator pos = temp.begin() + std::distance(this->begin(), position);
 				if (this->_size + count > this->_capacity)
 					this->reserve(this->_size + count);
