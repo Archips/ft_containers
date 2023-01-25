@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/24 14:25:27 by athirion         ###   ########.fr       */
+/*   Updated: 2023/01/25 13:37:23 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ namespace ft {
 			typedef typename ft::reverse_iterator<iterator>			        reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator>	        const_reverse_iterator;
 
-			/* CONSTRUCTOR */
+			/*
+			 ** CONSTRUCTORS
+			 */
 
 			vector(): _size(0), _capacity(0), _alloc(), _start(0), _end(0) {}
 
@@ -69,11 +71,12 @@ namespace ft {
 				this->_end = this->_start + this->_size - 1;	
 			}
 
-			/* COPY CONSTRUCTOR */
+			/*
+			 ** COPY CONSTRUCTOR
+			 */
 
 			vector(const vector& x) {
 
-				/* *this = x; */
                 this->_size = x._size;
 				this->_capacity = x._capacity;
 				this->_alloc = x._alloc;
@@ -83,7 +86,9 @@ namespace ft {
 					this->_alloc.construct(&this->_start[i], x[i]);
 			}
 
-			/* OPERATORS */
+			/* 
+			 ** OPERATORS
+			 */
 
 			vector&	operator=(const vector& x) {
 
@@ -102,7 +107,9 @@ namespace ft {
 			}
 
 
-			/* DESTRUCTOR */
+			/*
+			 ** DESTRUCTOR
+			 */
 
 			~vector(void) {
 
@@ -112,9 +119,11 @@ namespace ft {
 			}
 
 				
-			/* MEMBER FUNCTIONS */
+			/*
+			 ** MEMBER FUNCTIONS
+			 */
 
-			// ITERATORS
+			/* ITERATORS */
 			
 			iterator begin(void) {
 
@@ -156,7 +165,7 @@ namespace ft {
 				return (const_reverse_iterator(this->begin()));
 			}
 
-			// ELEMENT ACCESS
+			/* ELEMENT ACCESS */
 
 			reference operator[](size_type pos) {
 
@@ -202,14 +211,14 @@ namespace ft {
 				return (*(this->_end));
 			}
 
-			// ALLOCATOR
+			/* ALLOCATOR */
 
 			allocator_type get_allocator(void) const {
 
 				return (this->_alloc);
 			}
 
-            // CAPACITY
+            /* CAPACITY */
 
 			size_type	size(void) const {
 
@@ -276,7 +285,7 @@ namespace ft {
                 }
             }
 
-            // MODIFIERS
+            /* MODIFIERS */
 
 			template < class InputIterator >
 			void	assign(InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last) {
