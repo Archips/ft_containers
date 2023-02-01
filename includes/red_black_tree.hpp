@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/01 13:41:28 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/01 16:17:43 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,29 @@ namespace ft {
 			typedef typename allocator::AllocNode				alloc_node;
 			typedef typename allocator::AllocNode::size_type;	size_type;
 
-			
-			rbt(void):
-				_ 
+			/*
+			 ** CONSTRUCTORS
+			 */
 
+
+			rbt(void):
+				_root(NULL), _size(0), _alloc(), _comp() {}
+
+			rbt(node_ptr root = NULL, size_type size = 0, alloc_node alloc, key_compare comp):
+				_root(root), _size(size), _alloc(alloc), _comp(comp) {}
+
+			/*
+			 ** COPY CONSTRUCTOR
+			 */
+
+			/* rbt(const_rbt_ref src) {}; */
+
+
+			/*
+			 ** COPY ASSIGNMENT OPERATOR 
+			 */
+
+			/* rbt_ref operator=(const_rbt_ref rhs) {}; */
 
 		private:
 

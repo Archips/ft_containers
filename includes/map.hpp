@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 13:08:26 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/25 14:13:58 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/01 16:32:39 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 namespace ft {
 
 	template < class Key, class T, class Compare,
-			 class Alloc = std::allocator < std::pair < const Key, T> >
+			 class Alloc = std::allocator < ft::pair < const Key, T> >
 	class map {
 
 		public:
@@ -36,8 +36,8 @@ namespace ft {
 		typedef typename std::ptrdiff_t							difference_type;
 		typedef Compare											key_compare;
 		typedef Alloc											allocator_type;
-		typedef value_type&										reference;
-		typedef const value_type&								const_reference;
+		typedef typename Alloc::reference						reference;
+		typedef typename Alloc::const_reference					const_reference;
 		typedef typename Alloc::pointer							pointer;
 		typedef typename Alloc::const_pointer					const_pointer;
 		typedef T*												iterator;
