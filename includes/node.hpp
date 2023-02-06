@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 11:48:53 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/01 13:23:22 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/06 15:26:54 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace ft {
 
 			node(void): p(NULL), left_child(NULL), right_child(NULL), color(RED){}
 
-			node(node_ptr p, node_ptr l_child, node_ptr r_child, int c, value_type pair): 
+			node(node_ptr p = NULL, node_ptr l_child = NULL, node_ptr r_child = NULL, int c = RED, value_type pair): 
 				parent(p),
 				left_child(l_child),
 				right_child(r_child),

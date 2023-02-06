@@ -6,15 +6,17 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/01 16:17:43 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/03 14:58:06 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RED_BLACK_TREE_HPP
 # define RED_BLACK_TREE_HPP
 
-#include "node.hpp"
+# include "node.hpp"
 
+# define RED	0
+# define BLACK	1
 
 namespace ft {
 
@@ -56,14 +58,30 @@ namespace ft {
 			 ** COPY CONSTRUCTOR
 			 */
 
-			/* rbt(const_rbt_ref src) {}; */
+			rbt(const_rbt_ref src) {
+
+				this->_root = src._root;
+				this->_size = src._size;
+				this->_alloc = src._alloc;
+				this->_comp = src._comp;
+			}
 
 
 			/*
 			 ** COPY ASSIGNMENT OPERATOR 
 			 */
 
-			/* rbt_ref operator=(const_rbt_ref rhs) {}; */
+			rbt_ref operator=(const_rbt_ref rhs) {
+	
+				if (this != &rhs) {
+
+					this->_root = rhs._root;
+					this->_size = rhs._size;
+					this->_alloc = rhs._alloc;
+					this->_comp = rhs._comp;
+				}	
+				return (*this);
+			}
 
 		private:
 
