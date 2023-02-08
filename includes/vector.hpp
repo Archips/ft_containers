@@ -50,7 +50,7 @@ namespace ft {
 
 			vector(): _size(0), _capacity(0), _alloc(), _start(0), _end(0) {}
 
-			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {}
+			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {std::cout << " pouet" << std::endl;}
 
 			explicit vector(size_type count, const T& value = T(), const Alloc& alloc = Alloc()) :
 				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start + _size - 1) {

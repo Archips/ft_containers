@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 15:59:08 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/22 14:29:15 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/08 14:28:44 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ namespace ft {
 
 			reference operator[](difference_type n) const {
 
-				return (*(*this + n));
+				return (base()[-n-1]);
 			}
 
 			reverse_iterator& operator++() {
