@@ -33,19 +33,17 @@ namespace ft {
         public:
 
 			typedef T												        value_type;
-			typedef ft::random_access_iterator<value_type>      	    	iterator;
-			typedef ft::random_access_iterator<const value_type>    		const_iterator;
-			/* typedef T* 			 									      	iterator; */
-			/* typedef const T* 											 	const_iterator; */
-			typedef typename Alloc::reference				 		        reference;
-			typedef typename Alloc::const_reference					        const_reference;
 			typedef Alloc											        allocator_type;
 			typedef	typename Alloc::pointer							        pointer;
 			typedef typename Alloc::const_pointer					        const_pointer;
+			typedef typename Alloc::reference				 		        reference;
+			typedef typename Alloc::const_reference					        const_reference;
 			typedef typename std::size_t							        size_type;
 			typedef typename std::ptrdiff_t							        difference_type;
-			typedef typename ft::reverse_iterator<iterator>			        reverse_iterator;
-			typedef typename ft::reverse_iterator<const_iterator>	        const_reverse_iterator;
+			typedef ft::random_access_iterator<pointer>						iterator;
+			typedef ft::random_access_iterator<const_pointer>				const_iterator;
+			typedef ft::reverse_iterator<iterator>			        		reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>	        		const_reverse_iterator;
 
 			/*
 			 ** CONSTRUCTORS
@@ -140,12 +138,12 @@ namespace ft {
 
 			iterator end(void) {
 
-				return (this->_start + this->_size);
+				return (iterator(this->_start + this->_size));
 			}
 
 			const_iterator end(void) const {
 
-				return (this->_start + this->_size);
+				return (const_iterator(this->_start + this->_size));
 			}
 
 			reverse_iterator rbegin(void) {
