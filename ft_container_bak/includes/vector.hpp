@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/08 17:32:31 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/10 15:49:05 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 # define VECTOR_HPP
 
 #include <iostream>
-#include <iterator> // std::distance
 #include <stdexcept>
 #include <string>
+#include "distance.hpp"
 #include "equal.hpp"
 #include "iterator_traits.hpp"
 #include "lexicographical_compare.hpp"
@@ -51,7 +51,7 @@ namespace ft {
 
 			vector(): _size(0), _capacity(0), _alloc(), _start(0), _end(0) {}
 
-			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {std::cout << " pouet" << std::endl;}
+			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {}
 
 			explicit vector(size_type count, const T& value = T(), const Alloc& alloc = Alloc()) :
 				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start + _size - 1) {
@@ -65,7 +65,7 @@ namespace ft {
 
 			template <class InputIterator>
 			vector (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last, const allocator_type& alloc = allocator_type()):
-			_size(std::distance(first, last)), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)) {
+			_size(ft::distance(first, last)), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)) {
 				
 				for (size_type i = 0; i < this->_size; i ++)
 					this->_alloc.construct(&this->_start[i], *(first++));
@@ -272,7 +272,7 @@ namespace ft {
                 }
                 else if (n > this->_capacity) {
                 
-					pointer new_alloc = _alloc.allocate(n);
+					pointer new_alloc = _alloc.allocate(this->_size * 2);
                     pointer end = new_alloc;
 					for (size_type i = 0; i < this->_size; i++) {
                         this->_alloc.construct(&new_alloc[i], this->_start[i]);
@@ -282,7 +282,7 @@ namespace ft {
 					this->_alloc.deallocate(this->_start, this->capacity());
 					this->_start = new_alloc;
                     this->_end = end;
-                    this->_capacity = n;
+                    this->_capacity = this->_size * 2;
                 }
             }
 
@@ -319,10 +319,10 @@ namespace ft {
 			}
 
 			iterator insert(iterator position, const value_type& val) {
-				
+			
 				ft::vector<value_type> temp(*this);
-				iterator pos = temp.begin() + std::distance(this->begin(), position);
-				size_type new_elem = std::distance(this->begin(), position);
+				iterator pos = temp.begin() + ft::distance(this->begin(), position);
+				difference_type new_elem = ft::distance(this->begin(), position);
 				if (this->_size + 1 > this->_capacity)
 					this->reserve(this->_size + 1);
 				this->clear();
@@ -333,15 +333,13 @@ namespace ft {
 				for (iterator it = pos; it != temp.end(); it ++) {
 					this->push_back(*it);
 				}
-				return (&this->_start[new_elem]);
+				return (iterator(this->_start + new_elem));
 			}
 			
 			void	insert(iterator position, size_type n, const value_type& val) {
 				
-				if (!n)
-					return ;
 				ft::vector<value_type> temp(*this);
-				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				if (this->_size + n > this->_capacity)
 					this->reserve(this->_size + n);
 				this->clear();
@@ -358,11 +356,10 @@ namespace ft {
 
 			template < class InputIterator >
 			void insert(iterator position, InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last) {
-
-				size_type count = std::distance(first, last);
-
+				
+				size_type count = ft::distance(first, last);
 				ft::vector<value_type> temp(*this);
-				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				if (this->_size + count > this->_capacity)
 					this->reserve(this->_size + count);
 				this->clear();
@@ -379,14 +376,16 @@ namespace ft {
 
 			iterator erase(iterator position) {
 
+				size_type i = 0;
 				ft::vector<value_type> temp = *this;
-				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				this->clear();
 				iterator it = temp.begin();
-				for (; it != pos; it ++)
+				for (; it != pos; it ++) {
 					this->push_back(*it);
-                iterator it_temp = it;
-                temp._alloc.destroy(it_temp);
+					i ++;
+				}
+                temp._alloc.destroy(&temp._start[i]);
 				it++;
 				for (; it != temp.end(); it ++)
 					this->push_back(*it);
@@ -396,7 +395,7 @@ namespace ft {
 			iterator erase(iterator first, iterator last) {
 				if (first == last)
 					return (first);
-                size_type dist = std::distance(first, last);
+                size_type dist = ft::distance(first, last);
 				iterator it = first;
                 while (dist) {
                     it = erase(it);

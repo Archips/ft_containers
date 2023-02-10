@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 14:36:06 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/08 17:35:46 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/10 14:05:28 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,13 @@
 namespace ft {
 
 	template < class iterator >
-	class random_access_iterator: public ft::iterator<ft::random_access_iterator_tag, iterator> {
+	class random_access_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category,
+				typename iterator_traits<iterator>::difference_type,
+				typename iterator_traits<iterator>::value_type,
+				typename iterator_traits<iterator>::pointer,
+				typename iterator_traits<iterator>::reference>
+
+	{
 
 		protected:
 
@@ -27,30 +33,25 @@ namespace ft {
 		
 		public:
 
-			typedef	iterator																			iterator_type;
-			typedef typename ft::iterator<ft::random_access_iterator_tag, iterator>::iterator_category	iterator_category;
-			typedef typename ft::iterator<ft::random_access_iterator_tag, iterator>::value_type			value_type;
-			typedef typename ft::iterator<ft::random_access_iterator_tag, iterator>::difference_type	difference_type;
-			typedef typename ft::iterator<ft::random_access_iterator_tag, iterator>::pointer			pointer;
-			typedef typename ft::iterator<ft::random_access_iterator_tag, iterator>::reference			reference;
+			typedef	iterator													iterator_type;
+			typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category;
+			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
+			typedef typename ft::iterator_traits<iterator>::value_type			value_type;
+			typedef typename ft::iterator_traits<iterator>::pointer				pointer;
+			typedef typename ft::iterator_traits<iterator>::reference			reference;
 
 			/*
 			 ** CONSTRUCTORS
 			 */
 
 			random_access_iterator(void): _current() {}
-			explicit random_access_iterator(const iterator& x): _current(x) {}
-			random_access_iterator(random_access_iterator& other): _current(other.base()) {}
+			explicit random_access_iterator(const iterator_type& x): _current(x) {}
+			random_access_iterator(const random_access_iterator& other): _current(other.base()) {}
 			
 			template < class U >
-			random_access_iterator(const random_access_iterator <U> &other): _current(other._current) {}
+			random_access_iterator(const random_access_iterator <U> &other): _current(other.base()) {}
 
 			~random_access_iterator(void) {}
-
-			operator random_access_iterator<const iterator>() const {
-
-				return (random_access_iterator<const iterator>(this->_current));
-			}
 
 			random_access_iterator& operator=(const random_access_iterator& other) {
 
@@ -81,8 +82,8 @@ namespace ft {
 
 			random_access_iterator& operator++(void) {
 
-				/* ++ this->_current; */
-				this->_current++;
+				++ this->_current;
+				/* this->_current++; */
 				return (*this);
 			}
 
@@ -128,13 +129,13 @@ namespace ft {
 
 			random_access_iterator& operator+=(const difference_type n) {
 
-				this->_current = this->_current - n;
+				this->_current = this->_current + n;
 				return (*this);
 			}
 
 			random_access_iterator& operator-=(const difference_type n) {
 
-				this->_current = this->_current + n;
+				this->_current = this->_current - n;
 				return (*this);
 			}
 	};

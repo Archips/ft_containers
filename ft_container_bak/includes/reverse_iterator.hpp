@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 15:59:08 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/08 14:28:44 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/10 10:39:05 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ namespace ft {
 	
 			reverse_iterator(void): _current(){}
 			
-			explicit reverse_iterator( iterator_type x): _current(x){}
+			explicit reverse_iterator(const iterator_type x): _current(x){}
 			
 			template < class U >
 			reverse_iterator (const reverse_iterator <U>& other): _current(other.base()){}

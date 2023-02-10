@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/01 16:17:08 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/10 14:26:07 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,7 +332,7 @@ namespace ft {
 				for (iterator it = pos; it != temp.end(); it ++) {
 					this->push_back(*it);
 				}
-				return (&this->_start[new_elem]);
+				return (iterator(this->_start + new_elem));
 			}
 			
 			void	insert(iterator position, size_type n, const value_type& val) {

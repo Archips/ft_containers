@@ -1,5 +1,5 @@
-#include "common.hpp"
-#include "vector.hpp"
+#include "../includes/common.hpp"
+#include "../includes/vector.hpp"
 
 #define TESTED_NAMESPACE ft
 #define TESTED_TYPE std::string
