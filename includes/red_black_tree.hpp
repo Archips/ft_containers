@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/03 14:58:06 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/12 14:42:56 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,6 @@ namespace ft {
 		public:
 
 			typedef	T											value_type;
-			typedef	rbt*										rbt_ptr;
-			typedef const rbt*									const_rbt_ptr;
-			typedef rbt&										rbt_ref;
-			typedef const rbt&									const_rbt_ref;
-
 			typedef typename T::first_type						key;
 			typedef typename T::second_type						value;
 			typedef Compare										key_compare;	
