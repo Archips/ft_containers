@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/10 15:49:05 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/12 13:39:37 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ namespace ft {
 			vector(const vector& x) {
 
                 this->_size = x._size;
-				this->_capacity = x._capacity;
+				this->_capacity = x.size();
 				this->_alloc = x._alloc;
 				this->_start = this->_alloc.allocate(this->_capacity);
 				this->_end = this->_start + this->_size - 1;
@@ -204,12 +204,12 @@ namespace ft {
 
 			reference back(void) {
 
-				return (*(this->_end));
+				return (*(this->_start + this->_size - 1));
 			}
 
 			const_reference back(void) const {
 
-				return (*(this->_end));
+				return (*(this->_start + this->_size - 1));
 			}
 
 			/* ALLOCATOR */
@@ -233,11 +233,7 @@ namespace ft {
 
             void    resize(size_type n, value_type val = value_type()) {
 
-				if (n > this->max_size()) {
-					
-					throw std::length_error("vector::_m_fill_insert");
-				}
-				else if (n < this->_size) {
+				if (n < this->_size) {
 				
 					for (size_type i = n; i < this->_size; i ++)
 						this->_alloc.destroy(&this->_start[i]);
@@ -246,7 +242,7 @@ namespace ft {
 				}
 				else if (n > this->_size) {
 					
-					this->reserve(n);
+					this->reserve(std::max(n, this->_size * 2));
 					for (size_type i = this->_size; i < n; i ++)
 						this->_alloc.construct(&this->_start[i], val);
 					this->_size = n;
@@ -268,11 +264,11 @@ namespace ft {
 
                 if (n > this->max_size()) {
                     
-					throw std::length_error("vector::_M_fill_insert");
+					throw std::length_error("vector::reserve");
                 }
                 else if (n > this->_capacity) {
                 
-					pointer new_alloc = _alloc.allocate(this->_size * 2);
+					pointer new_alloc = _alloc.allocate(n);
                     pointer end = new_alloc;
 					for (size_type i = 0; i < this->_size; i++) {
                         this->_alloc.construct(&new_alloc[i], this->_start[i]);
@@ -282,7 +278,7 @@ namespace ft {
 					this->_alloc.deallocate(this->_start, this->capacity());
 					this->_start = new_alloc;
                     this->_end = end;
-                    this->_capacity = this->_size * 2;
+                    this->_capacity = n;
                 }
             }
 
@@ -304,8 +300,10 @@ namespace ft {
 
 			void		push_back(const value_type& val) {
 
-				if (this->_size + 1 > this->_capacity)
-					this->reserve(this->_size + 1);
+				if (this->_capacity && this->_size >= this->_capacity)
+					this->reserve(this->_capacity * 2);
+				else if (!this->_capacity)
+					this->reserve(1);
 				this->_size += 1;
 				this->_end = this->_start + this->_size - 1;
 				this->_alloc.construct(&this->_start[this->_size - 1], val);
@@ -324,7 +322,7 @@ namespace ft {
 				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				difference_type new_elem = ft::distance(this->begin(), position);
 				if (this->_size + 1 > this->_capacity)
-					this->reserve(this->_size + 1);
+					this->reserve(this->_size * 2);
 				this->clear();
 				for (iterator it = temp.begin(); it != pos; it ++) {
 					this->push_back(*it);
@@ -341,7 +339,7 @@ namespace ft {
 				ft::vector<value_type> temp(*this);
 				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				if (this->_size + n > this->_capacity)
-					this->reserve(this->_size + n);
+					this->reserve(std::max(this->_size + n, this->_size * 2));
 				this->clear();
 				for (iterator it = temp.begin(); it != pos; it ++) {
 					this->push_back(*it);
@@ -361,7 +359,7 @@ namespace ft {
 				ft::vector<value_type> temp(*this);
 				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				if (this->_size + count > this->_capacity)
-					this->reserve(this->_size + count);
+					this->reserve(std::max(this->_size + count, this->_size * 2));
 				this->clear();
 				for (iterator it = temp.begin(); it != pos; it ++) {
 					this->push_back(*it);
@@ -377,7 +375,7 @@ namespace ft {
 			iterator erase(iterator position) {
 
 				size_type i = 0;
-				ft::vector<value_type> temp = *this;
+				ft::vector<value_type> temp(*this);
 				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				this->clear();
 				iterator it = temp.begin();
@@ -385,7 +383,7 @@ namespace ft {
 					this->push_back(*it);
 					i ++;
 				}
-                temp._alloc.destroy(&temp._start[i]);
+                /* temp._alloc.destroy(&temp._start[i]); */
 				it++;
 				for (; it != temp.end(); it ++)
 					this->push_back(*it);
