@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 15:59:08 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/08 14:28:44 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/10 10:39:05 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,12 @@
 namespace ft {
 
 	template < class iterator > 
-	class reverse_iterator {
+	class reverse_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category,
+			typename iterator_traits<iterator>::value_type,
+			typename iterator_traits<iterator>::difference_type,
+			typename iterator_traits<iterator>::pointer,
+			typename iterator_traits<iterator>::reference>
+	{
 
 		protected :
 
@@ -34,10 +39,16 @@ namespace ft {
 			typedef typename	ft::iterator_traits<iterator>::reference			reference;
 	
 			reverse_iterator(void): _current(){}
-			explicit reverse_iterator( iterator_type x): _current(x){}
+			
+			explicit reverse_iterator(const iterator_type x): _current(x){}
+			
 			template < class U >
 			reverse_iterator (const reverse_iterator <U>& other): _current(other.base()){}
-	
+
+			operator reverse_iterator<const iterator>() const {
+				return (reverse_iterator<const iterator>(this->_current));
+			}
+
 			template < class U >
 			reverse_iterator& operator=( const reverse_iterator <U>& other) {
 			
@@ -161,8 +172,8 @@ namespace ft {
 	}
 
 	template < class Iterator1, class Iterator2 >
-	typename reverse_iterator<Iterator1>::difference_type operator-( const reverse_iterator<Iterator1>& lhs,
-																	 const reverse_iterator<Iterator2>& rhs) {
+	typename ft::reverse_iterator<Iterator1>::difference_type operator-( const ft::reverse_iterator<Iterator1>& lhs,
+																	 const ft::reverse_iterator<Iterator2>& rhs) {
 
 		return (rhs.base() - lhs.base());
 	}

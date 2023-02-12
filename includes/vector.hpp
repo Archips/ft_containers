@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/10 14:26:07 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/12 13:39:37 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 # define VECTOR_HPP
 
 #include <iostream>
-#include <iterator> // std::distance
 #include <stdexcept>
 #include <string>
+#include "distance.hpp"
 #include "equal.hpp"
 #include "iterator_traits.hpp"
 #include "lexicographical_compare.hpp"
+#include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
 #include "enable_if.hpp"
 #include "is_integral.hpp"
@@ -32,17 +33,17 @@ namespace ft {
         public:
 
 			typedef T												        value_type;
-			typedef T* 			 									      	iterator;
-			typedef const T* 											 	const_iterator;
-			typedef typename Alloc::reference				 		        reference;
-			typedef typename Alloc::const_reference					        const_reference;
 			typedef Alloc											        allocator_type;
 			typedef	typename Alloc::pointer							        pointer;
 			typedef typename Alloc::const_pointer					        const_pointer;
+			typedef typename Alloc::reference				 		        reference;
+			typedef typename Alloc::const_reference					        const_reference;
 			typedef typename std::size_t							        size_type;
 			typedef typename std::ptrdiff_t							        difference_type;
-			typedef typename ft::reverse_iterator<iterator>			        reverse_iterator;
-			typedef typename ft::reverse_iterator<const_iterator>	        const_reverse_iterator;
+			typedef ft::random_access_iterator<pointer>						iterator;
+			typedef ft::random_access_iterator<const_pointer>				const_iterator;
+			typedef ft::reverse_iterator<iterator>			        		reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>	        		const_reverse_iterator;
 
 			/*
 			 ** CONSTRUCTORS
@@ -50,7 +51,7 @@ namespace ft {
 
 			vector(): _size(0), _capacity(0), _alloc(), _start(0), _end(0) {}
 
-			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {std::cout << " pouet" << std::endl;}
+			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {}
 
 			explicit vector(size_type count, const T& value = T(), const Alloc& alloc = Alloc()) :
 				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start + _size - 1) {
@@ -64,7 +65,7 @@ namespace ft {
 
 			template <class InputIterator>
 			vector (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last, const allocator_type& alloc = allocator_type()):
-			_size(std::distance(first, last)), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)) {
+			_size(ft::distance(first, last)), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)) {
 				
 				for (size_type i = 0; i < this->_size; i ++)
 					this->_alloc.construct(&this->_start[i], *(first++));
@@ -78,7 +79,7 @@ namespace ft {
 			vector(const vector& x) {
 
                 this->_size = x._size;
-				this->_capacity = x._capacity;
+				this->_capacity = x.size();
 				this->_alloc = x._alloc;
 				this->_start = this->_alloc.allocate(this->_capacity);
 				this->_end = this->_start + this->_size - 1;
@@ -137,12 +138,12 @@ namespace ft {
 
 			iterator end(void) {
 
-				return (this->_start + this->_size);
+				return (iterator(this->_start + this->_size));
 			}
 
 			const_iterator end(void) const {
 
-				return (this->_start + this->_size);
+				return (const_iterator(this->_start + this->_size));
 			}
 
 			reverse_iterator rbegin(void) {
@@ -203,12 +204,12 @@ namespace ft {
 
 			reference back(void) {
 
-				return (*(this->_end));
+				return (*(this->_start + this->_size - 1));
 			}
 
 			const_reference back(void) const {
 
-				return (*(this->_end));
+				return (*(this->_start + this->_size - 1));
 			}
 
 			/* ALLOCATOR */
@@ -232,11 +233,7 @@ namespace ft {
 
             void    resize(size_type n, value_type val = value_type()) {
 
-				if (n > this->max_size()) {
-					
-					throw std::length_error("vector::_m_fill_insert");
-				}
-				else if (n < this->_size) {
+				if (n < this->_size) {
 				
 					for (size_type i = n; i < this->_size; i ++)
 						this->_alloc.destroy(&this->_start[i]);
@@ -245,7 +242,7 @@ namespace ft {
 				}
 				else if (n > this->_size) {
 					
-					this->reserve(n);
+					this->reserve(std::max(n, this->_size * 2));
 					for (size_type i = this->_size; i < n; i ++)
 						this->_alloc.construct(&this->_start[i], val);
 					this->_size = n;
@@ -267,7 +264,7 @@ namespace ft {
 
                 if (n > this->max_size()) {
                     
-					throw std::length_error("vector::_M_fill_insert");
+					throw std::length_error("vector::reserve");
                 }
                 else if (n > this->_capacity) {
                 
@@ -303,8 +300,10 @@ namespace ft {
 
 			void		push_back(const value_type& val) {
 
-				if (this->_size + 1 > this->_capacity)
-					this->reserve(this->_size + 1);
+				if (this->_capacity && this->_size >= this->_capacity)
+					this->reserve(this->_capacity * 2);
+				else if (!this->_capacity)
+					this->reserve(1);
 				this->_size += 1;
 				this->_end = this->_start + this->_size - 1;
 				this->_alloc.construct(&this->_start[this->_size - 1], val);
@@ -318,12 +317,12 @@ namespace ft {
 			}
 
 			iterator insert(iterator position, const value_type& val) {
-				
+			
 				ft::vector<value_type> temp(*this);
-				iterator pos = temp.begin() + std::distance(this->begin(), position);
-				size_type new_elem = std::distance(this->begin(), position);
+				iterator pos = temp.begin() + ft::distance(this->begin(), position);
+				difference_type new_elem = ft::distance(this->begin(), position);
 				if (this->_size + 1 > this->_capacity)
-					this->reserve(this->_size + 1);
+					this->reserve(this->_size * 2);
 				this->clear();
 				for (iterator it = temp.begin(); it != pos; it ++) {
 					this->push_back(*it);
@@ -337,12 +336,10 @@ namespace ft {
 			
 			void	insert(iterator position, size_type n, const value_type& val) {
 				
-				if (!n)
-					return ;
 				ft::vector<value_type> temp(*this);
-				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				if (this->_size + n > this->_capacity)
-					this->reserve(this->_size + n);
+					this->reserve(std::max(this->_size + n, this->_size * 2));
 				this->clear();
 				for (iterator it = temp.begin(); it != pos; it ++) {
 					this->push_back(*it);
@@ -357,13 +354,12 @@ namespace ft {
 
 			template < class InputIterator >
 			void insert(iterator position, InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last) {
-
-				size_type count = std::distance(first, last);
-
+				
+				size_type count = ft::distance(first, last);
 				ft::vector<value_type> temp(*this);
-				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				if (this->_size + count > this->_capacity)
-					this->reserve(this->_size + count);
+					this->reserve(std::max(this->_size + count, this->_size * 2));
 				this->clear();
 				for (iterator it = temp.begin(); it != pos; it ++) {
 					this->push_back(*it);
@@ -378,14 +374,16 @@ namespace ft {
 
 			iterator erase(iterator position) {
 
-				ft::vector<value_type> temp = *this;
-				iterator pos = temp.begin() + std::distance(this->begin(), position);
+				size_type i = 0;
+				ft::vector<value_type> temp(*this);
+				iterator pos = temp.begin() + ft::distance(this->begin(), position);
 				this->clear();
 				iterator it = temp.begin();
-				for (; it != pos; it ++)
+				for (; it != pos; it ++) {
 					this->push_back(*it);
-                iterator it_temp = it;
-                temp._alloc.destroy(it_temp);
+					i ++;
+				}
+                /* temp._alloc.destroy(&temp._start[i]); */
 				it++;
 				for (; it != temp.end(); it ++)
 					this->push_back(*it);
@@ -395,7 +393,7 @@ namespace ft {
 			iterator erase(iterator first, iterator last) {
 				if (first == last)
 					return (first);
-                size_type dist = std::distance(first, last);
+                size_type dist = ft::distance(first, last);
 				iterator it = first;
                 while (dist) {
                     it = erase(it);
