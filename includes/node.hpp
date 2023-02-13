@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 11:48:53 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/12 13:48:58 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/13 17:51:51 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,114 @@ namespace ft {
 
 			~node(void);
 
+
+			/*
+			 ** MEMBER FUNCTIONS
+			 */
+
+			
+			bool	is_left_child(void) {
+
+				if (this->parent && this->parent->left_child == this)
+					return (true);
+				return (false);
+			}
+
+			bool	is_right_child(void) {
+
+				if (this->parent && this->parent->right_child == this)
+					return (true);
+				return (false);
+			}
+			
+			node_ptr	max(void) {
+
+				if (!this->right_child)
+					return (this);
+				return (this->right_child.max());
+			}
+
+			node_ptr	min(void) {
+
+				if (!this->left_child)
+					return (this);
+				return (this->left_child.min());
+			}
+
+			//que faire si le node est deja le plus grand de l'arbre ? le plus a
+			//droite de tous les autres ?
+
+			node_ptr	successor(void) {
+
+				node_ptr p;
+				node_ptr tmp;
+
+				if (!this)
+					return (NULL);
+				if (this->right_child)
+					return (this->right_child->min());
+				p  = this->parent;
+				tmp = this;
+				while (p && tmp == p->right_child) {
+
+					tmp = p;
+					p = p->parent;
+				}
+				return (p);
+			}
+
+			/* node_ptr	successor(void) { */
+
+			/* 	node_ptr p; */
+			/* 	node_ptr tmp; */
+
+			/* 	if (!this) */
+			/* 		return (NULL); */
+				
+			/* 	if (this->right_child) */
+			/* 		return (this->right_child->min()); */
+				
+			/* 	if (this->is_left_child) */
+			/* 		return (this->parent); */
+				
+			/* 	if (this->max() == this) */
+			/* 		return (this); */
+				
+			/* 	p  = this->parent; */
+			/* 	tmp = this; */
+			/* 	while (p && tmp == p->right_child) { */
+
+			/* 		tmp = p; */
+			/* 		p = p->parent; */
+			/* 	} */
+			/* 	return (p); */
+			/* } */
+
+			//que faire si le node est deja le plus petit de l'arbre ? le plus a
+			//guache de tous les autres ?
+
+			node_ptr	predecessor(void) {
+
+				node_ptr p;
+				node_ptr tmp;
+
+				if (!this)
+					return (NULL);
+				if (this->left_child)
+					return (this->left_child->max());
+				p  = this->parent;
+				tmp = this;
+				while (p && tmp == p->left_child) {
+
+					tmp = p;
+					p = p->parent;
+				}
+				return (p);
+			}
+
+
+
+			}
 	};
 
 }
