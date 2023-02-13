@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 11:48:53 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/13 17:51:51 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/13 18:38:50 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,14 @@ namespace ft {
 			}
 
 
+			node_ptr	sibling(void) {
 
+				if (!this || !this->parent)
+					return (NULL);
+				if (this->is_left_child())
+					return (this->parent->right_child);
+				if (this->is_right_child())
+					return (this->parent->left_child);
 			}
 	};
 
