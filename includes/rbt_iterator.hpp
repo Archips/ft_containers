@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 14:43:45 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/12 18:14:51 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/14 14:16:57 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,25 +74,40 @@ namespace ft {
 				return (&(operator*()));
 			}
 
-			
-			
+			rbt_iterator& operator++(void) {
 
+				return (this->_current->successor());
+			}
 
+			rbt_iterator& operator--(void) {
 
+				return (this->_current->predecessor());
+			}
 
+			rbt_iterator& operator++(int) {
 
+				rbt_iterator temp = *this;
+				++(*this);
+				return (temp);
+			}
 
+			rbt_iterator& operator--(int) {
 
+				rbt_iterator temp = *this;
+				--(*this);
+				return (temp);
+			}
 
+			bool operator==(const rbt_iterator &it) const {
 
+				return (this->_current == it.base());
+			}
 
+			bool operator!=(const rbt_iterator &it) const {
 
-
-
-
-
-
+				return (!(this->_current == it.base()));
+			}
 	
-}
+};
 
 #endif
