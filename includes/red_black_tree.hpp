@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/12 14:42:56 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/15 14:41:20 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define RED_BLACK_TREE_HPP
 
 # include "node.hpp"
+# include "rbt_ierator.hpp"
 
 # define RED	0
 # define BLACK	1
@@ -37,6 +38,8 @@ namespace ft {
 			
 			typedef typename allocator::AllocNode				alloc_node;
 			typedef typename allocator::AllocNode::size_type;	size_type;
+
+			typedef rbt_iterator								iterator;
 
 			/*
 			 ** CONSTRUCTORS
@@ -76,6 +79,39 @@ namespace ft {
 					this->_comp = rhs._comp;
 				}	
 				return (*this);
+			}
+
+			/*
+			 ** MEMBER FUNCTIONS
+			 */
+
+			bool	empty(void) {
+
+				return (this->_root == NULL);
+			}
+
+			iterator max(void) {
+			
+				if (this->_root)
+					return (iterator(this->root->max()));
+					return (iterator());
+			}
+
+			iterator min(void) {
+				
+				if (this->_root)
+					return (iterator(this->_root->min()));
+				return (iterator());
+			}
+			
+			iterator begin(void){
+
+				return (this->min());
+			}
+
+			iterator end(void) {
+
+				return (iterator());
 			}
 
 		private:
