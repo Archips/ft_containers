@@ -31,15 +31,21 @@ namespace ft {
 			typedef typename T::second_type						value;
 			typedef Compare										key_compare;	
 			
-			typedef typename node::node_ptr						node_ptr;
-			typedef typename node::const_node_ptr				const_node_ptr;
-			typedef typename node::node_ref						node_ref;
-			typedef typename node::const_node_ref				const_node_ref;
+			typedef rbt*										rbt_ptr;
+			typedef const*										const_rbt_ptr;
+			typedef rbt&										rbt_ref;
+			typedef const &rbt									const_rbt_ref;
+
+			typedef typename ft::node::node_ptr					node_ptr;
+			typedef typename ft::node::const_node_ptr			const_node_ptr;
+			typedef typename ft::node::node_ref					node_ref;
+			typedef typename ft::node::const_node_ref			const_node_ref;
 			
 			typedef typename allocator::AllocNode				alloc_node;
 			typedef typename allocator::AllocNode::size_type;	size_type;
 
-			typedef rbt_iterator								iterator;
+			typedef typename ft::rbt_iterator<T>				iterator;
+			typedef typename ft::const_rbt_iterator<T>			const_iterator;
 
 			/*
 			 ** CONSTRUCTORS
@@ -85,33 +91,94 @@ namespace ft {
 			 ** MEMBER FUNCTIONS
 			 */
 
+			/* bool	comp(const value& x, const value& y) { */
+			bool	value_compare(const value& x, const value& y) {
+
+				return (_comp(x.first, y.first);
+			}
+
+			/* bool	comp(const key& x, const key& y) { */
+			bool	value_compare(const key& x, const key& y) {
+
+				return (_comp(x, y);
+			}
+
+			size_type size(void) const {
+
+				return (this->_size);
+			}
+
+			size_type max_size(void) const {
+
+				return (this->_alloc.max_size());
+			}
+
+			node_ptr root(void) const {
+
+				return (this->_root);
+			}
+			
 			bool	empty(void) {
 
 				return (this->_root == NULL);
 			}
 
-			iterator max(void) {
-			
-				if (this->_root)
-					return (iterator(this->root->max()));
-					return (iterator());
+			node_ref operator*(void) const {
+
+				return (this->_root);
 			}
 
-			iterator min(void) {
-				
+			node_ptr operator->(void) const {
+
+				return (&this->_root);
+			}
+
+			iterator max(void) const {
+			
 				if (this->_root)
-					return (iterator(this->_root->min()));
+					return (iterator(this->_root.max()));
 				return (iterator());
 			}
 			
-			iterator begin(void){
+			const_iterator max(void) const {
+
+				if (this->_root)
+					return (const_iterator(this->_root.max()));
+				return (const_iterator());
+			}
+
+			iterator min(void) const {
+				
+				if (this->_root)
+					return (iterator(this->_root.min()));
+				return (iterator());
+			}
+			
+			const_iterator min(void) const {
+
+				if (this->_root)
+					return (const_iterator(this->_root.min()))l
+				return (const_iterator());
+			}
+
+			iterator begin(void) const {
 
 				return (this->min());
 			}
 
-			iterator end(void) {
+			const_iterator begin(void) const {
 
-				return (iterator());
+				return (this->min());
+			}
+
+			iterator end(void) const {
+
+				return (this->max());
+			}
+
+			const_iterator end(void) const {
+
+				return (this->max());
 			}
 
 		private:
