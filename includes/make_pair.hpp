@@ -13,6 +13,8 @@
 #ifndef MAKE_PAIR_HPP
 # define MAKE_PAIR_HPP
 
+# include "pair.hpp"
+
 namespace ft {
 
     template < class T1, class T2 >

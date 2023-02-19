@@ -14,7 +14,8 @@
 # define RED_BLACK_TREE_HPP
 
 # include "node.hpp"
-# include "rbt_ierator.hpp"
+# include "pair.hpp"
+# include "rbt_iterator.hpp"
 
 # define RED	0
 # define BLACK	1
@@ -36,16 +37,16 @@ namespace ft {
 			typedef rbt&										rbt_ref;
 			typedef const &rbt									const_rbt_ref;
 
-			typedef typename ft::node::node_ptr					node_ptr;
-			typedef typename ft::node::const_node_ptr			const_node_ptr;
-			typedef typename ft::node::node_ref					node_ref;
-			typedef typename ft::node::const_node_ref			const_node_ref;
+			typedef typename node::node_ptr						node_ptr;
+			typedef typename node::const_node_ptr				const_node_ptr;
+			typedef typename node::node_ref						node_ref;
+			typedef typename node::const_node_ref				const_node_ref;
 			
 			typedef typename allocator::AllocNode				alloc_node;
 			typedef typename allocator::AllocNode::size_type;	size_type;
 
 			typedef typename ft::rbt_iterator<T>				iterator;
-			typedef typename ft::const_rbt_iterator<T>			const_iterator;
+			typedef typename ft::rbt_const_iterator<T>			const_iterator;
 
 			/*
 			 ** CONSTRUCTORS
@@ -180,6 +181,151 @@ namespace ft {
 
 				return (this->max());
 			}
+
+			ft::pair<iterator, bool>	create_node(const T &new_node) {
+
+				if (this->_root != NULL) {
+					
+					this->_root = this->_alloc.allocate(1);
+					this->_alloc.construct(this->_root, node(new_node));
+					this->_root->color = BLACK;
+					this->_root->parent = NULL;
+					this->_size += 1;
+					return (ft::make_pair<iterator, bool>(iterator(this->_root, NULL), true));
+				}
+
+				node_ptr tmp_node = this->_root;
+				node_ptr tmp_parent = NULL;
+
+				while (tmp_node) {
+
+					tmp_parent = tmp_node;
+					if (value_compare(new_node, tmp_node->data)) 
+						tmp_node = tmp_node->left_child;
+					else if
+						tmp_node = tmp_node->right_child;
+					else
+						return (ft::make_pair<iterator, bool>(iterator(tmp_node, NULL), false));
+				}
+
+				tmp_node = this->_alloc.allocate(1);
+				this->_alloc.construct(tmp_node, node(new_node));
+				tmp_node->color = RED;
+				tmp_node->parent = tmp_parent;
+				this->_size += 1;
+				if (value_compare(tmp_parent->data, tmp_node->value))
+					tmp_parent->right_child = tmp_node;
+				else
+					tmp_parent->left_child = tmp_node;
+				
+				insert_node(tmp_node);
+				
+				return (ft::make_pair<iterator, bool>(iterator(tmp_node, NULL), true));
+			}
+
+			node_ptr	insert_node(node_ptr new_node) {
+
+				if (!new_node)
+					return (new_node);
+
+				if (!new_node->parent) {
+
+					new_node->color = BLACK;
+					return (new_node);
+				}
+
+				node_ptr parent = new_node->parent;
+
+				if (!parent && parent->color == BLACK)
+					return (new_node);
+
+				node_ptr uncle = parent->sibling();
+				if (parent->color == RED && uncle && uncle->color == RED) {
+
+					parent->color = BLACK;
+					uncle->color = BLACK;
+					parent->parent->color = RED;
+					insert_node(parent->parent);
+				
+					return (new_node);
+				}
+
+				if (parent->is_left_child()) {
+
+					if (new_node->is_right_child()) {
+
+						new_node = parent;
+						left_rotate(parent);
+					}
+					parent->color = BLACK;
+					if (parent->parent) {
+
+						parent->parent->color = RED;
+						right_rotate(parent->parent);
+					}
+					return (new_node);
+				}
+				else if (parent->is_right_child()) {
+
+					if (new_node->is_left_child()) {
+
+						new_node = parent;
+						right_rotate(parent);
+					}
+					parent->color = BLACK;
+					if (parent->parent) {
+
+						parent->parent->color = RED;
+						left->rotate(parent->parent);
+					}
+					return (new_node);
+				}
+			return (new_node);
+		}
+
+		void	left_rotate(node_ptr node) {
+
+			if (node->right) {
+
+				node_ptr right_son = node->right;
+				if (node->right->left != NULL) {
+					node->right = node->right->left;
+					node->right->parent = node;
+				}
+				if (!node->parent)
+					this->_root = right_son;
+				else if (node->is_left_son())
+					node->parent->left = right_son;
+				else
+					node->parent->right = right_son;
+
+				right_son->parent = node->parent;
+				node->parent = right_son;
+				right_son->left = node;
+			}
+		}
+
+		void	right_rotate(node_ptr node) {
+
+			if (node->left) {
+
+				node_ptr left_son = node->left;
+				if (node->left->right) {
+					node->left = node->left->right;
+					node->left->parent = node;
+				}
+				if (node->parent)
+					this->_root = left_son;
+				else if (node->is_left_son())
+					node->parent->left = left_son;
+				else
+					node->parent->right = left_son;
+
+				left_son->parent = node->parent;
+				node->parent = left_son;
+				left_son->right = node;
+			}
+		}
 
 		private:
 

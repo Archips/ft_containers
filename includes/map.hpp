@@ -19,6 +19,7 @@
 #include "iterator_traits.hpp"
 #include "make_pair.hpp"
 #include "pair.hpp"
+#include "red_black_tree.hpp"
 #include "reverse_iterator.hpp"
 
 namespace ft {
@@ -29,21 +30,24 @@ namespace ft {
 
 		public:
 
-		typedef Key												key_type;
-		typedef T												mapped_type;
-		typedef typename ft::pair < const Key, T >				value_type;
-		typedef typename std::size_t							size_type;
-		typedef typename std::ptrdiff_t							difference_type;
-		typedef Compare											key_compare;
-		typedef Alloc											allocator_type;
-		typedef typename Alloc::reference						reference;
-		typedef typename Alloc::const_reference					const_reference;
-		typedef typename Alloc::pointer							pointer;
-		typedef typename Alloc::const_pointer					const_pointer;
-		typedef T*												iterator;
-		typedef const T*										const_iterator;
-		typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
-		typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+		typedef Key															key_type;
+		typedef T															mapped_type;
+		typedef typename ft::pair < const Key, T >							value_type;
+		typedef typename std::size_t										size_type;
+		typedef typename std::ptrdiff_t										difference_type;
+		typedef Compare														key_compare;
+		typedef Alloc														allocator_type;
+		typedef typename Alloc::reference									reference;
+		typedef typename Alloc::const_reference								const_reference;
+		typedef typename Alloc::pointer										pointer;
+		typedef typename Alloc::const_pointer								const_pointer;
+		typedef typemame Alloc::template rebind<node<mapped_value>::other	node_alloc;
+		typedef node<value_type>											node_type;
+		typedef node<value_type>*											node_ptr;
+		typedef typename ft::rbt<value_type, key_compare>::iterator			iterator;
+		typedef typename ft::rbt<value_type, key_compare>::const_iterator	const_iterator;
+		typedef typename ft::reverse_iterator<iterator>						reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator>				const_reverse_iterator;
 		
 		class value_compare: public std::binary_function< value_type, value_type, bool > {
 
@@ -72,7 +76,10 @@ namespace ft {
 		 ** CONSTRUCTORS
 		 */ 
 
-			/* explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()); */
+			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
+				this->_size(0),
+				this->_alloc(alloc), 
+				this->_comp(comp) {}
 			
 			/* template < class InputIterator > */
 			/* map(InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last, */
@@ -102,21 +109,46 @@ namespace ft {
 
 		/* ITERATORS */
 
-			/* iterator begin(void); */
+			iterator begin(void) {
 
-			/* const_iterator begin(void) const; */
+				return (this->_rbt.begin());
+			}
 
-			/* iterator end(void); */
+			const_iterator begin(void) const {
 
-			/* const_iterator end(void) const; */
+				return (const_iterator(this->_rbt.begin()));
+			}
 
-			/* reverse_iterator rbegin(void); */
+			iterator end(void) {
 
-			/* const_reverse_iterator rbegin(void) const; */
+				return (this->_rbt.end());
+			}
 
-			/* reverse_iterator rend(void); */
+			const_iterator end(void) const {
 
-			/* const_reverse_iterator rend(void) const; */
+				return (const_iterator(this->_rbt.end()));
+			}
+
+			reverse_iterator rbegin(void) {
+
+				return (reverse_iterator(this->_rbt.end()));
+			}
+
+			const_reverse_iterator rbegin(void) const {
+
+				return (const_reverse_iterator(this->_rbt.end()));
+			}
+
+			reverse_iterator rend(void) {
+
+				return (reverse_iterator(this->_rbt.begin()));
+			}
+
+			const_reverse_iterator rend(void) const {
+				
+				return (const_reverse_iterator(this->_rbt.begin()));
+			}
+
 
 		/* CAPACITY */
 
@@ -183,6 +215,14 @@ namespace ft {
 		/* ALLOCATOR */
 
 			/* allocator_type get_allocator(void) const; */
+
+		private:
+
+			size_type						_size;
+			allocator_type					_alloc;
+			node_alloc						_node_alloc;
+			key_compare						_comp;
+			rbt<value_type, key_compare>	_rbt;
 
 	};
 

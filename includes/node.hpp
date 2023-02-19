@@ -42,12 +42,12 @@ namespace ft {
 
 			node(void): p(NULL), left_child(NULL), right_child(NULL), color(RED){}
 
-			node(node_ptr p = NULL, node_ptr l_child = NULL, node_ptr r_child = NULL, int c = RED, value_type pair): 
+			node(node_ptr p = NULL, node_ptr l_child = NULL, node_ptr r_child = NULL, int c = RED, const value_type val): 
 				parent(p),
 				left_child(l_child),
 				right_child(r_child),
 				color(c), 
-				data(pair){}
+				data(val){}
 
 			/*
 			 ** COPY CONSTRUCTOR
@@ -66,13 +66,13 @@ namespace ft {
 
 			node_ref	operator=(const_node_ref rhs) {
 
-				if (this != &src) {
+				if (this != &rhs) {
 
-					this->parent = src.parent;
-					this->left_child = src.left_child;
-					this->right_child = src.right_child;
-					this->color = src.color;
-					this->data = src.data;
+					this->parent = rhs.parent;
+					this->left_child = rhs.left_child;
+					this->right_child = rhs.right_child;
+					this->color = rhs.color;
+					this->data = rhs.data;
 				}
 				return (*this);
 			}

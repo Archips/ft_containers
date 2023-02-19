@@ -45,7 +45,7 @@ namespace ft {
 
 			explicit rbt_iterator(const iterator_type& x): _current(x) {}
 
-			rbt_iterator(const rbt& other): _current(other.base()) {}
+			rbt_iterator(const rbt_iterator& other): _current(other.base()) {}
 
 			template < class U >
 			rbt_iterator(const rbt_iterator <U> &other): _current(other.base()) {}
@@ -111,7 +111,7 @@ namespace ft {
 	};
 
 	template < class iterator >
-	class rbt_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category,
+	class rbt_const_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category,
 		typename iterator_traits<iterator>::difference_type,
 		typename iterator_traits<iterator>::value_type,
 		typename iterator_traits<iterator>::pointer,
@@ -138,14 +138,14 @@ namespace ft {
 
 			explicit rbt_const_iterator(const iterator_type& x): _current(x) {}
 
-			rbt_const_iterator(const rbt& other): _current(other.base()) {}
+			rbt_const_iterator(const rbt_const_iterator& other): _current(other.base()) {}
 
 			template < class U >
-			rbt_const_iterator(const rbt_iterator <U> &other): _current(other.base()) {}
+			rbt_const_iterator(const rbt_const_iterator <U> &other): _current(other.base()) {}
 
 			~rbt_const_iterator(void) {}
 
-			rbt_const_iterator& operator=(const rbt_iterator& rhs) {
+			rbt_const_iterator& operator=(const rbt_const_iterator& rhs) {
 
 				if (this != &rhs)
 					this->_current = rhs._current;
