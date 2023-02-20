@@ -6,36 +6,51 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 14:43:45 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/14 14:16:57 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/20 18:04:25 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RBT_ITERATOR_HPP
 # define RBT_ITERATOR_HPP
 
+#include "pair.hpp"
 #include "iterator_traits.hpp"
+#include "random_access_iterator.hpp"
 
 namespace ft {
 
-	template < class iterator >
-	class rbt_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category,
-		typename iterator_traits<iterator>::difference_type,
-		typename iterator_traits<iterator>::value_type,
-		typename iterator_traits<iterator>::pointer,
-		typename iterator_traits<iterator>::reference>
+	template <class iterator>
+	class rbt_const_iterator;
+
+	template < class node >
+	/* class rbt_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category, */
+	/* 	typename iterator_traits<iterator>::difference_type, */
+	/* 	typename iterator_traits<iterator>::value_type, */
+	/* 	typename iterator_traits<iterator>::pointer, */
+	/* 	typename iterator_traits<iterator>::reference> */
+	class rbt_iterator: public ft::iterator<random_access_iterator_tag, typename node::value_type>
 	{
-		protected:
-
-			iterator _current;
-
+	
 		public:
 
-			typedef iterator													iterator_type;
-			typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category;
-			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
-			typedef typename ft::iterator_traits<iterator>::value_type			value_type;
-			typedef typename ft::iterator_traits<iterator>::pointer				pointer;
-			typedef typename ft::iterator_traits<iterator>::reference			reference;
+			typedef typename node::node_ptr																			node_ptr;
+			typedef typename node::value_type																		value_type;
+			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::iterator_category	iterator_category;
+			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::difference_type	difference_type;
+			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::pointer			pointer;
+			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::reference			reference;
+
+			/* typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category; */
+			/* typedef typename ft::iterator_traits<iterator>::difference_type		difference_type; */
+			/* typedef typename ft::iterator_traits<iterator>::value_type			value_type; */
+			/* typedef typename ft::iterator_traits<iterator>::pointer				pointer; */
+			/* typedef typename ft::iterator_traits<iterator>::reference			reference; */
+
+		protected:
+
+			node_ptr _current;
+
+		public:
 
 			/*
 			 ** CONSTRUCTORS
@@ -43,12 +58,12 @@ namespace ft {
 
 			rbt_iterator(void): _current() {};
 
-			explicit rbt_iterator(const iterator_type& x): _current(x) {}
+			/* explicit rbt_iterator(const rbt_iterator& x): _current(x) {} */
 
-			rbt_iterator(const rbt_iterator& other): _current(other.base()) {}
+			rbt_iterator(const node_ptr other): _current(other) {}
 
 			template < class U >
-			rbt_iterator(const rbt_iterator <U> &other): _current(other.base()) {}
+			rbt_iterator(const rbt_iterator <U> &other): _current(other->base()) {}
 
 			~rbt_iterator(void) {}
 
@@ -59,39 +74,39 @@ namespace ft {
 				return (*this);
 			}
 
-			iterator_type base(void) const {
+			node_ptr base(void) const {
 
 				return (this->_current);
 			}
 
 			reference operator*(void) const {
 
-				return (*(this->_current));
+				return (this->_current->data);
 			}
 
 			pointer operator->(void) const {
 
-				return (&(operator*()));
+				return (&operator*());
 			}
 
 			rbt_iterator& operator++(void) {
 
-				return (this->_current->successor());
+				return (*this->_current->successor());
 			}
 
 			rbt_iterator& operator--(void) {
 
-				return (this->_current->predecessor());
+				return (*this->_current->predecessor());
 			}
 
-			rbt_iterator& operator++(int) {
+			rbt_iterator operator++(int) {
 
 				rbt_iterator temp = *this;
 				++(*this);
 				return (temp);
 			}
 
-			rbt_iterator& operator--(int) {
+			rbt_iterator operator--(int) {
 
 				rbt_iterator temp = *this;
 				--(*this);
@@ -110,25 +125,48 @@ namespace ft {
 	
 	};
 
-	template < class iterator >
-	class rbt_const_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category,
-		typename iterator_traits<iterator>::difference_type,
-		typename iterator_traits<iterator>::value_type,
-		typename iterator_traits<iterator>::pointer,
-		typename iterator_traits<iterator>::reference>
+	template < class node >
+	/* class rbt_const_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category, */
+	/* 	typename iterator_traits<iterator>::difference_type, */
+	/* 	typename iterator_traits<iterator>::value_type, */
+	/* 	typename iterator_traits<iterator>::pointer, */
+	/* 	typename iterator_traits<iterator>::reference> */
+	class rbt_const_iterator: public ft::iterator<random_access_iterator_tag, typename node::value_type>
 	{
-		protected:
-
-			iterator _current;
-
+	
 		public:
 
-			typedef iterator													iterator_type;
-			typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category;
-			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
-			typedef typename ft::iterator_traits<iterator>::value_type			value_type;
-			typedef typename ft::iterator_traits<iterator>::pointer				pointer;
-			typedef typename ft::iterator_traits<iterator>::reference			reference;
+			typedef typename node::node_ptr																			node_ptr;
+			typedef typename node::value_type																		value_type;
+			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::iterator_category	iterator_category;
+			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::difference_type	difference_type;
+			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::pointer			pointer;
+			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::reference			reference;
+
+			/* typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category; */
+			/* typedef typename ft::iterator_traits<iterator>::difference_type		difference_type; */
+			/* typedef typename ft::iterator_traits<iterator>::value_type			value_type; */
+			/* typedef typename ft::iterator_traits<iterator>::pointer				pointer; */
+			/* typedef typename ft::iterator_traits<iterator>::reference			reference; */
+
+		protected:
+
+			node_ptr _current;
+
+		/* protected: */
+
+		/* 	iterator _current; */
+
+		/* public: */
+
+		/* 	typedef iterator													iterator_type; */
+		/* 	typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category; */
+		/* 	typedef typename ft::iterator_traits<iterator>::difference_type		difference_type; */
+		/* 	typedef typename ft::iterator_traits<iterator>::value_type			value_type; */
+		/* 	typedef typename ft::iterator_traits<iterator>::pointer				pointer; */
+		/* 	typedef typename ft::iterator_traits<iterator>::reference			reference; */
+
+		public:
 
 			/*
 			 ** CONSTRUCTORS
@@ -136,9 +174,9 @@ namespace ft {
 
 			rbt_const_iterator(void): _current() {};
 
-			explicit rbt_const_iterator(const iterator_type& x): _current(x) {}
+			/* explicit rbt_const_iterator(const iterator_type& x): _current(x) {} */
 
-			rbt_const_iterator(const rbt_const_iterator& other): _current(other.base()) {}
+			rbt_const_iterator(const node_ptr& other): _current(other) {}
 
 			template < class U >
 			rbt_const_iterator(const rbt_const_iterator <U> &other): _current(other.base()) {}
@@ -152,14 +190,14 @@ namespace ft {
 				return (*this);
 			}
 
-			iterator_type base(void) const {
+			node_ptr base(void) const {
 
 				return (this->_current);
 			}
 
 			reference operator*(void) const {
 
-				return (*(this->_current));
+				return (this->_current->data);
 			}
 
 			pointer operator->(void) const {

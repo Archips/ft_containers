@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/08 16:01:08 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/08 16:46:18 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/20 16:15:43 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace ft {
 		pair(const T1& x, const T2& y): first(x), second(y) {}
 
 		template < class U1, class U2 >
-		pair( const pair < U1, U2 >& p): first(p.U1), second(p.U2) {}
+		pair( const pair < U1, U2 >& p): first(p.first), second(p.second) {}
 
 		~pair(void) {}
 

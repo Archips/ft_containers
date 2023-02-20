@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/15 14:41:20 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/20 17:08:49 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "node.hpp"
 # include "pair.hpp"
+# include "random_access_iterator.hpp"
 # include "rbt_iterator.hpp"
 
 # define RED	0
@@ -33,20 +34,20 @@ namespace ft {
 			typedef Compare										key_compare;	
 			
 			typedef rbt*										rbt_ptr;
-			typedef const*										const_rbt_ptr;
+			typedef const rbt*									const_rbt_ptr;
 			typedef rbt&										rbt_ref;
-			typedef const &rbt									const_rbt_ref;
+			typedef const rbt&									const_rbt_ref;
 
 			typedef typename node::node_ptr						node_ptr;
 			typedef typename node::const_node_ptr				const_node_ptr;
 			typedef typename node::node_ref						node_ref;
 			typedef typename node::const_node_ref				const_node_ref;
 			
-			typedef typename allocator::AllocNode				alloc_node;
-			typedef typename allocator::AllocNode::size_type;	size_type;
+			typedef AllocNode									alloc_node;
+			typedef typename AllocNode::size_type				size_type;
 
-			typedef typename ft::rbt_iterator<T>				iterator;
-			typedef typename ft::rbt_const_iterator<T>			const_iterator;
+			typedef typename ft::rbt_iterator<node>				iterator;
+			typedef typename ft::rbt_const_iterator<node>		const_iterator;
 
 			/*
 			 ** CONSTRUCTORS
@@ -56,7 +57,7 @@ namespace ft {
 			rbt(void):
 				_root(NULL), _size(0), _alloc(), _comp() {}
 
-			rbt(node_ptr root = NULL, size_type size = 0, alloc_node alloc, key_compare comp):
+			rbt(alloc_node alloc, key_compare comp, node_ptr root = NULL, size_type size = 0):
 				_root(root), _size(size), _alloc(alloc), _comp(comp) {}
 
 			/*
@@ -93,15 +94,15 @@ namespace ft {
 			 */
 
 			/* bool	comp(const value& x, const value& y) { */
-			bool	value_compare(const value& x, const value& y) {
+			bool	value_compare(const value_type& x, const value_type& y) const {
 
-				return (_comp(x.first, y.first);
+				return (_comp(x.first, y.first));
 			}
 
 			/* bool	comp(const key& x, const key& y) { */
-			bool	value_compare(const key& x, const key& y) {
+			bool	value_compare(const key& x, const key& y) const {
 
-				return (_comp(x, y);
+				return (_comp(x, y));
 			}
 
 			size_type size(void) const {
@@ -119,7 +120,7 @@ namespace ft {
 				return (this->_root);
 			}
 			
-			bool	empty(void) {
+			bool	empty(void) const {
 
 				return (this->_root == NULL);
 			}
@@ -137,28 +138,28 @@ namespace ft {
 			iterator max(void) const {
 			
 				if (this->_root)
-					return (iterator(this->_root.max()));
+					return (iterator(this->_root->max()));
 				return (iterator());
 			}
 			
-			const_iterator max(void) const {
+			const_iterator const_max(void) const {
 
 				if (this->_root)
-					return (const_iterator(this->_root.max()));
+					return (const_iterator(this->_root->max()));
 				return (const_iterator());
 			}
 
 			iterator min(void) const {
 				
 				if (this->_root)
-					return (iterator(this->_root.min()));
+					return (iterator(this->_root->min()));
 				return (iterator());
 			}
 			
-			const_iterator min(void) const {
+			const_iterator const_min(void) const {
 
 				if (this->_root)
-					return (const_iterator(this->_root.min()))l
+					return (const_iterator(this->_root->min()));
 				return (const_iterator());
 			}
 
@@ -167,7 +168,7 @@ namespace ft {
 				return (this->min());
 			}
 
-			const_iterator begin(void) const {
+			const_iterator const_begin(void) const {
 
 				return (this->min());
 			}
@@ -177,21 +178,21 @@ namespace ft {
 				return (this->max());
 			}
 
-			const_iterator end(void) const {
+			const_iterator const_end(void) const {
 
 				return (this->max());
 			}
 
 			ft::pair<iterator, bool>	create_node(const T &new_node) {
 
-				if (this->_root != NULL) {
+				if (this->_root == NULL) {
 					
 					this->_root = this->_alloc.allocate(1);
 					this->_alloc.construct(this->_root, node(new_node));
 					this->_root->color = BLACK;
 					this->_root->parent = NULL;
 					this->_size += 1;
-					return (ft::make_pair<iterator, bool>(iterator(this->_root, NULL), true));
+					return (ft::make_pair<iterator, bool>(iterator(this->_root), true));
 				}
 
 				node_ptr tmp_node = this->_root;
@@ -202,10 +203,10 @@ namespace ft {
 					tmp_parent = tmp_node;
 					if (value_compare(new_node, tmp_node->data)) 
 						tmp_node = tmp_node->left_child;
-					else if
+					else if (value_compare(tmp_node->data, new_node))
 						tmp_node = tmp_node->right_child;
 					else
-						return (ft::make_pair<iterator, bool>(iterator(tmp_node, NULL), false));
+						return (ft::make_pair<iterator, bool>(iterator(tmp_node), false));
 				}
 
 				tmp_node = this->_alloc.allocate(1);
@@ -213,14 +214,14 @@ namespace ft {
 				tmp_node->color = RED;
 				tmp_node->parent = tmp_parent;
 				this->_size += 1;
-				if (value_compare(tmp_parent->data, tmp_node->value))
+				if (value_compare(tmp_parent->data, tmp_node->data))
 					tmp_parent->right_child = tmp_node;
 				else
 					tmp_parent->left_child = tmp_node;
 				
 				insert_node(tmp_node);
 				
-				return (ft::make_pair<iterator, bool>(iterator(tmp_node, NULL), true));
+				return (ft::make_pair<iterator, bool>(iterator(tmp_node), true));
 			}
 
 			node_ptr	insert_node(node_ptr new_node) {
@@ -276,54 +277,54 @@ namespace ft {
 					if (parent->parent) {
 
 						parent->parent->color = RED;
-						left->rotate(parent->parent);
+						left_rotate(parent->parent);
 					}
 					return (new_node);
 				}
 			return (new_node);
 		}
 
-		void	left_rotate(node_ptr node) {
+		void	left_rotate(node_ptr n) {
 
-			if (node->right) {
+			if (n->right_child) {
 
-				node_ptr right_son = node->right;
-				if (node->right->left != NULL) {
-					node->right = node->right->left;
-					node->right->parent = node;
+				node_ptr right_son = n->right_child;
+				if (n->right_child->left_child != NULL) {
+					n->right_child = n->right_child->left_child;
+					n->right_child->parent = n;
 				}
-				if (!node->parent)
+				if (!n->parent)
 					this->_root = right_son;
-				else if (node->is_left_son())
-					node->parent->left = right_son;
+				else if (n->is_left_child())
+					n->parent->left_child = right_son;
 				else
-					node->parent->right = right_son;
+					n->parent->right_child = right_son;
 
-				right_son->parent = node->parent;
-				node->parent = right_son;
-				right_son->left = node;
+				right_son->parent = n->parent;
+				n->parent = right_son;
+				right_son->left_child = n;
 			}
 		}
 
-		void	right_rotate(node_ptr node) {
+		void	right_rotate(node_ptr n) {
 
-			if (node->left) {
+			if (n->left_child) {
 
-				node_ptr left_son = node->left;
-				if (node->left->right) {
-					node->left = node->left->right;
-					node->left->parent = node;
+				node_ptr left_son = n->left_child;
+				if (n->left_child->right_child) {
+					n->left_child = n->left_child->right_child;
+					n->left_child->parent = n;
 				}
-				if (node->parent)
+				if (n->parent)
 					this->_root = left_son;
-				else if (node->is_left_son())
-					node->parent->left = left_son;
+				else if (n->is_left_child())
+					n->parent->left_child = left_son;
 				else
-					node->parent->right = left_son;
+					n->parent->right_child = left_son;
 
-				left_son->parent = node->parent;
-				node->parent = left_son;
-				left_son->right = node;
+				left_son->parent = n->parent;
+				n->parent = left_son;
+				left_son->right_child = n;
 			}
 		}
 

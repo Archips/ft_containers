@@ -6,26 +6,30 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 13:08:26 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/01 16:32:39 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/20 15:01:02 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
-#include <iterator>
-#include "enable_if.hpp"
-#include "is_integral.hpp"
-#include "iterator_traits.hpp"
-#include "make_pair.hpp"
-#include "pair.hpp"
-#include "red_black_tree.hpp"
-#include "reverse_iterator.hpp"
+# include <iterator>
+# include "enable_if.hpp"
+# include "is_integral.hpp"
+# include "iterator_traits.hpp"
+# include "make_pair.hpp"
+# include "pair.hpp"
+# include "rbt_iterator.hpp"
+# include "red_black_tree.hpp"
+# include "reverse_iterator.hpp"
 
 namespace ft {
 
-	template < class Key, class T, class Compare,
-			 class Alloc = std::allocator < ft::pair < const Key, T> >
+	template<class T>
+	class node;
+
+	template < class Key, class T, class Compare = std::less<Key>,
+			 class Alloc = std::allocator < ft::pair < const Key, T> > >
 	class map {
 
 		public:
@@ -41,7 +45,7 @@ namespace ft {
 		typedef typename Alloc::const_reference								const_reference;
 		typedef typename Alloc::pointer										pointer;
 		typedef typename Alloc::const_pointer								const_pointer;
-		typedef typemame Alloc::template rebind<node<mapped_value>::other	node_alloc;
+		typedef typename Alloc::template rebind<node<mapped_type> >::other	node_alloc;
 		typedef node<value_type>											node_type;
 		typedef node<value_type>*											node_ptr;
 		typedef typename ft::rbt<value_type, key_compare>::iterator			iterator;
@@ -61,7 +65,7 @@ namespace ft {
 
 				bool operator() (const value_type& lhs, const value_type& rhs) const {
 
-					return (comp(lhs.first, rhs.first);
+					return (comp(lhs.first, rhs.first));
 				}
 
 			protected:
@@ -71,15 +75,16 @@ namespace ft {
 
 		};
 
+		public:
 
 		/* 
 		 ** CONSTRUCTORS
 		 */ 
 
 			explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
-				this->_size(0),
-				this->_alloc(alloc), 
-				this->_comp(comp) {}
+				_size(0),
+				_alloc(alloc), 
+				_comp(comp) {}
 			
 			/* template < class InputIterator > */
 			/* map(InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last, */
@@ -92,7 +97,7 @@ namespace ft {
 			/* map(const map& x); */
 
 		/*
-		 ** DESTRUCTORS
+		 ** DESTRUCTOR
 		 */
 
 			/* ~map(void); */
@@ -111,22 +116,22 @@ namespace ft {
 
 			iterator begin(void) {
 
-				return (this->_rbt.begin());
+				return (iterator(this->_rbt.begin()));
 			}
 
 			const_iterator begin(void) const {
 
-				return (const_iterator(this->_rbt.begin()));
+				return (const_iterator(this->_rbt.const_begin()));
 			}
 
 			iterator end(void) {
 
-				return (this->_rbt.end());
+				return (iterator(this->_rbt.end()));
 			}
 
 			const_iterator end(void) const {
 
-				return (const_iterator(this->_rbt.end()));
+				return (const_iterator(this->_rbt.const_end()));
 			}
 
 			reverse_iterator rbegin(void) {
@@ -136,7 +141,7 @@ namespace ft {
 
 			const_reverse_iterator rbegin(void) const {
 
-				return (const_reverse_iterator(this->_rbt.end()));
+				return (const_reverse_iterator(this->_rbt.const_end()));
 			}
 
 			reverse_iterator rend(void) {
@@ -146,29 +151,50 @@ namespace ft {
 
 			const_reverse_iterator rend(void) const {
 				
-				return (const_reverse_iterator(this->_rbt.begin()));
+				return (const_reverse_iterator(this->_rbt.const_begin()));
 			}
 
 
 		/* CAPACITY */
 
-			/* bool empty(void) const; */
+			bool empty(void) const {
 
-			/* size_type size(void) const; */
+				return (this->_rbt.empty());
+			}
 
-			/* size_type max_size(void) const; */
+			size_type size(void) const {
+
+				return (this->_rbt.size());
+			}
+
+			size_type max_size(void) const {
+
+				return (this->_rbt.max_size());
+			}
 
 		/* ELEMENT ACCESS */
 
-			/* mapped_type& operator[](const key_type& k); */
+			mapped_type& operator[](const key_type& k) {
 
+				ft::pair<key_type, mapped_type> new_pair = ft::make_pair(k, mapped_type());
+
+				ft::pair<iterator, bool> ret = insert(new_pair);
+				iterator it = ret.first;
+				mapped_type &val = it->second;
+
+				return (val);
+			}
+	
 			/* mapped_type& at(const key_type &k); */
 
 			/* const mapped_type& at(const key_type& k) const; */
 
 		/* MODIFIERS */
 
-			/* ft::pair<iterator, bool> insert(const value_type& val); */
+			ft::pair<iterator, bool> insert(const value_type& val) {
+				
+				return (this->_rbt.create_node(val));
+			}
 			
 			/* iterator insert(iterator position, const value_type& val); */
 

@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 11:48:53 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/13 18:38:50 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/20 17:38:10 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # define BLACK	1
 
 namespace ft {
+
+	template <class Key, class T, class Compare, class Alloc>
+	class map;
 
 	template < class T>
 	class node {
@@ -40,9 +43,9 @@ namespace ft {
 			 ** CONSTRUCTORS
 			 */ 
 
-			node(void): p(NULL), left_child(NULL), right_child(NULL), color(RED){}
+			node(void): parent(NULL), left_child(NULL), right_child(NULL), color(RED){}
 
-			node(node_ptr p = NULL, node_ptr l_child = NULL, node_ptr r_child = NULL, int c = RED, const value_type val): 
+			node(const value_type val, node_ptr p = NULL, node_ptr l_child = NULL, node_ptr r_child = NULL, int c = RED): 
 				parent(p),
 				left_child(l_child),
 				right_child(r_child),
@@ -81,7 +84,7 @@ namespace ft {
 			 ** DESTRUCTOR
 			 */
 
-			~node(void);
+			~node(void) {}
 
 
 			/*
@@ -107,14 +110,14 @@ namespace ft {
 
 				if (!this->right_child)
 					return (this);
-				return (this->right_child.max());
+				return (this->right_child->max());
 			}
 
 			node_ptr	min(void) {
 
 				if (!this->left_child)
 					return (this);
-				return (this->left_child.min());
+				return (this->left_child->min());
 			}
 
 			//que faire si le node est deja le plus grand de l'arbre ? le plus a
@@ -125,8 +128,8 @@ namespace ft {
 				node_ptr p;
 				node_ptr tmp;
 
-				if (!this)
-					return (NULL);
+				/* if (!this) */
+					/* return (NULL); */
 				if (this->right_child)
 					return (this->right_child->min());
 				p  = this->parent;
@@ -174,8 +177,8 @@ namespace ft {
 				node_ptr p;
 				node_ptr tmp;
 
-				if (!this)
-					return (NULL);
+				/* if (!this) */
+				/* 	return (NULL); */
 				if (this->left_child)
 					return (this->left_child->max());
 				p  = this->parent;
@@ -191,12 +194,13 @@ namespace ft {
 
 			node_ptr	sibling(void) {
 
-				if (!this || !this->parent)
+				if (!this->parent)
 					return (NULL);
 				if (this->is_left_child())
 					return (this->parent->right_child);
 				if (this->is_right_child())
 					return (this->parent->left_child);
+				return (NULL);
 			}
 	};
 
