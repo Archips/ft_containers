@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 11:48:53 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/20 17:38:10 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/21 09:39:06 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ namespace ft {
 			//que faire si le node est deja le plus grand de l'arbre ? le plus a
 			//droite de tous les autres ?
 
-			node_ptr	successor(void) {
+			node_ptr	successor(void) const {
 
 				node_ptr p;
 				node_ptr tmp;

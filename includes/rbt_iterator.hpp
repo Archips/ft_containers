@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 14:43:45 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/20 18:04:25 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/21 14:05:07 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,21 @@ namespace ft {
 
 			rbt_iterator& operator++(void) {
 
-				return (*this->_current->successor());
+				/* if (!this->_current) */
+					/* return (NULL); */
+				node_ptr temp = this->_current;
+				if (this->_current->right_child) {
+					
+					this->_current = this->_current->right_child;
+					while (this->_current->left_child)
+						this->_current = this->_current->left_child;
+					return (*this);
+				}
+				while (this->_current->parent && this->_current->parent->right_child) {
+					temp = this->_current->parent;
+					this->_current->parent = this->_current->parent->parent;
+				}
+				return (*temp);
 			}
 
 			rbt_iterator& operator--(void) {

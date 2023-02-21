@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 13:08:26 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/20 15:01:02 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/21 10:09:14 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ namespace ft {
 
 			ft::pair<iterator, bool> insert(const value_type& val) {
 				
+				std::cout << "in ft_pair<iterator, bool> insert" << std::endl;
 				return (this->_rbt.create_node(val));
 			}
 			
