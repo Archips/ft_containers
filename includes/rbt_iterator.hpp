@@ -19,10 +19,10 @@
 
 namespace ft {
 
-	template <class iterator>
+	template <class node, class Compare>
 	class rbt_const_iterator;
 
-	template < class node >
+	template < class node, class Compare >
 	/* class rbt_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category, */
 	/* 	typename iterator_traits<iterator>::difference_type, */
 	/* 	typename iterator_traits<iterator>::value_type, */
@@ -35,6 +35,7 @@ namespace ft {
 
 			typedef typename node::node_ptr																			node_ptr;
 			typedef typename node::value_type																		value_type;
+			typedef rbt_iterator<node, Compare>						iterator;
 			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::iterator_category	iterator_category;
 			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::difference_type	difference_type;
 			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::pointer			pointer;
@@ -46,7 +47,7 @@ namespace ft {
 			/* typedef typename ft::iterator_traits<iterator>::pointer				pointer; */
 			/* typedef typename ft::iterator_traits<iterator>::reference			reference; */
 
-		protected:
+		private:
 
 			node_ptr _current;
 
@@ -56,14 +57,16 @@ namespace ft {
 			 ** CONSTRUCTORS
 			 */ 
 
-			rbt_iterator(void): _current() {};
+			rbt_iterator(void): _current(NULL) {};
 
-			/* explicit rbt_iterator(const rbt_iterator& x): _current(x) {} */
+			explicit rbt_iterator(node_ptr other): _current(other) {}
 
-			rbt_iterator(const node_ptr other): _current(other) {}
+			rbt_iterator(const rbt_iterator &other): _current(other._current) {}
 
-			template < class U >
-			rbt_iterator(const rbt_iterator <U> &other): _current(other->base()) {}
+			rbt_iterator(const rbt_const_iterator<node, Compare> &src) {
+
+				this->_current = src.base();
+			}
 
 			~rbt_iterator(void) {}
 
@@ -86,45 +89,85 @@ namespace ft {
 
 			pointer operator->(void) const {
 
-				return (&operator*());
+				return (&(this->_current->data));
 			}
 
-			rbt_iterator& operator++(void) {
-
-				if (this->_current) {
+			node_ptr max(node_ptr n) {
 				
-					node_ptr temp = this->_current;
-					if (this->_current->right_child) {
-					
-						this->_current = this->_current->right_child;
-						while (this->_current->left_child)
-							this->_current = this->_current->left_child;
-					}
-					else {
-						while (this->_current->parent && this->_current == this->_current->parent->right_child) {
-							this->_current = this->_current->parent;
-						this->_current = this->_current->parent;
-					/* this->_current->parent = this->_current->parent->parent; */
-					}
+				if (!n)
+					return (NULL);
+				while (n->right_child)
+					n = n->right_child;
+				return (n);
+			}
+
+			node_ptr min(node_ptr n) {
+				
+				if (!n)
+					return (NULL);
+				while (n->left_child)
+					n = n->left_child;
+				return (n);
+			}
+
+			node_ptr successor(node_ptr n) {
+
+				if (!n)
+					return (NULL);
+				if (n->right_child)
+					return (this->min(n->right_child));
+				node_ptr p = n->parent;
+				while (p && n == p->right_child) {
+
+					n = p;
+					p = p->parent;
 				}
-				return (*temp);
+				return (p);
 			}
 
-			rbt_iterator& operator--(void) {
+			node_ptr predecessor(node_ptr n) {
 
-				return (*this->_current->predecessor());
+				if (!n)
+					return (NULL);
+				if (n->left_child)
+					return (this->max(n->left_child));
+				node_ptr p = n->parent;
+				while (p && n == p->left_child) {
+
+					n = p;
+					p = p->parent;
+				}
+				return (p);
 			}
 
-			rbt_iterator operator++(int) {
+			iterator& operator++(void) {
 
-				rbt_iterator temp = *this;
+				std::cout << "operator ++()" << std::endl;
+				this->_current = this->successor(this->_current);
+				std::cout << this << std::endl;
+				return (*this);
+			}
+
+			iterator& operator--(void) {
+				
+				this->_current = this->predecessor(this->_current);
+				return (*this);
+			}
+
+			iterator operator++(int) {
+
+				std::cout << "operator ++(int)" << std::endl;
+				iterator temp = *this;
+				/* this->_current = this->successor(this->_current); */
 				++(*this);
+				std::cout << this << std::endl;
 				return (temp);
 			}
 
-			rbt_iterator operator--(int) {
+			iterator operator--(int) {
 
-				rbt_iterator temp = *this;
+				iterator temp = *this;
+				/* this->_current = this->predecessor(this->_current); */
 				--(*this);
 				return (temp);
 			}
@@ -141,7 +184,7 @@ namespace ft {
 	
 	};
 
-	template < class node >
+	template < class node, class Compare>
 	/* class rbt_const_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category, */
 	/* 	typename iterator_traits<iterator>::difference_type, */
 	/* 	typename iterator_traits<iterator>::value_type, */
@@ -151,9 +194,10 @@ namespace ft {
 	{
 	
 		public:
-
-			typedef typename node::node_ptr																			node_ptr;
+			
+			typedef node*																			node_ptr;
 			typedef typename node::value_type																		value_type;
+			typedef rbt_const_iterator<node, Compare>						const_iterator;
 			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::iterator_category	iterator_category;
 			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::difference_type	difference_type;
 			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::pointer			pointer;
@@ -165,13 +209,9 @@ namespace ft {
 			/* typedef typename ft::iterator_traits<iterator>::pointer				pointer; */
 			/* typedef typename ft::iterator_traits<iterator>::reference			reference; */
 
-		protected:
+		private:
 
 			node_ptr _current;
-
-		/* protected: */
-
-		/* 	iterator _current; */
 
 		/* public: */
 
@@ -194,8 +234,7 @@ namespace ft {
 
 			rbt_const_iterator(const node_ptr& other): _current(other) {}
 
-			template < class U >
-			rbt_const_iterator(const rbt_const_iterator <U> &other): _current(other.base()) {}
+			rbt_const_iterator(const rbt_const_iterator <node, Compare> &other): _current(other.base()) {}
 
 			~rbt_const_iterator(void) {}
 
@@ -256,6 +295,12 @@ namespace ft {
 			}
 	
 	};
+	template< typename node, class Compare >
+	std::ostream & operator<<(std::ostream & o, rbt_iterator<node, Compare> const & max_op)
+	{
+		o << *max_op._node->value->first;
+		return (o);
+	}
 }
 
 #endif

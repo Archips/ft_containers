@@ -116,22 +116,22 @@ namespace ft {
 
 			iterator begin(void) {
 
-				return (iterator(this->_rbt.begin()));
+				return (this->_rbt.begin());
 			}
 
 			const_iterator begin(void) const {
 
-				return (const_iterator(this->_rbt.const_begin()));
+				return (this->_rbt.const_begin());
 			}
 
 			iterator end(void) {
 
-				return (iterator(this->_rbt.end()));
+				return (this->_rbt.end());
 			}
 
 			const_iterator end(void) const {
 
-				return (const_iterator(this->_rbt.const_end()));
+				return (this->_rbt.const_end());
 			}
 
 			reverse_iterator rbegin(void) {

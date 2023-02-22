@@ -28,26 +28,26 @@ namespace ft {
 
 		public:
 
-			typedef	T											value_type;
-			typedef typename T::first_type						key;
-			typedef typename T::second_type						value;
-			typedef Compare										key_compare;	
+			typedef	T													value_type;
+			typedef typename T::first_type								key;
+			typedef typename T::second_type								value;
+			typedef Compare												key_compare;	
 			
-			typedef rbt*										rbt_ptr;
-			typedef const rbt*									const_rbt_ptr;
-			typedef rbt&										rbt_ref;
-			typedef const rbt&									const_rbt_ref;
+			typedef rbt*												rbt_ptr;
+			typedef const rbt*											const_rbt_ptr;
+			typedef rbt&												rbt_ref;
+			typedef const rbt&											const_rbt_ref;
 
-			typedef typename node::node_ptr						node_ptr;
-			typedef typename node::const_node_ptr				const_node_ptr;
-			typedef typename node::node_ref						node_ref;
-			typedef typename node::const_node_ref				const_node_ref;
+			typedef typename node::node_ptr								node_ptr;
+			typedef typename node::const_node_ptr						const_node_ptr;
+			typedef typename node::node_ref								node_ref;
+			typedef typename node::const_node_ref						const_node_ref;
 			
-			typedef AllocNode									alloc_node;
-			typedef typename AllocNode::size_type				size_type;
+			typedef AllocNode											alloc_node;
+			typedef typename AllocNode::size_type						size_type;
 
-			typedef typename ft::rbt_iterator<node>				iterator;
-			typedef typename ft::rbt_const_iterator<node>		const_iterator;
+			typedef typename ft::rbt_iterator<node, key_compare>		iterator;
+			typedef typename ft::rbt_const_iterator<node, key_compare>	const_iterator;
 
 			/*
 			 ** CONSTRUCTORS
@@ -55,10 +55,10 @@ namespace ft {
 
 
 			rbt(void):
-				_root(NULL), _size(0), _alloc(), _comp() {}
+				_root(NULL), _size(0), _alloc(alloc_node()), _comp(key_compare()) {}
 
-			rbt(alloc_node alloc, key_compare comp, node_ptr root = NULL, size_type size = 0):
-				_root(root), _size(size), _alloc(alloc), _comp(comp) {}
+			/* rbt(alloc_node alloc, key_compare comp, node_ptr root = NULL, size_type size = 0): */
+			/* 	_root(root), _size(size), _alloc(alloc), _comp(comp) {} */
 
 			/*
 			 ** COPY CONSTRUCTOR
@@ -133,52 +133,66 @@ namespace ft {
 				return (&this->_root);
 			}
 
-			iterator max(void) const {
+			node_ptr max(node_ptr n) const {
 			
-				if (this->_root)
-					return (iterator(this->_root->max()));
-				return (iterator());
+				if (!n)
+					return (NULL);
+				while (n->right_child)
+					n = n->right_child;
+				return (n);
+				/* if (this->_root) */
+				/* 	return (iterator(this->_root->max())); */
+				/* return (iterator()); */
 			}
 			
-			const_iterator const_max(void) const {
+			/* const_iterator const_max(void) const { */
 
-				if (this->_root)
-					return (const_iterator(this->_root->max()));
-				return (const_iterator());
-			}
+			/* 	if (this->_root) */
+			/* 		return (const_iterator(this->_root->max())); */
+			/* 	return (const_iterator()); */
+			/* } */
 
-			iterator min(void) const {
+			node_ptr min(node_ptr n) const {
 				
-				if (this->_root)
-					return (iterator(this->_root->min()));
-				return (iterator());
+				if (!n)
+					return (NULL);
+				while (n->left_child)
+					n = n->left_child;
+				return (n);
+				/* if (this->_root) */
+				/* 	return (iterator(this->_root->min())); */
+				/* return (iterator()); */
 			}
 			
-			const_iterator const_min(void) const {
+			/* const_iterator const_min(void) const { */
 
-				if (this->_root)
-					return (const_iterator(this->_root->min()));
-				return (const_iterator());
-			}
+			/* 	if (this->_root) */
+			/* 		return (const_iterator(this->_root->min())); */
+			/* 	return (const_iterator()); */
+			/* } */
 
 			iterator begin(void) const {
 
-				return (this->min());
+				node_ptr begin = this->min(this->_root);
+				return (iterator(begin));
 			}
 
 			const_iterator const_begin(void) const {
-
-				return (this->min());
+				
+				node_ptr begin = this->min(this->_root);
+				return (const_iterator(begin));
 			}
 
 			iterator end(void) const {
-
-				return (this->max());
+			
+				/* this-> = this->max(this->_root); */
+				return (iterator(NULL));
 			}
 
 			const_iterator const_end(void) const {
-
-				return (this->max());
+				
+				/* node_ptr end = this->max(this->_root); */
+				return (const_iterator(NULL));
 			}
 
 			ft::pair<iterator, bool>	create_node(const T &new_node) {

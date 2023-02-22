@@ -46,7 +46,7 @@ int main()
 	it = test.begin();
 	map<int, string>::iterator ite = test.end();
 	std::cout << "test.begin() -> " << it->first << " | " << it->second << std::endl;
-	std::cout << "test.end() -> " << ite->first << " | " << ite->second << std::endl;
+	/* std::cout << "test.end() -> " << ite->first << " | " << ite->second << std::endl; */
 	cout << '\n';
 
 	while (it != test.end())
