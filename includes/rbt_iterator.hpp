@@ -91,19 +91,21 @@ namespace ft {
 
 			rbt_iterator& operator++(void) {
 
-				/* if (!this->_current) */
-					/* return (NULL); */
-				node_ptr temp = this->_current;
-				if (this->_current->right_child) {
+				if (this->_current) {
+				
+					node_ptr temp = this->_current;
+					if (this->_current->right_child) {
 					
-					this->_current = this->_current->right_child;
-					while (this->_current->left_child)
-						this->_current = this->_current->left_child;
-					return (*this);
-				}
-				while (this->_current->parent && this->_current->parent->right_child) {
-					temp = this->_current->parent;
-					this->_current->parent = this->_current->parent->parent;
+						this->_current = this->_current->right_child;
+						while (this->_current->left_child)
+							this->_current = this->_current->left_child;
+					}
+					else {
+						while (this->_current->parent && this->_current == this->_current->parent->right_child) {
+							this->_current = this->_current->parent;
+						this->_current = this->_current->parent;
+					/* this->_current->parent = this->_current->parent->parent; */
+					}
 				}
 				return (*temp);
 			}
