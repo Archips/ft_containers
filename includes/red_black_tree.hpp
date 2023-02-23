@@ -183,20 +183,19 @@ namespace ft {
 
 			iterator end(void) const {
 			
-				node_ptr end = this->max(this->_root);
-				return (iterator(end));
+				/* node_ptr end = this->max(this->_root); */
+				return (iterator(NULL));
 			}
 
 			const_iterator const_end(void) const {
 				
-				node_ptr end = this->max(this->_root);
-				return (const_iterator(end));
+				/* node_ptr end = this->max(this->_root); */
+				return (const_iterator(NULL));
 			}
 
 			ft::pair<iterator, bool>	create_node(const T &new_node) {
 
 				if (this->_root == NULL) {
-					std::cout << ">>> create_node #0 <<<" << std::endl;
 					this->_root = this->_alloc.allocate(1);
 					this->_alloc.construct(this->_root, node(new_node));
 					this->_root->color = BLACK;
@@ -207,24 +206,20 @@ namespace ft {
 
 				node_ptr tmp_node = this->_root;
 				node_ptr tmp_parent = NULL;
-				std::cout << ">>> create_node #1 <<<" << std::endl;
 				while (tmp_node) {
 
 					tmp_parent = tmp_node;
 					if (value_compare(new_node, tmp_node->data)) { 
 						
-						/* std::cout << ">>>>> create node #2 <<<<<<" << std::endl; */
 						tmp_node = tmp_node->left_child;
 					}
 					else if (value_compare(tmp_node->data, new_node)) {
 						
-						/* std::cout << ">>>>> create node #3 <<<<<<" << std::endl; */
 						tmp_node = tmp_node->right_child;
 					}	
 					else
 						return (ft::make_pair<iterator, bool>(iterator(tmp_node), false));
 				}
-				std::cout << ">>> create_node #2<<<" << std::endl;
 
 				tmp_node = this->_alloc.allocate(1);
 				this->_alloc.construct(tmp_node, node(new_node));
@@ -236,131 +231,270 @@ namespace ft {
 				else
 					tmp_parent->left_child = tmp_node;
 				
-				tmp_node = insert_node(tmp_node);
+				insert_node(tmp_node);
 				
 				return (ft::make_pair<iterator, bool>(iterator(tmp_node), true));
 			}
 
-			node_ptr	insert_node(node_ptr new_node) {
+			void insert_node(node_ptr k) {
 
-				if (!new_node) {
+				node_ptr u;
 
-					std::cout << ">>> insert #1 <<<" << std::endl;
-					return (new_node);
+				while (k->parent && k->parent->color == RED) {
+
+					if (k->parent == k->parent->parent->left_child) {
+						
+						u = k->parent->parent->right_child;
+						if (u && u->color == RED) {
+
+							k->parent->color = BLACK;
+							u->color = BLACK;
+							k->parent->parent->color = RED;
+							k = k->parent->parent;
+						}
+						else {
+
+							if (k == k->parent->right_child) {
+
+								k = k->parent;
+								left_rotate(k);
+							}
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
+							right_rotate(k->parent->parent);
+						}
+					}
+					else {
+
+						u = k->parent->parent->left_child;
+						if (u && u->color == RED) {
+
+							k->parent->color = BLACK;
+							u->color = BLACK;
+							k->parent->parent->color = RED;
+							k = k->parent->parent;
+						}
+						else {
+
+							if (k == k->parent->left_child) {
+
+								k = k->parent;
+								right_rotate(k);
+							}
+							k->parent->color = BLACK;
+							k->parent->parent->color = RED;
+							left_rotate(k->parent->parent);
+						}
+					}
+
+					if (this->_root == k)
+						break;
 				}
+				this->_root->color = BLACK;
+			}
 
-				if (!new_node->parent) {
+			void	left_rotate(node_ptr x) {
+
+				node_ptr y = x->right_child;
+				x->right_child = y->left_child;
+				if (y->left_child)
+					y->left_child->parent = x;
+				y->parent = x->parent;
+				if (x->parent == NULL)
+					this->_root = y;
+				else if (x == x->parent->left_child)
+					x->parent->left_child = y;
+				else
+					x->parent->right_child = y;
+				y->left_child = x;
+				x->parent = y;
+			}
+
+			void	right_rotate(node_ptr x) {
+
+				node_ptr y = x->left_child;
+				x->left_child = y->right_child;
+				if (y->right_child)
+					y->right_child->parent = x;
+				y->parent = x->parent;
+				if (x->parent == NULL)
+					this->_root = y;
+				else if (x == x->parent->right_child)
+					x->parent->right_child = y;
+				else
+					x->parent->left_child = y;
+				y->right_child = x;
+				x->parent = y;
+			}
+
+			size_type	erase(const key& key) {
+
+				node_ptr z = this->_root;
+				node_ptr x;
+				node_ptr y;
+				int	temp_color;
 					
-					std::cout << ">>> insert #2 <<<" << std::endl;
-					new_node->color = BLACK;
-					return (new_node);
+				while (z && z->data.first != key) {
+
+					if (z && value_compare(key, z->data.first))
+						z = z->left_child;
+					else if (z && value_compare(z->data.first, key))
+						z = z->right_child;
 				}
+				if (!z)
+					return (0);
 
-				node_ptr parent = new_node->parent;
+				y = z;
+				temp_color = y->color;
+				if (!z->left_child) {
 
-				if (!parent && parent->color == BLACK) {
-				
-					std::cout << ">>> insert #3 <<<" << std::endl;
-					return (new_node);
+					x = z->right_child;
+					transplant(z, z->right_child);
 				}
+				else if (!z->right_child) {
 
-				node_ptr uncle = parent->sibling();
-				if (parent->color == RED && uncle && uncle->color == RED) {
-					
-					std::cout << ">>> insert #4 <<<" << std::endl;
-					parent->color = BLACK;
-					uncle->color = BLACK;
-					parent->parent->color = RED;
-					insert_node(parent->parent);
-				
-					return (new_node);
-				}
-
-				if (parent->is_left_child()) {
-
-					if (new_node->is_right_child()) {
-						
-						std::cout << ">>> insert #5 <<<" << std::endl;
-						new_node = parent;
-						left_rotate(parent);
-					}
-					parent->color = BLACK;
-					if (parent->parent) {
-						
-						std::cout << ">>> insert #6 <<<" << std::endl;
-						parent->parent->color = RED;
-						right_rotate(parent->parent);
-					}
-					return (new_node);
-				}
-				else if (parent->is_right_child()) {
-					std::cout << ">>> insert #### <<<" << std::endl;
-
-					if (new_node->is_left_child()) {
-
-						std::cout << ">>> insert #7 <<<" << std::endl;
-						new_node = parent;
-						right_rotate(parent);
-					}
-					parent->color = BLACK;
-					if (parent->parent) {
-						
-						std::cout << ">>> insert #8 <<<" << std::endl;
-						parent->parent->color = RED;
-						left_rotate(parent->parent);
-					}
-					return (new_node);
-				}
-			return (new_node);
-		}
-
-		void	left_rotate(node_ptr n) {
-
-			if (n->right_child) {
-
-				node_ptr right_son = n->right_child;
-				n->right_child = right_son->left_child;
-				if (right_son->left_child != NULL) {
-					right_son->left_child->parent = n;
-				}
-				if (!n->parent) {
-					this->_root = right_son;
-				}
-				else if (n->is_left_child()) {
-					n->parent->left_child = right_son;
+					x = z->left_child;
+					transplant(z, z->left_child);
 				}
 				else {
-					n->parent->right_child = right_son;
+					
+					y = min(z->right_child);
+					temp_color = y->color;
+					x = y->right_child;
+					if (x && y->parent == z)
+						x->parent = y;
+					else {
+						
+						transplant(y, y->right_child);
+						y->right_child = z->right_child;
+						y->right_child->parent = y;
+					}
+					transplant(z, y);
+					y->left_child = z->left_child;
+					y->left->parent = y;
+					y->color = z->color;
 				}
-				/* right_son->parent = n->parent; */
-				right_son->left_child = n;
-				n->parent = right_son;
+				if (x && temp_color == BLACK)
+					delete_fix(x);
+				destroy_node(z);
+				this->_size --;
+				return (1);
 			}
-		}
 
-		void	right_rotate(node_ptr n) {
+			void	transplant(node_ptr u, node_ptr v) {
 
-			if (n->left_child) {
-
-				node_ptr left_son = n->left_child;
-				n->left_child = left_son->right_child;
-				if (left_son->right_child != NULL) {
-					left_son->right_child->parent = n;
-				}
-				if (!n->parent)
-					this->_root = left_son;
-				else if (n->is_left_child())
-					n->parent->left_child = left_son;
+				if (!u->parent)
+					this->_root = v;
+				else if (u == u->parent->left_child)
+					u->parent->left_child = v;
 				else
-					n->parent->right_child = left_son;
-
-				/* left_son->parent = n->parent; */
-				left_son->right_child = n;
-				n->parent = left_son;
+					u->parent->right_child = v;
+				if (v)
+					v->parent = u->parent;
 			}
-		}
 
-		private:
+			void	clear(void) {
+
+				this->destroy_tree(this->_root);
+			}
+
+			void	destroy_node(node_ptr x) {
+
+				this->_alloc.destroy(x);
+				this->_alloc.deallocate(x, 1);
+			}
+
+			void	destroy_tree(node_ptr node_tree) {
+
+				if (!node_tree)
+					return ;
+				if (node_tree->left_child)
+					destroy_tree(node_tree->left_child);
+				if (node_tree->right_child)
+					destroy_tree(node_tree->right_child);
+				destroy_node(node_tree);
+				this->_size = 0;
+				return;
+			}
+
+			void	delete_fix(node_ptr x) {
+
+				node_ptr w;
+
+				while (x != this->_root && x->color == BLACK) {
+
+					if (x == x->parent->left_child) {
+
+						w = x->parent->right_child;
+						if (w->color == RED) {
+
+							w->color = BLACK;
+							x->parent->color = RED;
+							left_rotate(x->parent);
+							w = x->parent->right_child;
+						}
+						if (w->left_child->color == BLACK && w->right_child->color == BLACK) {
+
+							w->color = RED;
+							x = x->parent;
+						}
+						else {
+
+							if (w->right_child->color == BLACK) {
+
+								w->left_child->color = BLACK;
+								w->color = RED;
+								right_rotate(w);
+								w = x->parent->right_child;
+							}
+							w->color = x->parent->color;
+							x->parent->color = BLACK;
+							w->right_child->color = BLACK;
+							left_rotate(x->parent);
+							x = this->_root;
+						}
+					}
+					else {
+					
+						if (x == x->parent->right_child) {
+
+							w = x->parent->left_child;
+							if (w->color == RED) {
+
+								w->color = BLACK;
+								x->parent->color = RED;
+								right_rotate(x->parent);
+								w = x->parent->left_child;
+							}
+							if (w->right_child->color == BLACK && w->left_child->color == BLACK) {
+
+								w->color = RED;
+								x = x->parent;
+							}
+							else {
+
+								if (w->left_child->color == BLACK) {
+
+									w->right_child->color = BLACK;
+									w->color = RED;
+									left_rotate(w);
+									w = x->parent->left_child;
+								}
+								w->color = x->parent->color;
+								x->parent->color = BLACK;
+								w->left_child->color = BLACK;
+								right_rotate(x->parent);
+								x = this->_root;
+							}
+						}
+					}
+				}
+			
+				x->color = BLACK;
+			}
+
+
+			private:
 
 			node_ptr		_root;
 			size_type		_size;			

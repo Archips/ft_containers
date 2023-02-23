@@ -108,7 +108,10 @@ namespace ft {
 		 ** DESTRUCTOR
 		 */
 
-			/* ~map(void); */
+			~map(void) {
+
+				this->clear();
+			}
 
 		/*
 		 ** OPERATORS
@@ -207,14 +210,31 @@ rbt<value_type, key_compare>	get_rbt()
 
 			ft::pair<iterator, bool> insert(const value_type& val) {
 				
-				std::cout << "in ft_pair<iterator, bool> insert" << std::endl;
 				return (this->_rbt.create_node(val));
 			}
 			
-			/* iterator insert(iterator position, const value_type& val); */
+			iterator insert(iterator position, const value_type& val) {
 
-			/* template < class InputIterator > */
-			/* void insert(InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last); */
+				if (this->_rbt.insert(val)) {
+
+					iterator it = this->_rbt.begin();
+					for (; it != this->_rbt.end(); it++) {
+
+						if (position.first == it.first)
+							return (it);
+					}
+				}
+				else
+					return (this->end());
+			}
+
+
+			template < class InputIterator >
+			void insert(InputIterator first, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type last) {
+
+				for (; first != last; first++)
+					insert(*first);
+			}
 
 			/* void erase(iterator position); */
 
@@ -224,14 +244,23 @@ rbt<value_type, key_compare>	get_rbt()
 
 			/* void swap(map& x); */
 
-			/* void clear(void); */
+			void clear(void) {
+
+				this->_rbt.clear();
+			}
 
 
 		/* OBSERVERS */
 
-			/* key_compare key_comp(void) const; */
+			key_compare key_comp(void) const {
 
-			/* value_compare value_comp(void) const; */
+				return (this->_comp);
+			}
+
+			value_compare value_comp(void) const {
+
+				return (value_compare(this->_comp));
+			}
 
 		/* OPERATIONS */
 
@@ -255,7 +284,10 @@ rbt<value_type, key_compare>	get_rbt()
 
 		/* ALLOCATOR */
 
-			/* allocator_type get_allocator(void) const; */
+			allocator_type get_allocator(void) const {
+
+				return (this->_alloc);
+			}
 
 	};
 

@@ -5,3 +5,4 @@ containers_test
 42TESTERS-CONTAINERS
 container_tester
 .nfs*
+a.out.dSYM/
