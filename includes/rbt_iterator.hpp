@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 14:43:45 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/21 14:05:07 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/23 14:44:58 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "pair.hpp"
 #include "iterator_traits.hpp"
+#include "reverse_iterator.hpp"
 #include "random_access_iterator.hpp"
 
 namespace ft {
@@ -28,18 +29,31 @@ namespace ft {
 	/* 	typename iterator_traits<iterator>::value_type, */
 	/* 	typename iterator_traits<iterator>::pointer, */
 	/* 	typename iterator_traits<iterator>::reference> */
-	class rbt_iterator: public ft::iterator<random_access_iterator_tag, typename node::value_type>
+	class rbt_iterator
 	{
 	
 		public:
 
-			typedef typename node::node_ptr																			node_ptr;
-			typedef typename node::value_type																		value_type;
-			typedef rbt_iterator<node, Compare>						iterator;
-			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::iterator_category	iterator_category;
-			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::difference_type	difference_type;
-			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::pointer			pointer;
-			typedef typename ft::iterator<random_access_iterator_tag, typename node::value_type>::reference			reference;
+			typedef typename node::value_type		value_type;
+			typedef	typename node::value_type&		reference;
+			typedef typename node::value_type*		pointer;
+			typedef bidirectional_iterator_tag		iterator_category;
+			typedef ptrdiff_t						difference_type;
+			typedef rbt_iterator<node, Compare> 	iterator;
+			typedef node*					 		node_ptr;
+
+
+			/* typedef typename node::node_ptr																			node_ptr; */
+			/* typedef typename node::value_type																		value_type; */
+			/* typedef rbt_iterator<node, Compare>																		iterator; */
+			/* typedef typename ft::iterator_traits<rbt_iterator>::iterator_category	iterator_category; */
+			/* typedef typename ft::iterator_traits<rbt_iterator>::difference_type		difference_type; */
+			/* typedef typename ft::iterator_traits<rbt_iterator>::pointer				pointer; */
+			/* typedef typename ft::iterator_traits<rbt_iterator>::reference			reference; */
+			/* typedef random_access_iterator_tag																		iterator_category; */
+			/* typedef ptrdiff_t																						difference_type; */
+			/* typedef typename node::value_type*																		pointer; */
+			/* typedef typename node::value_type&																		reference; */
 
 			/* typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category; */
 			/* typedef typename ft::iterator_traits<iterator>::difference_type		difference_type; */
@@ -114,8 +128,10 @@ namespace ft {
 
 				if (!n)
 					return (NULL);
-				if (n->right_child)
-					return (this->min(n->right_child));
+				if (n->right_child) {
+				
+					return (min(n->right_child));
+				}
 				node_ptr p = n->parent;
 				while (p && n == p->right_child) {
 
@@ -140,33 +156,52 @@ namespace ft {
 				return (p);
 			}
 
-			iterator& operator++(void) {
+			rbt_iterator& operator++(void) {
 
-				std::cout << "operator ++()" << std::endl;
 				this->_current = this->successor(this->_current);
-				std::cout << this << std::endl;
 				return (*this);
 			}
 
-			iterator& operator--(void) {
+
+			/* rbt_iterator& operator++(void) { */
+
+			/* 	if (this->_current) { */
+
+			/* 		if (this->_current->right_child) { */
+			/* 			std::cout << "right->child " << this->_current->right_child << std::endl; */
+			/* 			this->_current = this->_current->right_child; */
+			/* 			while (this->_current->left_child) { */
+			/* 				this->_current = this->_current->left_child; */
+			/* 			} */
+			/* 		} */
+			/* 		else { */
+			/* 			while (this->_current->parent && this->_current == this->_current->parent->right_child) */
+			/* 				this->_current = this->_current->parent; */
+			/* 			this->_current = this->_current->parent; */
+			/* 		} */
+			/* 	} */
+			/* 	return (*this); */
+
+			/* } */
+
+
+			rbt_iterator& operator--(void) {
 				
 				this->_current = this->predecessor(this->_current);
 				return (*this);
 			}
 
-			iterator operator++(int) {
+			rbt_iterator operator++(int) {
 
-				std::cout << "operator ++(int)" << std::endl;
-				iterator temp = *this;
+				rbt_iterator temp = *this;
 				/* this->_current = this->successor(this->_current); */
 				++(*this);
-				std::cout << this << std::endl;
 				return (temp);
 			}
 
-			iterator operator--(int) {
+			rbt_iterator operator--(int) {
 
-				iterator temp = *this;
+				rbt_iterator temp = *this;
 				/* this->_current = this->predecessor(this->_current); */
 				--(*this);
 				return (temp);

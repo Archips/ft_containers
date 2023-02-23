@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 10:22:53 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/20 14:04:03 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/23 10:49:25 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define ITERATOR_TRAITS_HPP
 
 #include <cstddef>
+#include <iostream>
 /* #include "random_access_iterator.hpp" */
 /* #include <iterator> */
 

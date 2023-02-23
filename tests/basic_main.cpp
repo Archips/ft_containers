@@ -6,7 +6,7 @@
 /*   By: hbaudet <hbaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 13:07:47 by hbaudet           #+#    #+#             */
-/*   Updated: 2023/02/21 14:05:34 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/23 17:02:04 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,35 +32,26 @@ int main()
 	map<int, string>::iterator	it;
 
 	test.insert(my_pair);
-	std::cout << "after first insert" << std::endl;
 	test.insert(pair<int, string>(-4, "bar"));
-	std::cout << "after #2 insert" << std::endl;
 	test.insert(pair<int, string>(2, "machin"));
-	std::cout << "after #3 insert" << std::endl;
-	test.insert(pair<int, string>(3, "foo"));
-	std::cout << "after #4 insert" << std::endl;
-	test.insert(pair<int, string>(746, "Marcel"));
-	std::cout << "after #5 insert" << std::endl;
+	/* test.insert(pair<int, string>(3, "foo")); */
+	/* test.insert(pair<int, string>(746, "Marcel")); */
 	/* test.insert(pair<int, string>(1, "truc")); */
-	std::cout << "after insert" << std::endl;
 	it = test.begin();
-	map<int, string>::iterator ite = test.end();
-	std::cout << "test.begin() -> " << it->first << " | " << it->second << std::endl;
-	/* std::cout << "test.end() -> " << ite->first << " | " << ite->second << std::endl; */
 	cout << '\n';
-
-	while (it != test.end())
-	{
-		cout << "start of while\n";
-		cout << it->first << ", " << it->second << '\n';
-		it++;
- 		cout << "iterator incremented\n";
+	test.get_rbt().print_prefix(test.get_rbt().root(), 0);
+	/* while (it != test.end()) */
+	/* { */
+	/* 	cout << "start of while\n"; */
+	/* 	cout << it->first << ", " << it->second << '\n'; */
+	/* 	it++; */
+ 		/* cout << "iterator incremented\n"; */
 
 // #ifndef STD
 // 		cout << it.getPointer() << '\n';
 // 		cout << test.end().getPointer() << '\n';
 // #endif
 
-	}
+	/* } */
 	cout << "End of display loop\n";
 }

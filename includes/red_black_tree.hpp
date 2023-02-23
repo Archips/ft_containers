@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/21 13:38:38 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/23 17:04:46 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ namespace ft {
 			rbt(void):
 				_root(NULL), _size(0), _alloc(alloc_node()), _comp(key_compare()) {}
 
-			/* rbt(alloc_node alloc, key_compare comp, node_ptr root = NULL, size_type size = 0): */
-			/* 	_root(root), _size(size), _alloc(alloc), _comp(comp) {} */
 
 			/*
 			 ** COPY CONSTRUCTOR
@@ -87,6 +85,26 @@ namespace ft {
 					this->_comp = rhs._comp;
 				}	
 				return (*this);
+			}
+
+// print rbt fct 
+
+			void    print_prefix( node_ptr cur, int level ) const
+			{
+					std::cout << std::string(2 * level, ' ');
+					if (!cur)
+							std::cout << "NULL (B)" << std::endl;
+					else
+					{
+							std::cout << cur->data.first << "(";
+							if (cur->color == RED)
+									std::cout << "R)" << std::endl;
+							else
+									std::cout << "B)" << std::endl;
+							level += 1;
+							print_prefix(cur->left_child, level);
+							print_prefix(cur->right_child, level);
+					}
 			}
 
 			/*
@@ -140,18 +158,8 @@ namespace ft {
 				while (n->right_child)
 					n = n->right_child;
 				return (n);
-				/* if (this->_root) */
-				/* 	return (iterator(this->_root->max())); */
-				/* return (iterator()); */
 			}
 			
-			/* const_iterator const_max(void) const { */
-
-			/* 	if (this->_root) */
-			/* 		return (const_iterator(this->_root->max())); */
-			/* 	return (const_iterator()); */
-			/* } */
-
 			node_ptr min(node_ptr n) const {
 				
 				if (!n)
@@ -159,17 +167,7 @@ namespace ft {
 				while (n->left_child)
 					n = n->left_child;
 				return (n);
-				/* if (this->_root) */
-				/* 	return (iterator(this->_root->min())); */
-				/* return (iterator()); */
 			}
-			
-			/* const_iterator const_min(void) const { */
-
-			/* 	if (this->_root) */
-			/* 		return (const_iterator(this->_root->min())); */
-			/* 	return (const_iterator()); */
-			/* } */
 
 			iterator begin(void) const {
 
@@ -185,20 +183,20 @@ namespace ft {
 
 			iterator end(void) const {
 			
-				/* this-> = this->max(this->_root); */
-				return (iterator(NULL));
+				node_ptr end = this->max(this->_root);
+				return (iterator(end));
 			}
 
 			const_iterator const_end(void) const {
 				
-				/* node_ptr end = this->max(this->_root); */
-				return (const_iterator(NULL));
+				node_ptr end = this->max(this->_root);
+				return (const_iterator(end));
 			}
 
 			ft::pair<iterator, bool>	create_node(const T &new_node) {
 
 				if (this->_root == NULL) {
-					
+					std::cout << ">>> create_node #0 <<<" << std::endl;
 					this->_root = this->_alloc.allocate(1);
 					this->_alloc.construct(this->_root, node(new_node));
 					this->_root->color = BLACK;
@@ -296,6 +294,7 @@ namespace ft {
 					return (new_node);
 				}
 				else if (parent->is_right_child()) {
+					std::cout << ">>> insert #### <<<" << std::endl;
 
 					if (new_node->is_left_child()) {
 
@@ -320,20 +319,22 @@ namespace ft {
 			if (n->right_child) {
 
 				node_ptr right_son = n->right_child;
-				if (n->right_child->left_child != NULL) {
-					n->right_child = n->right_child->left_child;
-					n->right_child->parent = n;
+				n->right_child = right_son->left_child;
+				if (right_son->left_child != NULL) {
+					right_son->left_child->parent = n;
 				}
-				if (!n->parent)
+				if (!n->parent) {
 					this->_root = right_son;
-				else if (n->is_left_child())
+				}
+				else if (n->is_left_child()) {
 					n->parent->left_child = right_son;
-				else
+				}
+				else {
 					n->parent->right_child = right_son;
-
-				right_son->parent = n->parent;
-				n->parent = right_son;
+				}
+				/* right_son->parent = n->parent; */
 				right_son->left_child = n;
+				n->parent = right_son;
 			}
 		}
 
@@ -342,9 +343,9 @@ namespace ft {
 			if (n->left_child) {
 
 				node_ptr left_son = n->left_child;
-				if (n->left_child->right_child) {
-					n->left_child = n->left_child->right_child;
-					n->left_child->parent = n;
+				n->left_child = left_son->right_child;
+				if (left_son->right_child != NULL) {
+					left_son->right_child->parent = n;
 				}
 				if (!n->parent)
 					this->_root = left_son;
@@ -353,9 +354,9 @@ namespace ft {
 				else
 					n->parent->right_child = left_son;
 
-				left_son->parent = n->parent;
-				n->parent = left_son;
+				/* left_son->parent = n->parent; */
 				left_son->right_child = n;
+				n->parent = left_son;
 			}
 		}
 

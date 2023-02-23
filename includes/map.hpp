@@ -75,6 +75,14 @@ namespace ft {
 
 		};
 
+		private:
+
+			size_type						_size;
+			allocator_type					_alloc;
+			node_alloc						_node_alloc;
+			key_compare						_comp;
+			rbt<value_type, key_compare>	_rbt;
+
 		public:
 
 		/* 
@@ -111,6 +119,12 @@ namespace ft {
 		/*
 		 ** MEMBER FUNCTIONS
 		 */
+
+//A RETIRER APRES!!! debug only
+rbt<value_type, key_compare>	get_rbt()
+{
+	return (_rbt);
+}	
 
 		/* ITERATORS */
 
@@ -242,14 +256,6 @@ namespace ft {
 		/* ALLOCATOR */
 
 			/* allocator_type get_allocator(void) const; */
-
-		private:
-
-			size_type						_size;
-			allocator_type					_alloc;
-			node_alloc						_node_alloc;
-			key_compare						_comp;
-			rbt<value_type, key_compare>	_rbt;
 
 	};
 
