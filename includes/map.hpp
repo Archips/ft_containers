@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 13:08:26 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/21 10:09:14 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/24 11:37:45 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,11 +143,15 @@ rbt<value_type, key_compare>	get_rbt()
 
 			iterator end(void) {
 
+				if (this->empty())
+					return (this->_rbt.begin());
 				return (this->_rbt.end());
 			}
 
 			const_iterator end(void) const {
-
+				
+				if (this->empty())
+					return (this->_rbt.const_begin());
 				return (this->_rbt.const_end());
 			}
 
@@ -202,9 +206,33 @@ rbt<value_type, key_compare>	get_rbt()
 				return (val);
 			}
 	
-			/* mapped_type& at(const key_type &k); */
+			mapped_type& at(const key_type &k) {
 
-			/* const mapped_type& at(const key_type& k) const; */
+				node_ptr x = this->_rbt.root();
+				
+				while (x && x->data.first != k)
+				{
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				return (x->data.second);
+			}
+
+			const mapped_type& at(const key_type& k) const {
+
+				node_ptr x = this->_rbt.root();
+				
+				while (x && x->data.first != k)
+				{
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				return (x->data.second);
+			}
 
 		/* MODIFIERS */
 
@@ -215,32 +243,43 @@ rbt<value_type, key_compare>	get_rbt()
 			
 			iterator insert(iterator position, const value_type& val) {
 
-				if (this->_rbt.insert(val)) {
+				(void) position;
+				return(this->insert(val).first);
 
-					iterator it = this->_rbt.begin();
-					for (; it != this->_rbt.end(); it++) {
+/* 				iterator it = this->_rbt.begin(); */
+/* 				for (; it != this->_rbt.end(); it++) { */
 
-						if (position.first == it.first)
-							return (it);
-					}
-				}
-				else
-					return (this->end());
+/* 					if (position.first == it.first) */
+/* 						return (it); */
+/* 				} */
 			}
 
 
+			/* template < class InputIterator > */
+			/* void insert(InputIterator first, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type last) { */
 			template < class InputIterator >
-			void insert(InputIterator first, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type last) {
-
+			void insert(InputIterator first, InputIterator last) {
+			
 				for (; first != last; first++)
 					insert(*first);
 			}
 
-			/* void erase(iterator position); */
+			void erase(iterator position) {
 
-			/* size_type erase(const key_type& k); */
+				this->erase(position->first);
+			}
 
-			/* void erase (iterator first, iterator last); */
+			size_type erase(const key_type& k) {
+
+				return (this->_rbt.erase(k));
+			}
+				
+
+			void erase (iterator first, iterator last) {
+				
+				for (; first != last; first++)
+						erase(first);
+			}
 
 			/* void swap(map& x); */
 
@@ -264,20 +303,182 @@ rbt<value_type, key_compare>	get_rbt()
 
 		/* OPERATIONS */
 
-			/* iterator find(const key_type &k); */
+			iterator find(const key_type &k) {
+				
+				node_ptr x = this->_rbt.root();
+				
+				while (x && x->data.first != k)
+				{
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				if (!x)
+					return (iterator(NULL));
+				return (iterator(x));
+			}
 
-			/* const_iterator find(const key_type& k) const; */
+			const_iterator find(const key_type& k) const {
 
-			/* size_type count(const key_type& k) const; */
+				node_ptr x = this->_rbt.root();
+				
+				while (x && x->data.first != k)
+				{
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				if (!x)
+					return (const_iterator(NULL));
+				return (const_iterator(x));
+			}
 
-			/* iterator lower_bound(const key_type& k); */
+			size_type count(const key_type& k) const {
 
-			/* const_iterator lower_bound(const key_type& k) const; */
+				node_ptr x = this->_rbt.root();
+				
+				while (x && x->data.first != k)
+				{
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				if (!x)
+					return (0);
+				return (1);
+			}
 
-			/* iterator upper_bound(const key_type& k); */
+			iterator lower_bound(const key_type& k) {
 
-			/* const_iterator upper_bound(const key_type& k) const; */
+				node_ptr x = this->_rbt.root();
+				node_ptr temp;
 
+				while (x && x -> data.first != k) {
+
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				if (!x)
+					return (iterator(NULL));
+				else {
+
+					if (x->left_child) {
+						temp = x;
+						while (temp->right_child)
+							temp = temp->right_child;
+						return (iterator(temp));
+					}
+					temp = x->parent;
+					while (temp && x == temp->left_child) {
+						
+						x = temp;
+						temp = temp->parent;
+					}
+					return (iterator(temp));
+				}
+			}
+
+			const_iterator lower_bound(const key_type& k) const {
+
+				node_ptr x = this->_rbt.root();
+				node_ptr temp;
+
+				while (x && x -> data.first != k) {
+
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				if (!x)
+					return (const_iterator(NULL));
+				else {
+
+					if (x->left_child) {
+						temp = x;
+						while (temp->right_child)
+							temp = temp->right_child;
+						return (const_iterator(temp));
+					}
+					temp = x->parent;
+					while (temp && x == temp->left_child) {
+						
+						x = temp;
+						temp = temp->parent;
+					}
+					return (const_iterator(temp));
+				}
+			}
+
+			iterator upper_bound(const key_type& k) {
+
+				node_ptr x = this->_rbt.root();
+				node_ptr temp;
+
+				while (x && x -> data.first != k) {
+
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				if (!x)
+					return (iterator(NULL));
+				else {
+
+					if (x->right_child) {
+						temp = x;
+						while (temp->left_child)
+							temp = temp->left_child;
+						return (iterator(temp));
+					}
+					temp = x->parent;
+					while (temp && x == temp->right_child) {
+						
+						x = temp;
+						temp = temp->parent;
+					}
+					return (iterator(temp));
+				}
+			}
+
+			const_iterator upper_bound(const key_type& k) const {
+
+				node_ptr x = this->_rbt.root();
+				node_ptr temp;
+
+				while (x && x -> data.first != k) {
+
+					if (x && this->_rbt.value_compare(k, x->data.first))
+						x = x->left_child;
+					else if (x && this->_rbt.value_compare(x->data.first, k))
+						x = x->right_child;
+				}
+				if (!x)
+					return (iterator(NULL));
+				else {
+
+					if (x->right_child) {
+						temp = x;
+						while (temp->left_child)
+							temp = temp->left_child;
+						return (iterator(temp));
+					}
+					temp = x->parent;
+					while (temp && x == temp->right_child) {
+						
+						x = temp;
+						temp = temp->parent;
+					}
+					return (iterator(temp));
+				}
+			}
+			
 			/* ft::pair<iterator, iterator> equal_range(const key_type& k); */
 
 			/* ft::pair<const_iterator, const_iterator> equal_range(const key_type& k) const; */

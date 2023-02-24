@@ -1,8 +1,8 @@
 #ifndef BASE_HPP
 # define BASE_HPP
 
-/* #define TESTED_NAMESPACE std */
-#define TESTED_NAMESPACE ft
+#define TESTED_NAMESPACE std
+/* #define TESTED_NAMESPACE ft */
 
 # include <iostream>
 # include <string>

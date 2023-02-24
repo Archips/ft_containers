@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/23 17:04:46 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/24 12:00:34 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ namespace ft {
 				return (n);
 			}
 
-			iterator begin(void) const {
+			iterator begin(void) {
 
 				node_ptr begin = this->min(this->_root);
 				return (iterator(begin));
@@ -181,16 +181,24 @@ namespace ft {
 				return (const_iterator(begin));
 			}
 
-			iterator end(void) const {
+			iterator end(void) {
 			
-				/* node_ptr end = this->max(this->_root); */
-				return (iterator(NULL));
+				/* node_ptr temp = NULL; */
+				/* temp->parent = max(this->_root); */
+				/* temp->left_child = NULL; */
+				/* temp->right_child = NULL; */
+				/* /1* return (++(iterator(end))); *1/ */
+				/* return (iterator(temp->left_child)); */
+				return (iterator(max(this->_root)->right_child));
 			}
 
 			const_iterator const_end(void) const {
-				
+		
+				node_ptr temp = NULL;
+				temp->parent = max(this->_root);
 				/* node_ptr end = this->max(this->_root); */
-				return (const_iterator(NULL));
+				/* return (++(const_iterator(end))); */
+				return (const_iterator(max(this->_root)->right_child));
 			}
 
 			ft::pair<iterator, bool>	create_node(const T &new_node) {
@@ -371,7 +379,7 @@ namespace ft {
 					}
 					transplant(z, y);
 					y->left_child = z->left_child;
-					y->left->parent = y;
+					y->left_child->parent = y;
 					y->color = z->color;
 				}
 				if (x && temp_color == BLACK)
