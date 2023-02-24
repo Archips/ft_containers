@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 13:08:26 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/24 11:37:45 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/24 18:07:17 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,15 +143,11 @@ rbt<value_type, key_compare>	get_rbt()
 
 			iterator end(void) {
 
-				if (this->empty())
-					return (this->_rbt.begin());
 				return (this->_rbt.end());
 			}
 
 			const_iterator end(void) const {
 				
-				if (this->empty())
-					return (this->_rbt.const_begin());
 				return (this->_rbt.const_end());
 			}
 
@@ -245,18 +241,9 @@ rbt<value_type, key_compare>	get_rbt()
 
 				(void) position;
 				return(this->insert(val).first);
-
-/* 				iterator it = this->_rbt.begin(); */
-/* 				for (; it != this->_rbt.end(); it++) { */
-
-/* 					if (position.first == it.first) */
-/* 						return (it); */
-/* 				} */
 			}
 
 
-			/* template < class InputIterator > */
-			/* void insert(InputIterator first, typename ft::enable_if<ft::is_integral<InputIterator>::value, InputIterator>::type last) { */
 			template < class InputIterator >
 			void insert(InputIterator first, InputIterator last) {
 			
@@ -281,7 +268,26 @@ rbt<value_type, key_compare>	get_rbt()
 						erase(first);
 			}
 
-			/* void swap(map& x); */
+			void swap(map& x) {
+
+				size_type						temp_size = this->_size;
+				allocator_type					temp_alloc = this->_alloc;
+				node_alloc						temp_node_alloc = this->_node_alloc;
+				key_compare						temp_comp = this->_comp;
+				rbt<value_type, key_compare>	temp_rbt = this->_rbt;
+
+				this->_size = x._size;
+				this->_alloc = x._alloc;
+				this->_node_alloc = x._node_alloc;
+				this->_comp = x._comp;
+				this->_rbt = x._rbt;
+
+				x._size = temp_size;
+				x._alloc = temp_alloc;
+				x._node_alloc = temp_node_alloc;
+				x._comp = temp_comp;
+				x._rbt = temp_rbt;
+			}
 
 			void clear(void) {
 
@@ -315,8 +321,8 @@ rbt<value_type, key_compare>	get_rbt()
 						x = x->right_child;
 				}
 				if (!x)
-					return (iterator(NULL));
-				return (iterator(x));
+					return (this->end());
+				return (iterator(x, x->parent));
 			}
 
 			const_iterator find(const key_type& k) const {
@@ -331,8 +337,8 @@ rbt<value_type, key_compare>	get_rbt()
 						x = x->right_child;
 				}
 				if (!x)
-					return (const_iterator(NULL));
-				return (const_iterator(x));
+					return (this->end());
+				return (const_iterator(x, x->parent));
 			}
 
 			size_type count(const key_type& k) const {
@@ -353,135 +359,73 @@ rbt<value_type, key_compare>	get_rbt()
 
 			iterator lower_bound(const key_type& k) {
 
-				node_ptr x = this->_rbt.root();
-				node_ptr temp;
-
-				while (x && x -> data.first != k) {
-
-					if (x && this->_rbt.value_compare(k, x->data.first))
-						x = x->left_child;
-					else if (x && this->_rbt.value_compare(x->data.first, k))
-						x = x->right_child;
-				}
-				if (!x)
-					return (iterator(NULL));
-				else {
-
-					if (x->left_child) {
-						temp = x;
-						while (temp->right_child)
-							temp = temp->right_child;
-						return (iterator(temp));
+				iterator it = this->find(k);
+				if (it == this->end()) {
+					node_ptr x = this->_rbt.root();
+					while (x && x->data.first < k) {
+						if (x && this->_rbt.value_compare(x->data.first, k))
+							x = x->right_child;
 					}
-					temp = x->parent;
-					while (temp && x == temp->left_child) {
-						
-						x = temp;
-						temp = temp->parent;
-					}
-					return (iterator(temp));
+					return (iterator(x, x->parent));
 				}
+				else
+					return (it);
 			}
 
 			const_iterator lower_bound(const key_type& k) const {
 
-				node_ptr x = this->_rbt.root();
-				node_ptr temp;
-
-				while (x && x -> data.first != k) {
-
-					if (x && this->_rbt.value_compare(k, x->data.first))
-						x = x->left_child;
-					else if (x && this->_rbt.value_compare(x->data.first, k))
-						x = x->right_child;
-				}
-				if (!x)
-					return (const_iterator(NULL));
-				else {
-
-					if (x->left_child) {
-						temp = x;
-						while (temp->right_child)
-							temp = temp->right_child;
-						return (const_iterator(temp));
+				const_iterator it = this->find(k);
+				if (it == this->end()) {
+					node_ptr x = this->_rbt.root();
+					while (x && x->data.first < k) {
+						if (x && this->_rbt.value_compare(x->data.first, k))
+							x = x->right_child;
 					}
-					temp = x->parent;
-					while (temp && x == temp->left_child) {
-						
-						x = temp;
-						temp = temp->parent;
-					}
-					return (const_iterator(temp));
+					return (const_iterator(x, x->parent));
 				}
+				else
+					return (it);
 			}
 
 			iterator upper_bound(const key_type& k) {
-
+				
 				node_ptr x = this->_rbt.root();
-				node_ptr temp;
-
-				while (x && x -> data.first != k) {
-
-					if (x && this->_rbt.value_compare(k, x->data.first))
-						x = x->left_child;
-					else if (x && this->_rbt.value_compare(x->data.first, k))
+				while (x && x->data.first < k) {
+					if (x && this->_rbt.value_compare(x->data.first, k))
 						x = x->right_child;
+					x = x->right_child;
 				}
 				if (!x)
-					return (iterator(NULL));
-				else {
-
-					if (x->right_child) {
-						temp = x;
-						while (temp->left_child)
-							temp = temp->left_child;
-						return (iterator(temp));
-					}
-					temp = x->parent;
-					while (temp && x == temp->right_child) {
-						
-						x = temp;
-						temp = temp->parent;
-					}
-					return (iterator(temp));
-				}
+					return (this->end());
+				else
+					return (iterator(x, x->parent));
 			}
 
 			const_iterator upper_bound(const key_type& k) const {
-
+				
 				node_ptr x = this->_rbt.root();
-				node_ptr temp;
-
-				while (x && x -> data.first != k) {
-
-					if (x && this->_rbt.value_compare(k, x->data.first))
-						x = x->left_child;
-					else if (x && this->_rbt.value_compare(x->data.first, k))
+				while (x && x->data.first < k) {
+					if (x && this->_rbt.value_compare(x->data.first, k))
 						x = x->right_child;
+					x = x->right_child;
 				}
 				if (!x)
-					return (iterator(NULL));
-				else {
-
-					if (x->right_child) {
-						temp = x;
-						while (temp->left_child)
-							temp = temp->left_child;
-						return (iterator(temp));
-					}
-					temp = x->parent;
-					while (temp && x == temp->right_child) {
-						
-						x = temp;
-						temp = temp->parent;
-					}
-					return (iterator(temp));
-				}
+					return (this->end());
+				else
+					return (const_iterator(x, x->parent));
 			}
 			
-			/* ft::pair<iterator, iterator> equal_range(const key_type& k); */
+			ft::pair<iterator, iterator> equal_range(const key_type& k) {
 
-			/* ft::pair<const_iterator, const_iterator> equal_range(const key_type& k) const; */
+				ft::pair<iterator, iterator> bound = ft::make_pair(this->lower_bound(k), this->upper_bound(k));
+				return (bound);
+			}
+
+			ft::pair<const_iterator, const_iterator> equal_range(const key_type& k) const {
+
+				ft::pair<const_iterator, const_iterator> bound = ft::make_pair(this->lower_bound(k), this->upper_bound(k));
+				return (bound);
+			}
 
 		/* ALLOCATOR */
 
@@ -510,8 +454,11 @@ rbt<value_type, key_compare>	get_rbt()
 	/* template < class Key, class T, class Compare, class Alloc > */
 	/* bool operator>=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs); */
 
-	/* template < class Key, class T, class Compare, class Alloc > */
-	/* void swap(map<Key, T, Compare, Alloc>& x, map<Key, T, Compare, Alloc>& y); */
+	template < class Key, class T, class Compare, class Alloc >
+	void swap(map<Key, T, Compare, Alloc>& x, map<Key, T, Compare, Alloc>& y) {
+	
+		x.swap(y);
+	}
 
 }
 

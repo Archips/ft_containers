@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lowerBound_main.cpp                                :+:      :+:    :+:   */
+/*   upperBound_main.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbaudet <hbaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 13:07:06 by hbaudet           #+#    #+#             */
-/*   Updated: 2023/02/24 17:06:22 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/24 16:37:28 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ int main ()
   itlow=mymap.lower_bound ('b');  // itlow points to b
   itup=mymap.upper_bound ('d');   // itup points to e (not d!)
 
-  cout << "low : " << itlow->first << '\n';
-  cout << "up : " << itup->first << '\n';
+  std::cout << "itlow [" << itlow->first << " ] | [ " << itlow->second << "]" << std::endl;
+  std::cout << "itup [" << itup->first << " ] | [ " << itup->second << "]" << std::endl;
 
   mymap.erase(itlow,itup);        // erases [itlow,itup)
 

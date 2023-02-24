@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/24 12:00:34 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/24 17:41:25 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,33 +172,23 @@ namespace ft {
 			iterator begin(void) {
 
 				node_ptr begin = this->min(this->_root);
-				return (iterator(begin));
+				return (iterator(begin, NULL));
 			}
 
 			const_iterator const_begin(void) const {
 				
 				node_ptr begin = this->min(this->_root);
-				return (const_iterator(begin));
+				return (const_iterator(begin, NULL));
 			}
 
 			iterator end(void) {
 			
-				/* node_ptr temp = NULL; */
-				/* temp->parent = max(this->_root); */
-				/* temp->left_child = NULL; */
-				/* temp->right_child = NULL; */
-				/* /1* return (++(iterator(end))); *1/ */
-				/* return (iterator(temp->left_child)); */
-				return (iterator(max(this->_root)->right_child));
+				return (iterator(NULL, this->max(this->_root)));
 			}
 
 			const_iterator const_end(void) const {
 		
-				node_ptr temp = NULL;
-				temp->parent = max(this->_root);
-				/* node_ptr end = this->max(this->_root); */
-				/* return (++(const_iterator(end))); */
-				return (const_iterator(max(this->_root)->right_child));
+				return (const_iterator(NULL, this->max(this->_root)));
 			}
 
 			ft::pair<iterator, bool>	create_node(const T &new_node) {
@@ -209,7 +199,7 @@ namespace ft {
 					this->_root->color = BLACK;
 					this->_root->parent = NULL;
 					this->_size += 1;
-					return (ft::make_pair<iterator, bool>(iterator(this->_root), true));
+					return (ft::make_pair<iterator, bool>(iterator(this->_root, NULL), true));
 				}
 
 				node_ptr tmp_node = this->_root;
@@ -226,7 +216,7 @@ namespace ft {
 						tmp_node = tmp_node->right_child;
 					}	
 					else
-						return (ft::make_pair<iterator, bool>(iterator(tmp_node), false));
+						return (ft::make_pair<iterator, bool>(iterator(tmp_node, NULL), false));
 				}
 
 				tmp_node = this->_alloc.allocate(1);
@@ -241,7 +231,7 @@ namespace ft {
 				
 				insert_node(tmp_node);
 				
-				return (ft::make_pair<iterator, bool>(iterator(tmp_node), true));
+				return (ft::make_pair<iterator, bool>(iterator(tmp_node, NULL), true));
 			}
 
 			void insert_node(node_ptr k) {
@@ -375,7 +365,8 @@ namespace ft {
 						
 						transplant(y, y->right_child);
 						y->right_child = z->right_child;
-						y->right_child->parent = y;
+						if (y->right_child)
+							y->right_child->parent = y;
 					}
 					transplant(z, y);
 					y->left_child = z->left_child;
@@ -384,7 +375,8 @@ namespace ft {
 				}
 				if (x && temp_color == BLACK)
 					delete_fix(x);
-				destroy_node(z);
+				this->_alloc.destroy(z);
+				/* this->_alloc.deallocate(z, 1); */
 				this->_size --;
 				return (1);
 			}
@@ -403,7 +395,7 @@ namespace ft {
 
 			void	clear(void) {
 
-				this->destroy_tree(this->_root);
+				this->_root = this->destroy_tree(this->_root);
 			}
 
 			void	destroy_node(node_ptr x) {
@@ -412,17 +404,17 @@ namespace ft {
 				this->_alloc.deallocate(x, 1);
 			}
 
-			void	destroy_tree(node_ptr node_tree) {
+			node_ptr	destroy_tree(node_ptr node_tree) {
 
 				if (!node_tree)
-					return ;
+					return (NULL);
 				if (node_tree->left_child)
 					destroy_tree(node_tree->left_child);
 				if (node_tree->right_child)
 					destroy_tree(node_tree->right_child);
 				destroy_node(node_tree);
 				this->_size = 0;
-				return;
+				return (NULL);
 			}
 
 			void	delete_fix(node_ptr x) {
@@ -471,7 +463,7 @@ namespace ft {
 
 								w->color = BLACK;
 								x->parent->color = RED;
-								right_rotate(x->parent);
+								left_rotate(x->parent);
 								w = x->parent->left_child;
 							}
 							if (w->right_child->color == BLACK && w->left_child->color == BLACK) {
@@ -481,17 +473,17 @@ namespace ft {
 							}
 							else {
 
-								if (w->left_child->color == BLACK) {
+								if (w->right_child->color == BLACK) {
 
 									w->right_child->color = BLACK;
 									w->color = RED;
-									left_rotate(w);
+									right_rotate(w);
 									w = x->parent->left_child;
 								}
 								w->color = x->parent->color;
 								x->parent->color = BLACK;
 								w->left_child->color = BLACK;
-								right_rotate(x->parent);
+								left_rotate(x->parent);
 								x = this->_root;
 							}
 						}

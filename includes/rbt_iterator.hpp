@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 14:43:45 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/23 14:44:58 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/24 17:10:19 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ namespace ft {
 		private:
 
 			node_ptr _current;
+			node_ptr _parent;
 
 		public:
 
@@ -71,29 +72,37 @@ namespace ft {
 			 ** CONSTRUCTORS
 			 */ 
 
-			rbt_iterator(void): _current(NULL) {};
+			rbt_iterator(void): _current(NULL), _parent(NULL) {}
 
-			explicit rbt_iterator(node_ptr other): _current(other) {}
+			explicit rbt_iterator(node_ptr x, node_ptr y): _current(x), _parent(y) {}
 
-			rbt_iterator(const rbt_iterator &other): _current(other._current) {}
+			rbt_iterator(const rbt_iterator &other): _current(other._current), _parent(other._parent) {}
 
 			rbt_iterator(const rbt_const_iterator<node, Compare> &src) {
 
 				this->_current = src.base();
+				this->_parent = src.parent();
 			}
 
 			~rbt_iterator(void) {}
 
 			rbt_iterator& operator=(const rbt_iterator& rhs) {
 
-				if (this != &rhs)
+				if (this != &rhs) {
 					this->_current = rhs._current;
+					this->_parent = rhs._parent;
+				}
 				return (*this);
 			}
 
 			node_ptr base(void) const {
 
 				return (this->_current);
+			}
+
+			node_ptr parent(void) const {
+
+				return (this->_parent);
 			}
 
 			reference operator*(void) const {
@@ -143,8 +152,9 @@ namespace ft {
 
 			node_ptr predecessor(node_ptr n) {
 
-				if (!n)
+				if (!n) {
 					return (NULL);
+				}
 				if (n->left_child)
 					return (this->max(n->left_child));
 				node_ptr p = n->parent;
@@ -158,20 +168,23 @@ namespace ft {
 
 			rbt_iterator& operator++(void) {
 
+				this->_parent = this->_current;
 				this->_current = this->successor(this->_current);
 				return (*this);
 			}
 
 			rbt_iterator& operator--(void) {
-				
-				this->_current = this->predecessor(this->_current);
+			
+				if (!this->_current)
+					this->_current = this->_parent;
+				else
+					this->_current = this->predecessor(this->_current);
 				return (*this);
 			}
 
 			rbt_iterator operator++(int) {
 
 				rbt_iterator temp = *this;
-				/* this->_current = this->successor(this->_current); */
 				++(*this);
 				return (temp);
 			}
@@ -179,7 +192,6 @@ namespace ft {
 			rbt_iterator operator--(int) {
 
 				rbt_iterator temp = *this;
-				/* this->_current = this->predecessor(this->_current); */
 				--(*this);
 				return (temp);
 			}
@@ -213,6 +225,7 @@ namespace ft {
 		private:
 
 			node_ptr _current;
+			node_ptr _parent;
 
 		public:
 
@@ -220,29 +233,38 @@ namespace ft {
 			 ** CONSTRUCTORS
 			 */ 
 
-			rbt_const_iterator(void): _current(NULL) {};
+			rbt_const_iterator(void): _current(NULL), _parent(NULL) {}
 
-			explicit rbt_const_iterator(node_ptr other): _current(other) {}
+			explicit rbt_const_iterator(node_ptr x, node_ptr y): _current(x), _parent(y) {}
 
-			rbt_const_iterator(const rbt_const_iterator &other): _current(other._current) {}
+			rbt_const_iterator(const rbt_const_iterator &other): _current(other._current), _parent(other._parent) {}
 
 			rbt_const_iterator(const rbt_iterator<node, Compare> &src) {
 
 				this->_current = src.base();
+				this->_parent = src.parent();
 			}
 
 			~rbt_const_iterator(void) {}
 
 			rbt_const_iterator& operator=(const rbt_const_iterator& rhs) {
 
-				if (this != &rhs)
+				if (this != &rhs) {
+				
 					this->_current = rhs._current;
+					this->_parent = rhs._parent;
+				}
 				return (*this);
 			}
 
 			node_ptr base(void) const {
 
 				return (this->_current);
+			}
+
+			node_ptr parent(void) const {
+
+				return (this->_parent);
 			}
 
 			reference operator*(void) const {

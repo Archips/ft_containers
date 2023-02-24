@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lowerBound_main.cpp                                :+:      :+:    :+:   */
+/*   rbegin_main.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbaudet <hbaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 13:07:06 by hbaudet           #+#    #+#             */
-/*   Updated: 2023/02/24 17:06:22 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/24 14:28:31 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,42 @@ void	print(map<Key, T>& lst)
 int main ()
 {
   map<char,int> mymap;
-  map<char,int>::iterator itlow,itup;
 
-  mymap['a']=20;
-  mymap['b']=40;
-  mymap['c']=60;
-  mymap['d']=80;
-  mymap['e']=100;
+  mymap['x'] = 100;
+  mymap['y'] = 200;
+  mymap['z'] = 300;
 
-  itlow=mymap.lower_bound ('b');  // itlow points to b
-  itup=mymap.upper_bound ('d');   // itup points to e (not d!)
+  // show content:
+  map<char,int>::reverse_iterator rit;
+  for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
+    cout << rit->first << " => " << rit->second << '\n';
 
-  cout << "low : " << itlow->first << '\n';
-  cout << "up : " << itup->first << '\n';
 
-  mymap.erase(itlow,itup);        // erases [itlow,itup)
-
-  // print content:
-  for (map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+	for (map<char,int>::const_reverse_iterator it=mymap.rbegin(); it!=mymap.rend(); it++)
     cout << it->first << " => " << it->second << '\n';
+
+	map<char, int>::const_reverse_iterator it = mymap.rbegin();
+	map<char, int>::const_reverse_iterator ti = mymap.rend();
+
+	it++;
+	++it;
+	it--;
+	--it;
+
+	ti--;
+	--ti;
+	++ti;
+	ti++;
+
+	ti = it;
+
+	map<char, int>::reverse_iterator end = mymap.rend();
+	while(it != end)
+	{
+    	cout << it->first << " => " << it->second << '\n';
+		it++;
+	}
+
 
   return 0;
 }
