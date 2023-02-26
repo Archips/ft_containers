@@ -6,18 +6,21 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 13:08:26 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/24 18:07:17 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/26 15:20:38 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
-# include <iterator>
+/* # include <iterator> */
+# include <iostream>
 # include "enable_if.hpp"
+# include "equal.hpp"
 # include "is_integral.hpp"
 # include "iterator_traits.hpp"
 # include "make_pair.hpp"
+# include "lexicographical_compare.hpp"
 # include "pair.hpp"
 # include "rbt_iterator.hpp"
 # include "red_black_tree.hpp"
@@ -65,7 +68,7 @@ namespace ft {
 
 				bool operator() (const value_type& lhs, const value_type& rhs) const {
 
-					return (comp(lhs.first, rhs.first));
+					return (_comp(lhs.first, rhs.first));
 				}
 
 			protected:
@@ -96,7 +99,9 @@ namespace ft {
 			
 			template < class InputIterator >
 			map(InputIterator first, InputIterator last,
-					const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {
+					const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
+				_size(0), _alloc(alloc), _comp(comp)	
+			{
 				
 				for (; first != last; first++)
 					this->insert(*first);
@@ -285,7 +290,7 @@ rbt<value_type, key_compare>	get_rbt()
 			
 				iterator	temp;
 
-				for (; first != last; first++) {
+				for (; first != last; ) {
 						
 						temp = first;
 						first ++;
@@ -298,18 +303,18 @@ rbt<value_type, key_compare>	get_rbt()
 				size_type						temp_size = this->_size;
 				allocator_type					temp_alloc = this->_alloc;
 				node_alloc						temp_node_alloc = this->_node_alloc;
-				key_compare						temp_comp = this->_comp;
+				key_compare						temp_comp = this->_comp;;
 
 				this->_size = x._size;
 				this->_alloc = x._alloc;
 				this->_node_alloc = x._node_alloc;
 				this->_comp = x._comp;
-				this->_rbt.swap(x._rbt);
 
 				x._size = temp_size;
 				x._alloc = temp_alloc;
 				x._node_alloc = temp_node_alloc;
 				x._comp = temp_comp;
+				this->_rbt.swap(x._rbt);
 			}
 
 			void clear(void) {
@@ -382,62 +387,57 @@ rbt<value_type, key_compare>	get_rbt()
 
 			iterator lower_bound(const key_type& k) {
 
-				iterator it = this->find(k);
-				if (it == this->end()) {
-					node_ptr x = this->_rbt.root();
-					while (x && x->data.first < k) {
-						if (x && this->_rbt.value_compare(x->data.first, k))
-							x = x->right_child;
-					}
-					return (iterator(x, x->parent));
+				iterator it = this->begin();
+				
+				while (it != this->end()) {
+
+					if (it->first >= k)
+						break;
+					it ++;
 				}
-				else
-					return (it);
+				return (it);
 			}
 
 			const_iterator lower_bound(const key_type& k) const {
 
-				const_iterator it = this->find(k);
-				if (it == this->end()) {
-					node_ptr x = this->_rbt.root();
-					while (x && x->data.first < k) {
-						if (x && this->_rbt.value_compare(x->data.first, k))
-							x = x->right_child;
-					}
-					return (const_iterator(x, x->parent));
+				const_iterator it = this->begin();
+				
+				while (it != this->end()) {
+
+					if (it->first >= k)
+						break;
+					it ++;
 				}
-				else
-					return (it);
+				return (it);
 			}
 
+		
 			iterator upper_bound(const key_type& k) {
+
+				iterator it = this->begin();
 				
-				node_ptr x = this->_rbt.root();
-				while (x && x->data.first < k) {
-					if (x && this->_rbt.value_compare(x->data.first, k))
-						x = x->right_child;
-					x = x->right_child;
+				while (it != this->end()) {
+
+					if (it->first > k)
+						break;
+					it ++;
 				}
-				if (!x)
-					return (this->end());
-				else
-					return (iterator(x, x->parent));
+				return (it);
 			}
 
 			const_iterator upper_bound(const key_type& k) const {
+
+				const_iterator it = this->begin();
 				
-				node_ptr x = this->_rbt.root();
-				while (x && x->data.first < k) {
-					if (x && this->_rbt.value_compare(x->data.first, k))
-						x = x->right_child;
-					x = x->right_child;
+				while (it != this->end()) {
+
+					if (it->first > k)
+						break;
+					it ++;
 				}
-				if (!x)
-					return (this->end());
-				else
-					return (const_iterator(x, x->parent));
+				return (it);
 			}
-			
+
 			ft::pair<iterator, iterator> equal_range(const key_type& k) {
 
 				ft::pair<iterator, iterator> bound = ft::make_pair(this->lower_bound(k), this->upper_bound(k));
@@ -462,7 +462,7 @@ rbt<value_type, key_compare>	get_rbt()
 	template < class Key, class T, class Compare, class Alloc >
 	bool operator==(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
 
-		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.end()));
+		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template < class Key, class T, class Compare, class Alloc >
@@ -487,6 +487,7 @@ rbt<value_type, key_compare>	get_rbt()
 	bool operator>(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
 
 		return (rhs < lhs);
+	}
 
 	template < class Key, class T, class Compare, class Alloc >
 	bool operator>=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {

@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 14:43:45 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/24 17:10:19 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/26 15:30:33 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ namespace ft {
 
 			pointer operator->(void) const {
 
-				return (&(this->_current->data));
+				return (&operator*());
 			}
 
 			node_ptr max(node_ptr n) {
@@ -274,7 +274,7 @@ namespace ft {
 
 			pointer operator->(void) const {
 
-				return (&(this->_current->data));
+				return (&operator*());
 			}
 
 			node_ptr max(node_ptr n) {
@@ -314,8 +314,9 @@ namespace ft {
 
 			node_ptr predecessor(node_ptr n) {
 
-				if (!n)
+				if (!n) {
 					return (NULL);
+				}
 				if (n->left_child)
 					return (this->max(n->left_child));
 				node_ptr p = n->parent;
@@ -329,20 +330,23 @@ namespace ft {
 
 			rbt_const_iterator& operator++(void) {
 
+				this->_parent = this->_current;
 				this->_current = this->successor(this->_current);
 				return (*this);
 			}
 
 			rbt_const_iterator& operator--(void) {
-				
-				this->_current = this->predecessor(this->_current);
+			
+				if (!this->_current)
+					this->_current = this->_parent;
+				else
+					this->_current = this->predecessor(this->_current);
 				return (*this);
 			}
 
 			rbt_const_iterator operator++(int) {
 
 				rbt_const_iterator temp = *this;
-				/* this->_current = this->successor(this->_current); */
 				++(*this);
 				return (temp);
 			}
@@ -350,7 +354,6 @@ namespace ft {
 			rbt_const_iterator operator--(int) {
 
 				rbt_const_iterator temp = *this;
-				/* this->_current = this->predecessor(this->_current); */
 				--(*this);
 				return (temp);
 			}
