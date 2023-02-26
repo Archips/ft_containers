@@ -6,15 +6,13 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 13:08:26 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/26 15:20:38 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/26 16:22:55 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
-/* # include <iterator> */
-# include <iostream>
 # include "enable_if.hpp"
 # include "equal.hpp"
 # include "is_integral.hpp"
@@ -147,11 +145,11 @@ namespace ft {
 		 ** MEMBER FUNCTIONS
 		 */
 
-//A RETIRER APRES!!! debug only
-rbt<value_type, key_compare>	get_rbt()
-{
-	return (_rbt);
-}	
+/* //A RETIRER APRES!!! debug only */
+/* rbt<value_type, key_compare>	get_rbt() */
+/* { */
+/* 	return (_rbt); */
+/* } */	
 
 		/* ITERATORS */
 
