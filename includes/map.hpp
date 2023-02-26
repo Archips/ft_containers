@@ -262,7 +262,7 @@ namespace ft {
 			iterator insert(iterator position, const value_type& val) {
 
 				(void) position;
-				return(this->insert(val).first);
+				return (this->insert(val).first);
 			}
 
 
@@ -301,7 +301,7 @@ namespace ft {
 				size_type						temp_size = this->_size;
 				allocator_type					temp_alloc = this->_alloc;
 				node_alloc						temp_node_alloc = this->_node_alloc;
-				key_compare						temp_comp = this->_comp;;
+				key_compare						temp_comp = this->_comp;
 
 				this->_size = x._size;
 				this->_alloc = x._alloc;
