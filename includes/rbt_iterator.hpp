@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 14:43:45 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/26 15:30:33 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/26 15:41:49 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,23 @@ namespace ft {
 
 	template < class node, class Compare >
 	/* class rbt_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category, */
-	/* 	typename iterator_traits<iterator>::difference_type, */
-	/* 	typename iterator_traits<iterator>::value_type, */
-	/* 	typename iterator_traits<iterator>::pointer, */
-	/* 	typename iterator_traits<iterator>::reference> */
-	class rbt_iterator
+	/* 	iterator_traits<iterator>::difference_type, */
+	/* 	iterator_traits<iterator>::value_type, */
+	/* 	iterator_traits<iterator>::pointer, */
+	/* 	iterator_traits<iterator>::reference> */
+	class rbt_iterator: public ft::iterator<std::bidirectional_iterator_tag, typename node::value_type>
 	{
 	
 		public:
 
-			typedef typename node::value_type		value_type;
-			typedef	typename node::value_type&		reference;
-			typedef typename node::value_type*		pointer;
-			typedef bidirectional_iterator_tag		iterator_category;
-			typedef ptrdiff_t						difference_type;
-			typedef rbt_iterator<node, Compare> 	iterator;
+			/* typedef typename node::value_type		value_type; */
+			/* typedef	typename node::value_type&		reference; */
+			/* typedef typename node::value_type*		pointer; */
+			/* typedef bidirectional_iterator_tag		iterator_category; */
+			/* typedef ptrdiff_t						difference_type; */
+			/* typedef rbt_iterator<node, Compare> 	iterator; */
 			typedef node*					 		node_ptr;
-
+			typedef typename node::value_type		value_type;
 
 			/* typedef typename node::node_ptr																			node_ptr; */
 			/* typedef typename node::value_type																		value_type; */
@@ -55,11 +55,11 @@ namespace ft {
 			/* typedef typename node::value_type*																		pointer; */
 			/* typedef typename node::value_type&																		reference; */
 
-			/* typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category; */
-			/* typedef typename ft::iterator_traits<iterator>::difference_type		difference_type; */
+			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
+			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type		difference_type;
 			/* typedef typename ft::iterator_traits<iterator>::value_type			value_type; */
-			/* typedef typename ft::iterator_traits<iterator>::pointer				pointer; */
-			/* typedef typename ft::iterator_traits<iterator>::reference			reference; */
+			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer				pointer;
+			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference			reference;
 
 		private:
 
@@ -78,11 +78,11 @@ namespace ft {
 
 			rbt_iterator(const rbt_iterator &other): _current(other._current), _parent(other._parent) {}
 
-			rbt_iterator(const rbt_const_iterator<node, Compare> &src) {
+			// rbt_iterator(const rbt_const_iterator<node, Compare> &src) {
 
-				this->_current = src.base();
-				this->_parent = src.parent();
-			}
+			// 	this->_current = src.base();
+			// 	this->_parent = src.parent();
+			// }
 
 			~rbt_iterator(void) {}
 
@@ -209,18 +209,42 @@ namespace ft {
 	};
 
 	template < class node, class Compare >
-	class rbt_const_iterator
+	/* class rbt_iterator: public ft::iterator<typename iterator_traits<iterator>::iterator_category, */
+	/* 	iterator_traits<iterator>::difference_type, */
+	/* 	iterator_traits<iterator>::value_type, */
+	/* 	iterator_traits<iterator>::pointer, */
+	/* 	iterator_traits<iterator>::reference> */
+	class rbt_const_iterator: public ft::iterator<std::bidirectional_iterator_tag, typename node::value_type>
 	{
 	
 		public:
 
-			typedef typename node::value_type			value_type;
-			typedef	typename node::value_type&			reference;
-			typedef typename node::value_type*			pointer;
-			typedef bidirectional_iterator_tag			iterator_category;
-			typedef ptrdiff_t							difference_type;
-			typedef rbt_const_iterator<node, Compare> 	const_iterator;
+			/* typedef typename node::value_type		value_type; */
+			/* typedef	typename node::value_type&		reference; */
+			/* typedef typename node::value_type*		pointer; */
+			/* typedef bidirectional_iterator_tag		iterator_category; */
+			/* typedef ptrdiff_t						difference_type; */
+			/* typedef rbt_iterator<node, Compare> 	iterator; */
 			typedef node*					 			node_ptr;
+			typedef typename node::value_type const		value_type;
+
+			/* typedef typename node::node_ptr																			node_ptr; */
+			/* typedef typename node::value_type																		value_type; */
+			/* typedef rbt_iterator<node, Compare>																		iterator; */
+			/* typedef typename ft::iterator_traits<rbt_iterator>::iterator_category	iterator_category; */
+			/* typedef typename ft::iterator_traits<rbt_iterator>::difference_type		difference_type; */
+			/* typedef typename ft::iterator_traits<rbt_iterator>::pointer				pointer; */
+			/* typedef typename ft::iterator_traits<rbt_iterator>::reference			reference; */
+			/* typedef random_access_iterator_tag																		iterator_category; */
+			/* typedef ptrdiff_t																						difference_type; */
+			/* typedef typename node::value_type*																		pointer; */
+			/* typedef typename node::value_type&																		reference; */
+
+			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
+			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type		difference_type;
+			/* typedef typename ft::iterator_traits<iterator>::value_type			value_type; */
+			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer				pointer;
+			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference			reference;
 
 		private:
 

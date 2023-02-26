@@ -1,11 +1,12 @@
 #include "../includes/common_map.hpp"
-/* #include "../includes/map.hpp" */
-#include <map>
+#include "../includes/map.hpp"
+/* #include <map> */
 
 #define T1 int
 #define T2 int
-/* #define TESTED_NAMESPACE ft */
-#define TESTED_NAMESPACE std
+
+/* #define TESTED_NAMESPACE std */
+#define TESTED_NAMESPACE ft 
 
 int		main(void)
 {

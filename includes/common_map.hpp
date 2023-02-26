@@ -2,10 +2,10 @@
 /* #if !defined(USING_STD) */
 /* # include "map.hpp" */
 
-# include <map>
+# include "map.hpp"
 /* #endif /1* !defined(STD) *1/ */
 
-#define TESTED_NAMESPACE std
+#define TESTED_NAMESPACE ft
 #define _pair TESTED_NAMESPACE::pair
 
 template <typename T>
