@@ -376,7 +376,7 @@ namespace ft {
 				if (x && temp_color == BLACK)
 					delete_fix(x);
 				this->_alloc.destroy(z);
-				/* this->_alloc.deallocate(z, 1); */
+				this->_alloc.deallocate(z, 1);
 				this->_size --;
 				return (1);
 			}
@@ -493,6 +493,23 @@ namespace ft {
 				x->color = BLACK;
 			}
 
+			void	swap(rbt &cpy) {
+
+				node_ptr tmp_root = this->_root;
+				size_type tmp_size = this->_size;
+				alloc_node tmp_alloc = this->_alloc;
+				key_compare tmp_comp = this->_comp;
+
+				this->_root = cpy._root;
+				this->_size = cpy._size;
+				this->_alloc = cpy._alloc;
+				this->_comp = cpy._comp;
+
+				cpy._root = tmp_root;
+				cpy._size = tmp_size;
+				cpy._alloc = tmp_alloc;
+				cpy._comp = tmp_comp;
+			}
 
 			private:
 
