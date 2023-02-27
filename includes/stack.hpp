@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:33:30 by athirion          #+#    #+#             */
-/*   Updated: 2023/01/20 18:26:57 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 11:16:16 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,64 +22,91 @@ namespace ft {
 
 
     public:
+		
+	/*
+	 ** CONSTRUCTORS
+	 */
 
         typedef typename Container::value_type 	value_type;
         typedef typename Container::size_type 	size_type;
         typedef Container 						container_type;
 
-        explicit stack(const Container &cntr = Container()): _c(cntr) {}
+	/*
+	 ** COPY CONSTRUCTOR
+	 */
+
+        explicit stack(const Container &cntr = container_type()): c(cntr) {}
+
+	/*
+	 ** DESTRUCTOR
+	 */
 
         ~stack(void){}
 
-        // TOP
+	/*
+	 ** MEMBER FUNCTIONS
+	 */
+
+
+	/* ELEMENT ACCESS */
+
+		// TOP
 
         value_type& top() {
-            return (_c.back());
+            return (c.back());
         }
 
         const value_type& top() const {
-            return (_c.back());
+            return (c.back());
         }
+
+	/* CAPACITY */
 
         // EMPTY
 
         bool empty() const {
-            return (_c.empty());
+            return (c.empty());
         }
 
         //SIZE
 
         size_type size() const {
-            return (_c.size());
+            return (c.size());
         }
+
+	/* MODIFIERS */
 
         //PUSH
 
         void push(const value_type& val) {
-            _c.push_back(val);
+            c.push_back(val);
         }
 
         //POP
 
         void pop() {
-            _c.pop_back();
+            c.pop_back();
         }
 
-		//OPERATORS
+	/* OPERATORS */
 
         friend bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-            return (lhs._c == rhs._c);
+            return (lhs.c == rhs.c);
         }
 
         friend bool operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-            return (lhs._c < rhs._c);
+            return (lhs.c < rhs.c);
         }
 
     protected:
 
-        container_type _c;
+        container_type c;
 
     };
+
+	/*
+	 ** NON-MEMBER FUNCTION OVERLOADS
+	 */
 
     //RELATIONAL OPERATORS
 

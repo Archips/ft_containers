@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/26 16:22:23 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 17:56:40 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,26 +87,7 @@ namespace ft {
 				return (*this);
 			}
 
-// print rbt fct 
-
-			/* void    print_prefix( node_ptr cur, int level ) const */
-			/* { */
-			/* 		std::cout << std::string(2 * level, ' '); */
-			/* 		if (!cur) */
-			/* 				std::cout << "NULL (B)" << std::endl; */
-			/* 		else */
-			/* 		{ */
-			/* 				std::cout << cur->data.first << "("; */
-			/* 				if (cur->color == RED) */
-			/* 						std::cout << "R)" << std::endl; */
-			/* 				else */
-			/* 						std::cout << "B)" << std::endl; */
-			/* 				level += 1; */
-			/* 				print_prefix(cur->left_child, level); */
-			/* 				print_prefix(cur->right_child, level); */
-			/* 		} */
-			/* } */
-
+			
 			/*
 			 ** MEMBER FUNCTIONS
 			 */

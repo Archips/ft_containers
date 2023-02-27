@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 08:49:11 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/27 09:41:57 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 18:07:38 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,21 @@ namespace ft {
 		 ** MEMBER FUNCTIONS
 		 */
 
+		
+		/* ALLOCATOR */
+
+		// GET_ALLOCATOR
+
 		allocator_type get_allocator() const {
 
 			return (this->_alloc);
 		}
 
+
 		/* ITERATORS */
+
+
+		// BEGIN
 
         iterator begin() {
 
@@ -133,6 +142,8 @@ namespace ft {
 			return (this->_rbt.const_begin());
 		}
         
+		// END
+
 		iterator end() {
 
 			return (this->_rbt.end());
@@ -143,6 +154,8 @@ namespace ft {
 			return (this->_rbt.const_end());
 		}
         
+		// RBEGIN
+
 		reverse_iterator rbegin() {
 
 			return (reverse_iterator(this->_rbt.end()));
@@ -153,6 +166,8 @@ namespace ft {
 			return (const_reverse_iterator(this->_rbt.const_end()));
 		}
         
+		// REND
+
 		reverse_iterator rend() {
 
 			return (reverse_iterator(this->_rbt.begin()));
@@ -163,24 +178,36 @@ namespace ft {
 			return (const_reverse_iterator(this->_rbt.const_begin()));
 		}
         
+
 		/* CAPACITY */
+
+
+		// EMPTY
 
 		bool empty() const {
 
 			return (this->_rbt.empty());
 		}
         
+		// SIZE
+
 		size_type size() const {
 
 			return (this->_rbt.size());
 		}
         
+		// MAX_SIZE
+
 		size_type max_size() const {
 
 			return (this->_rbt.max_size());
 		}
 
+
 		/* MODIFIERS */
+
+
+		// INSERT
 
         pair<iterator,bool> insert(const value_type& x) {
 
@@ -200,6 +227,8 @@ namespace ft {
 				insert(*first);
 		}
         
+		// ERASE
+
 		void erase(iterator position) {
 
 			this->erase(position.base()->data);
@@ -222,6 +251,8 @@ namespace ft {
 			}
 		}
         
+		// SWAP
+
 		void swap(set<Key, Compare, Alloc>& x) {
 
 			size_type						temp_size = this->_size;
@@ -238,25 +269,37 @@ namespace ft {
 			this->_rbt.swap(x._rbt);
 		}
         
+		// CLEAR
+
 		void clear() {
 
 			this->_rbt.clear();
 		}
 
+
 		/* OBSERVERS */
+
+		
+		// KEY_COMP
 
 		key_compare key_comp() const {
 
 			return (this->_key_comp);
 		}
         
+		// VALUE_COMP
+
 		value_compare value_comp() const {
 
 			return (value_compare(this->_key_comp));
 		}
 		
+
 		/* OPERATIONS */
         
+
+		// FIND
+
 		iterator find(const value_type& k) const {
 
 			node_ptr x = this->_rbt.root();
@@ -273,21 +316,7 @@ namespace ft {
 			return (iterator(x, x->parent));
 		}
      
-		/* const_iterator find(const key_type& k) const { */
-
-		/* 	node_ptr x = this->_rbt.root(); */
-
-		/* 	while (x && x->data != x) { */
-
-		/* 		if (x && this->_rbt.value_compare(k, x->data)) */
-		/* 			x = x->left_child; */
-		/* 		if (x && this->_rbt.value_compare(x->data, k)) */
-		/* 			x = x->right_child; */
-		/* 	} */
-		/* 	if (!x) */
-		/* 		return (this->end()); */
-		/* 	return (const_iterator(x, x->parent)); */
-		/* } */   
+		// COUNT
 
 		size_type count(const key_type& k) const {
  
@@ -305,6 +334,8 @@ namespace ft {
 			return (1);
 		}       
 
+		// LOWER_BOUND
+
 		iterator lower_bound(const value_type& k) const {
 
 			iterator it = this->begin();
@@ -318,19 +349,8 @@ namespace ft {
 			return (it);
 		}
 		
-		/* const_iterator lower_bound(const key_type& k) const { */
+		// UPPER_BOUND
 
-		/* 	const_iterator it = this->begin(); */
-
-		/* 	while (it != this->end()) { */
-			
-		/* 		if (it >= k) */
-		/* 			break; */
-		/* 		it ++; */
-		/* 	} */
-		/* 	return (it); */
-		/* } */	
-        
 		iterator upper_bound(const value_type& k) const {
 
 			const_iterator it = this->begin();
@@ -344,36 +364,21 @@ namespace ft {
 			return (it);
 		}
 		
-		/* const_iterator upper_bound(const key_type& k) const { */
+		// EQUAL RANGE
 
-		/* 	const_iterator it = this->begin(); */
-
-		/* 	while (it != this->end()) { */
-
-		/* 		if (it > k) */
-		/* 			break; */
-		/* 		it ++; */
-		/* 	} */
-		/* 	return (it); */
-		/* } */
-        
 		pair<iterator, iterator> equal_range(const value_type& k) const {
 
 			ft::pair<iterator, iterator> bound = ft::make_pair(this->lower_bound(k), this->upper_bound(k));
 			return (bound);
 		}
 
-/* 		pair<const_iterator, const_iterator> equal_range(const key_type& k) const { */
-
-/* 			ft::pair<const_iterator, const_iterator> bound = ft::make_pair(this->lower_bound(k), this->upper_bound(k)); */
-/* 			return (bound); */
-/* 		} */
-
 	};
     
 	/*
-	 ** RELATIONAL OPERATORS
+	 ** NON MEMBER FUNCTIONS
 	 */ 
+
+	/* RELATIONAL OPERATORS */
 
 	template <class Key, class Compare, class Allocator>
     bool operator==(const set<Key,Compare,Allocator>& lhs, const set<Key,Compare,Allocator>& rhs) {
@@ -411,6 +416,8 @@ namespace ft {
 		return (!(rhs < lhs));
 	}
     
+	/* SWAP */
+
 	template <class Key, class Compare, class Allocator>
     void swap(set<Key, Compare, Allocator>& x, set<Key, Compare, Allocator>& y) {
 
