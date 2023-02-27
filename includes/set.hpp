@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/27 08:49:11 by athirion          #+#    #+#             */
+/*   Updated: 2023/02/27 09:41:57 by athirion         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SET_HPP
 # define SET_HPP
 
@@ -92,7 +104,7 @@ namespace ft {
 
 				this->_size = x._size;
 				this->_alloc = x._alloc;
-				this->_comp = x._comp;
+				this->_key_comp = x._key_comp;
 				this->_rbt.clear();
 				insert(x.begin(), x.end());
 			}
@@ -178,7 +190,7 @@ namespace ft {
 		iterator insert(iterator position, const value_type& x) {
 
 			(void) position;
-			return (this->insert(x));
+			return (this->insert(x).first);
 		}
         
 		template <class InputIterator>
@@ -190,7 +202,7 @@ namespace ft {
         
 		void erase(iterator position) {
 
-			this->erase(position);
+			this->erase(position.base()->data);
 		}
         
 		size_type erase(const key_type& x) {
@@ -214,15 +226,15 @@ namespace ft {
 
 			size_type						temp_size = this->_size;
 			allocator_type					temp_alloc = this->_alloc;
-			key_compare						temp_comp = this->_comp;
+			key_compare						temp_comp = this->_key_comp;
 
 			this->_size = x._size;
 			this->_alloc = x._alloc;
-			this->_comp = x._comp;
+			this->_key_comp = x._key_comp;
 
 			x._size = temp_size;
 			x._alloc = temp_alloc;
-			x._comp = temp_comp;
+			x._key_comp = temp_comp;
 			this->_rbt.swap(x._rbt);
 		}
         
@@ -235,21 +247,21 @@ namespace ft {
 
 		key_compare key_comp() const {
 
-			return (this->_comp);
+			return (this->_key_comp);
 		}
         
 		value_compare value_comp() const {
 
-			return (value_compare(this->_comp));
+			return (value_compare(this->_key_comp));
 		}
 		
 		/* OPERATIONS */
         
-		iterator find(const key_type& k) const {
+		iterator find(const value_type& k) const {
 
 			node_ptr x = this->_rbt.root();
 
-			while (x && x->data != x) {
+			while (x && x->data != k) {
 
 				if (x && this->_rbt.value_compare(k, x->data))
 					x = x->left_child;
@@ -281,7 +293,7 @@ namespace ft {
  
 			node_ptr x = this->_rbt.root();
 
-			while (x && x->data != x) {
+			while (x && x->data != k) {
 
 				if (x && this->_rbt.value_compare(k, x->data))
 					x = x->left_child;
@@ -293,13 +305,13 @@ namespace ft {
 			return (1);
 		}       
 
-		iterator lower_bound(const key_type& k) const {
+		iterator lower_bound(const value_type& k) const {
 
 			iterator it = this->begin();
 
 			while (it != this->end()) {
 
-				if (it >= k)
+				if (*it >= k)
 					break;
 				it ++;
 			}
@@ -319,13 +331,13 @@ namespace ft {
 		/* 	return (it); */
 		/* } */	
         
-		iterator upper_bound(const key_type& k) const {
+		iterator upper_bound(const value_type& k) const {
 
-			iterator it = this->begin();
+			const_iterator it = this->begin();
 
 			while (it != this->end()) {
 
-				if (it > k)
+				if (*it > k)
 					break;
 				it ++;
 			}
@@ -345,7 +357,7 @@ namespace ft {
 		/* 	return (it); */
 		/* } */
         
-		pair<iterator, iterator> equal_range(const key_type& k) const {
+		pair<iterator, iterator> equal_range(const value_type& k) const {
 
 			ft::pair<iterator, iterator> bound = ft::make_pair(this->lower_bound(k), this->upper_bound(k));
 			return (bound);

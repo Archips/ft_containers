@@ -6,40 +6,35 @@
 /*   By: hbaudet <hbaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 13:07:06 by hbaudet           #+#    #+#             */
-/*   Updated: 2023/02/26 13:55:13 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 08:51:15 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test_utils.hpp"
-#include "../includes/map.hpp"
+#include "../includes/set.hpp"
 
 # define NAMESPACE ft
 
 using namespace NAMESPACE;
 
-template <class Key, class T>
-void	print(map<Key, T>& lst)
+template <class T>
+void	print(set<T>& lst)
 {
-	for (typename map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
+	for (typename set<T>::iterator it = lst.begin(); it != lst.end(); it++)
 		cout << it->first << " => " << it->second << '\n';
 }
 
 int main ()
 {
-  map<char,int> mymap;
+  set<int> myset;
 
-  mymap['a']=10;
-  mymap['b']=20;
-  mymap['c']=30;
+  for (int i=1; i<=5; i++) myset.insert(i*10);   // myset: 10 20 30 40 50
 
-  pair<map<char,int>::iterator,map<char,int>::iterator> ret;
-  ret = mymap.equal_range('b');
+  pair<set<int>::const_iterator,set<int>::const_iterator> ret;
+  ret = myset.equal_range(30);
 
-  cout << "lower bound points to: ";
-  cout << ret.first->first << " => " << ret.first->second << '\n';
-
-  cout << "upper bound points to: ";
-  cout << ret.second->first << " => " << ret.second->second << '\n';
+  cout << "the lower bound points to: " << *ret.first << '\n';
+  cout << "the upper bound points to: " << *ret.second << '\n';
 
   return 0;
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rbt_iterator.hpp                                   :+:      :+:    :+:   */
+/*   rbt_iterator_set.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 14:43:45 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/26 16:21:46 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 09:46:06 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,20 @@
 namespace ft {
 
 	template <class node, class Compare>
-	class rbt_const_iterator;
+	class rbt_const_iterator_set;
 
 	template < class node, class Compare >
-	class rbt_iterator: public ft::iterator<std::bidirectional_iterator_tag, typename node::value_type>
+	class rbt_iterator_set: public ft::iterator<bidirectional_iterator_tag, typename node::value_type>
 	{
 	
 		public:
 
-			typedef node*					 																node_ptr;
-			typedef typename node::value_type const															value_type;
-			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
-			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type		difference_type;
-			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer				pointer;
-			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference			reference;
+			typedef node*					 															node_ptr;
+			typedef typename node::value_type const														value_type;
+			typedef typename ft::iterator<bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
+			typedef typename ft::iterator<bidirectional_iterator_tag, value_type>::difference_type		difference_type;
+			typedef typename ft::iterator<bidirectional_iterator_tag, value_type>::pointer				pointer;
+			typedef typename ft::iterator<bidirectional_iterator_tag, value_type>::reference			reference;
 
 		private:
 
@@ -47,15 +47,21 @@ namespace ft {
 			 ** CONSTRUCTORS
 			 */ 
 
-			rbt_iterator(void): _current(NULL), _parent(NULL) {}
+			rbt_iterator_set(void): _current(NULL), _parent(NULL) {}
 
-			explicit rbt_iterator(node_ptr x, node_ptr y): _current(x), _parent(y) {}
+			explicit rbt_iterator_set(node_ptr x, node_ptr y): _current(x), _parent(y) {}
 
-			rbt_iterator(const rbt_iterator &other): _current(other._current), _parent(other._parent) {}
+			rbt_iterator_set(const rbt_iterator_set &other): _current(other._current), _parent(other._parent) {}
 
-			~rbt_iterator(void) {}
+			rbt_iterator_set(const rbt_const_iterator_set<node, Compare> &src) {
 
-			rbt_iterator& operator=(const rbt_iterator& rhs) {
+				this->_current = src.base();
+				this->_parent = src.parent();
+			}
+
+			~rbt_iterator_set(void) {}
+
+			rbt_iterator_set& operator=(const rbt_iterator_set& rhs) {
 
 				if (this != &rhs) {
 					this->_current = rhs._current;
@@ -135,14 +141,14 @@ namespace ft {
 				return (p);
 			}
 
-			rbt_iterator& operator++(void) {
+			rbt_iterator_set& operator++(void) {
 
 				this->_parent = this->_current;
 				this->_current = this->successor(this->_current);
 				return (*this);
 			}
 
-			rbt_iterator& operator--(void) {
+			rbt_iterator_set& operator--(void) {
 			
 				if (!this->_current)
 					this->_current = this->_parent;
@@ -151,26 +157,26 @@ namespace ft {
 				return (*this);
 			}
 
-			rbt_iterator operator++(int) {
+			rbt_iterator_set operator++(int) {
 
-				rbt_iterator temp = *this;
+				rbt_iterator_set temp = *this;
 				++(*this);
 				return (temp);
 			}
 
-			rbt_iterator operator--(int) {
+			rbt_iterator_set operator--(int) {
 
-				rbt_iterator temp = *this;
+				rbt_iterator_set temp = *this;
 				--(*this);
 				return (temp);
 			}
 
-			bool operator==(const rbt_iterator &it) const {
+			bool operator==(const rbt_iterator_set &it) const {
 
 				return (this->_current == it.base());
 			}
 
-			bool operator!=(const rbt_iterator &it) const {
+			bool operator!=(const rbt_iterator_set &it) const {
 
 				return (!(this->_current == it.base()));
 			}
@@ -178,17 +184,17 @@ namespace ft {
 	};
 
 	template < class node, class Compare >
-	class rbt_const_iterator: public ft::iterator<std::bidirectional_iterator_tag, typename node::value_type>
+	class rbt_const_iterator_set: public ft::iterator<bidirectional_iterator_tag, typename node::value_type>
 	{
 	
 		public:
 
-			typedef node*												 									node_ptr;
-			typedef typename node::value_type const															value_type;
-			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
-			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::difference_type		difference_type;
-			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::pointer				pointer;
-			typedef typename ft::iterator<std::bidirectional_iterator_tag, value_type>::reference			reference;
+			typedef node*												 								node_ptr;
+			typedef typename node::value_type const														value_type;
+			typedef typename ft::iterator<bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
+			typedef typename ft::iterator<bidirectional_iterator_tag, value_type>::difference_type		difference_type;
+			typedef typename ft::iterator<bidirectional_iterator_tag, value_type>::pointer				pointer;
+			typedef typename ft::iterator<bidirectional_iterator_tag, value_type>::reference			reference;
 
 		private:
 
@@ -201,21 +207,21 @@ namespace ft {
 			 ** CONSTRUCTORS
 			 */ 
 
-			rbt_const_iterator(void): _current(NULL), _parent(NULL) {}
+			rbt_const_iterator_set(void): _current(NULL), _parent(NULL) {}
 
-			explicit rbt_const_iterator(node_ptr x, node_ptr y): _current(x), _parent(y) {}
+			explicit rbt_const_iterator_set(node_ptr x, node_ptr y): _current(x), _parent(y) {}
 
-			rbt_const_iterator(const rbt_const_iterator &other): _current(other._current), _parent(other._parent) {}
+			rbt_const_iterator_set(const rbt_const_iterator_set &other): _current(other._current), _parent(other._parent) {}
 
-			rbt_const_iterator(const rbt_iterator<node, Compare> &src) {
+			rbt_const_iterator_set(const rbt_iterator_set<node, Compare> &src) {
 
 				this->_current = src.base();
 				this->_parent = src.parent();
 			}
 
-			~rbt_const_iterator(void) {}
+			~rbt_const_iterator_set(void) {}
 
-			rbt_const_iterator& operator=(const rbt_const_iterator& rhs) {
+			rbt_const_iterator_set& operator=(const rbt_const_iterator_set& rhs) {
 
 				if (this != &rhs) {
 				
@@ -296,14 +302,14 @@ namespace ft {
 				return (p);
 			}
 
-			rbt_const_iterator& operator++(void) {
+			rbt_const_iterator_set& operator++(void) {
 
 				this->_parent = this->_current;
 				this->_current = this->successor(this->_current);
 				return (*this);
 			}
 
-			rbt_const_iterator& operator--(void) {
+			rbt_const_iterator_set& operator--(void) {
 			
 				if (!this->_current)
 					this->_current = this->_parent;
@@ -312,26 +318,26 @@ namespace ft {
 				return (*this);
 			}
 
-			rbt_const_iterator operator++(int) {
+			rbt_const_iterator_set operator++(int) {
 
-				rbt_const_iterator temp = *this;
+				rbt_const_iterator_set temp = *this;
 				++(*this);
 				return (temp);
 			}
 
-			rbt_const_iterator operator--(int) {
+			rbt_const_iterator_set operator--(int) {
 
-				rbt_const_iterator temp = *this;
+				rbt_const_iterator_set temp = *this;
 				--(*this);
 				return (temp);
 			}
 
-			bool operator==(const rbt_const_iterator &it) const {
+			bool operator==(const rbt_const_iterator_set &it) const {
 
 				return (this->_current == it.base());
 			}
 
-			bool operator!=(const rbt_const_iterator &it) const {
+			bool operator!=(const rbt_const_iterator_set &it) const {
 
 				return (!(this->_current == it.base()));
 			}
@@ -339,7 +345,7 @@ namespace ft {
 	};
 
 	template< typename node, class Compare >
-	std::ostream & operator<<(std::ostream & o, rbt_iterator<node, Compare> const & max_op)
+	std::ostream & operator<<(std::ostream & o, rbt_iterator_set<node, Compare> const & max_op)
 	{
 		o << *max_op._node->value->first;
 		return (o);

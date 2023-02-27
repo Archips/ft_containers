@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   red_black_tree.hpp                                 :+:      :+:    :+:   */
+/*   red_black_tree_set.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:33:17 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/26 16:22:23 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 09:04:38 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,24 @@ namespace ft {
 
 		public:
 
-			typedef	T													value_type;
-			typedef Compare												key_compare;	
+			typedef	T														value_type;
+			typedef Compare													key_compare;	
 			
-			typedef rbt*												rbt_ptr;
-			typedef const rbt*											const_rbt_ptr;
-			typedef rbt&												rbt_ref;
-			typedef const rbt&											const_rbt_ref;
+			typedef rbt*													rbt_ptr;
+			typedef const rbt*												const_rbt_ptr;
+			typedef rbt&													rbt_ref;
+			typedef const rbt&												const_rbt_ref;
 
-			typedef typename node::node_ptr								node_ptr;
-			typedef typename node::const_node_ptr						const_node_ptr;
-			typedef typename node::node_ref								node_ref;
-			typedef typename node::const_node_ref						const_node_ref;
+			typedef typename node::node_ptr									node_ptr;
+			typedef typename node::const_node_ptr							const_node_ptr;
+			typedef typename node::node_ref									node_ref;
+			typedef typename node::const_node_ref							const_node_ref;
 			
-			typedef AllocNode											alloc_node;
-			typedef typename AllocNode::size_type						size_type;
+			typedef AllocNode												alloc_node;
+			typedef typename AllocNode::size_type							size_type;
 
-			typedef typename ft::rbt_iterator<node, key_compare>		iterator;
-			typedef typename ft::rbt_const_iterator<node, key_compare>	const_iterator;
+			typedef typename ft::rbt_iterator_set<node, key_compare>		iterator;
+			typedef typename ft::rbt_const_iterator_set<node, key_compare>	const_iterator;
 
 			/*
 			 ** CONSTRUCTORS
@@ -162,7 +162,7 @@ namespace ft {
 				return (n);
 			}
 
-			iterator begin(void) {
+			iterator begin(void) const {
 
 				node_ptr begin = this->min(this->_root);
 				return (iterator(begin, NULL));
@@ -174,7 +174,7 @@ namespace ft {
 				return (const_iterator(begin, NULL));
 			}
 
-			iterator end(void) {
+			iterator end(void) const {
 			
 				return (iterator(NULL, this->max(this->_root)));
 			}

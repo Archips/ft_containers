@@ -6,56 +6,48 @@
 /*   By: hbaudet <hbaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 13:07:06 by hbaudet           #+#    #+#             */
-/*   Updated: 2023/02/24 11:28:19 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 09:26:15 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test_utils.hpp"
-#include "../includes/map.hpp"
+#include "../includes/set.hpp"
 
 # define NAMESPACE ft
 
 using namespace NAMESPACE;
 
-template <class Key, class T>
-void	print(map<Key, T>& lst)
+template <class T>
+void	print(set<T>& lst)
 {
-	for (typename map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
+	for (typename set<T>::iterator it = lst.begin(); it != lst.end(); it++)
 		cout << it->first << " => " << it->second << '\n';
 }
 
 int main ()
 {
-  map<char,int> mymap;
+  set<int> myset;
+  set<int>::iterator it;
+  pair<set<int>::iterator,bool> ret;
 
-  // first insert function version (single parameter):
-  mymap.insert ( pair<char,int>('a',100) );
-  mymap.insert ( pair<char,int>('z',200) );
+  // set some initial values:
+  for (int i=1; i<=5; ++i) myset.insert(i*10);    // set: 10 20 30 40 50
 
-  pair<map<char,int>::iterator,bool> ret;
-  ret = mymap.insert ( pair<char,int>('z',500) );
-  if (ret.second==false) {
-    cout << "element 'z' already exists";
-    cout << " with a value of " << ret.first->second << '\n';
-  }
+  ret = myset.insert(20);               // no new element inserted
 
-  // second insert function version (with hint position):
-  map<char,int>::iterator it = mymap.begin();
-  mymap.insert (it, pair<char,int>('b',300));  // max efficiency inserting
-  mymap.insert (it, pair<char,int>('c',400));  // no max efficiency inserting
+  if (ret.second==false) it=ret.first;  // "it" now points to element 20
 
-  // third insert function version (range insertion):
-  map<char,int> anothermap;
-  anothermap.insert(mymap.begin(),mymap.find('c'));
+  myset.insert (it,25);                 // max efficiency inserting
+  myset.insert (it,24);                 // max efficiency inserting
+  myset.insert (it,26);                 // no max efficiency inserting
 
-  // showing contents:
-  cout << "mymap contains:\n";
-  for (it=mymap.begin(); it!=mymap.end(); ++it)
-    cout << it->first << " => " << it->second << '\n';
+  int myints[]= {5,10,15};              // 10 already in set, not inserted
+  myset.insert (myints,myints+3);
 
-  cout << "anothermap contains:\n";
-  for (it=anothermap.begin(); it!=anothermap.end(); ++it)
-    cout << it->first << " => " << it->second << '\n';
+  cout << "myset contains:";
+  for (it=myset.begin(); it!=myset.end(); ++it)
+    cout << ' ' << *it;
+  cout << '\n';
 
   return 0;
 }

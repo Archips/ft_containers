@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   empty_main.cpp                                     :+:      :+:    :+:   */
+/*   count_main.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbaudet <hbaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 13:07:06 by hbaudet           #+#    #+#             */
-/*   Updated: 2023/02/27 09:37:58 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 08:48:53 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@ int main ()
 {
   set<int> myset;
 
-  myset.insert(20);
-  myset.insert(30);
-  myset.insert(10);
+  // set some initial values:
+  for (int i=1; i<5; ++i) myset.insert(i*3);    // set: 3 6 9 12
 
-  cout << "myset contains:";
-  while (!myset.empty())
+  for (int i=0; i<10; ++i)
   {
-     cout << ' ' << *myset.begin();
-     myset.erase(myset.begin());
+    cout << i;
+    if (myset.count(i)!=0)
+      cout << " is an element of myset.\n";
+    else
+      cout << " is not an element of myset.\n";
   }
-  cout << '\n';
 
   return 0;
 }

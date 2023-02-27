@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   empty_main.cpp                                     :+:      :+:    :+:   */
+/*   keyComp_main.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbaudet <hbaudet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/02 13:07:06 by hbaudet           #+#    #+#             */
-/*   Updated: 2023/02/27 09:37:58 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/27 09:29:29 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,20 @@ void	print(set<T>& lst)
 int main ()
 {
   set<int> myset;
+  int highest;
 
-  myset.insert(20);
-  myset.insert(30);
-  myset.insert(10);
+  set<int>::key_compare mycomp = myset.key_comp();
+
+  for (int i=0; i<=5; i++) myset.insert(i);
 
   cout << "myset contains:";
-  while (!myset.empty())
-  {
-     cout << ' ' << *myset.begin();
-     myset.erase(myset.begin());
-  }
+
+  highest=*myset.rbegin();
+  set<int>::iterator it=myset.begin();
+  do {
+    cout << ' ' << *it;
+  } while ( mycomp(*(++it),highest) );
+
   cout << '\n';
 
   return 0;
