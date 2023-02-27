@@ -49,9 +49,7 @@ namespace ft {
 			 ** CONSTRUCTORS
 			 */
 
-			vector(): _size(0), _capacity(0), _alloc(), _start(0), _end(0) {}
-
-			explicit vector(const Alloc& alloc): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {}
+			explicit vector(const Alloc& alloc = Alloc()): _size(0), _capacity(0),  _alloc(alloc), _start(0), _end(0) {}
 
 			explicit vector(size_type count, const T& value = T(), const Alloc& alloc = Alloc()) :
 				_size(count), _capacity(_size), _alloc(alloc), _start(_alloc.allocate(_capacity)), _end(_start + _size - 1) {
@@ -172,18 +170,6 @@ namespace ft {
 
 					return (*(this->_start + this->_size - 1));
 				}
-
-			// DATA (retrocactively applied to c++98 standards)
-
-/* 				pointer data() { */
-
-/* 					return (this->_start); */
-/* 				} */
-
-/* 				const_pointer data() const { */
-
-/* 					return (this->_start); */
-/* 				} */
 
 
 			/* ALLOCATOR */

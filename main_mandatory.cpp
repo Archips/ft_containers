@@ -522,27 +522,6 @@ void vector_back(void) {
 	std::cout << std::endl;
 }
 
-// void vector_data(void) {
-
-// 	std::cout << ">>> VECTOR DATA <<<\n" << std::endl;
-	
-// 	vector<int> myvector (5);
-
-// 	int* p = myvector.data();
-
-// 	*p = 10;
-// 	++p;
-// 	*p = 20;
-// 	p[2] = 100;
-
-// 	std::cout << "myvector contains:";
-// 	for (unsigned i=0; i<myvector.size(); ++i)
-// 	std::cout << ' ' << myvector[i];
-// 	std::cout << '\n';
-
-// 	std::cout << std::endl;
-// }
-
 void vector_assign(void) {
 
 	std::cout << ">>> VECTOR ASSIGN <<<\n" << std::endl;
@@ -920,30 +899,6 @@ void map_accessor(void) {
 	std::cout << std::endl;
 }
 
-/* void map_at(void) { */
-
-/* 	std::cout << ">>> MAP AT <<<\n" << std::endl; */
-	
-/* 	map<std::string,int> mymap; */
-
-/* 	mymap.insert(pair<std::string, int>("alpha", 0)); */
-/* 	mymap.insert(pair<std::string, int>("beta", 0)); */
-/* 	mymap.insert(pair<std::string, int>("gamma", 0)); */
-
-/* 	mymap.at("alpha") = 10; */
-/* 	mymap.at("beta") = 20; */
-/* 	mymap.at("gamma") = 30; */
-
-/* 	map<std::string, int>::iterator it = mymap.begin(); */
-/* 	map<std::string, int>::iterator ite = mymap.end(); */
-
-/* 	for (; it != ite; ++it) { */
-/* 		std::cout << it->first << ": " << it->second << '\n'; */
-/* 	} */
-
-/* 	std::cout << std::endl; */
-/* } */
-
 void map_insert(void) {
 
 	std::cout << ">>> MAP INSERT <<<\n" << std::endl;
@@ -1303,7 +1258,6 @@ int main()
 	vector_at();
 	vector_front();
 	vector_back();
-	// vector_data();
 	vector_assign();
 	vector_push_back();
 	vector_pop_back();
@@ -1326,7 +1280,6 @@ int main()
 	map_size();
 	map_max_size();
 	map_accessor();
-	/* map_at(); */
 	map_insert();
 	map_erase();
 	map_swap();

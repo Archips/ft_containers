@@ -23,25 +23,15 @@ namespace ft {
 
     public:
 		
-	/*
-	 ** CONSTRUCTORS
-	 */
-
         typedef typename Container::value_type 	value_type;
         typedef typename Container::size_type 	size_type;
         typedef Container 						container_type;
 
 	/*
-	 ** COPY CONSTRUCTOR
+	 ** CONSTRUCTOR
 	 */
 
         explicit stack(const Container &cntr = container_type()): c(cntr) {}
-
-	/*
-	 ** DESTRUCTOR
-	 */
-
-        ~stack(void){}
 
 	/*
 	 ** MEMBER FUNCTIONS
