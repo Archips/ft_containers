@@ -920,29 +920,29 @@ void map_accessor(void) {
 	std::cout << std::endl;
 }
 
-void map_at(void) {
+/* void map_at(void) { */
 
-	std::cout << ">>> MAP AT <<<\n" << std::endl;
+/* 	std::cout << ">>> MAP AT <<<\n" << std::endl; */
 	
-	map<std::string,int> mymap;
+/* 	map<std::string,int> mymap; */
 
-	mymap.insert(pair<std::string, int>("alpha", 0));
-	mymap.insert(pair<std::string, int>("beta", 0));
-	mymap.insert(pair<std::string, int>("gamma", 0));
+/* 	mymap.insert(pair<std::string, int>("alpha", 0)); */
+/* 	mymap.insert(pair<std::string, int>("beta", 0)); */
+/* 	mymap.insert(pair<std::string, int>("gamma", 0)); */
 
-	mymap.at("alpha") = 10;
-	mymap.at("beta") = 20;
-	mymap.at("gamma") = 30;
+/* 	mymap.at("alpha") = 10; */
+/* 	mymap.at("beta") = 20; */
+/* 	mymap.at("gamma") = 30; */
 
-	map<std::string, int>::iterator it = mymap.begin();
-	map<std::string, int>::iterator ite = mymap.end();
+/* 	map<std::string, int>::iterator it = mymap.begin(); */
+/* 	map<std::string, int>::iterator ite = mymap.end(); */
 
-	for (; it != ite; ++it) {
-		std::cout << it->first << ": " << it->second << '\n';
-	}
+/* 	for (; it != ite; ++it) { */
+/* 		std::cout << it->first << ": " << it->second << '\n'; */
+/* 	} */
 
-	std::cout << std::endl;
-}
+/* 	std::cout << std::endl; */
+/* } */
 
 void map_insert(void) {
 
@@ -1326,7 +1326,7 @@ int main()
 	map_size();
 	map_max_size();
 	map_accessor();
-	map_at();
+	/* map_at(); */
 	map_insert();
 	map_erase();
 	map_swap();

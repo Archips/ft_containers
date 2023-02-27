@@ -149,35 +149,35 @@ namespace ft {
 		/* ELEMENT ACCESS */
 
 
-		// AT
+		// AT (retrocactively applied to c++98 standards)
 
-			mapped_type& at(const key_type &k) {
+		/* 	mapped_type& at(const key_type &k) { */
 
-				node_ptr x = this->_rbt.root();
+		/* 		node_ptr x = this->_rbt.root(); */
 				
-				while (x && x->data.first != k)
-				{
-					if (x && this->_rbt.value_compare(k, x->data.first))
-						x = x->left_child;
-					else if (x && this->_rbt.value_compare(x->data.first, k))
-						x = x->right_child;
-				}
-				return (x->data.second);
-			}
+		/* 		while (x && x->data.first != k) */
+		/* 		{ */
+		/* 			if (x && this->_rbt.value_compare(k, x->data.first)) */
+		/* 				x = x->left_child; */
+		/* 			else if (x && this->_rbt.value_compare(x->data.first, k)) */
+		/* 				x = x->right_child; */
+		/* 		} */
+		/* 		return (x->data.second); */
+		/* 	} */
 
-			const mapped_type& at(const key_type& k) const {
+		/* 	const mapped_type& at(const key_type& k) const { */
 
-				node_ptr x = this->_rbt.root();
+		/* 		node_ptr x = this->_rbt.root(); */
 				
-				while (x && x->data.first != k)
-				{
-					if (x && this->_rbt.value_compare(k, x->data.first))
-						x = x->left_child;
-					else if (x && this->_rbt.value_compare(x->data.first, k))
-						x = x->right_child;
-				}
-				return (x->data.second);
-			}
+		/* 		while (x && x->data.first != k) */
+		/* 		{ */
+		/* 			if (x && this->_rbt.value_compare(k, x->data.first)) */
+		/* 				x = x->left_child; */
+		/* 			else if (x && this->_rbt.value_compare(x->data.first, k)) */
+		/* 				x = x->right_child; */
+		/* 		} */
+		/* 		return (x->data.second); */
+		/* 	} */
 
 		// OPERATOR[]	
 
