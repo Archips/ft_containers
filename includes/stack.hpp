@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:33:30 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/27 11:16:16 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/28 08:16:15 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,11 @@ namespace ft {
 
 	/* OPERATORS */
 
-        friend bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-            return (lhs.c == rhs.c);
-        }
+    	template <class Type, class C>
+        friend bool operator== (const stack<Type,C>& lhs, const stack<Type,C>& rhs);
 
-        friend bool operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-            return (lhs.c < rhs.c);
-        }
+    	template <class Type, class C>
+        friend bool operator< (const stack<Type,C>& lhs, const stack<Type,C>& rhs);
 
     protected:
 
@@ -99,6 +97,16 @@ namespace ft {
 	 */
 
     //RELATIONAL OPERATORS
+
+    template <class T, class Container>
+	bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
+    	return (lhs.c == rhs.c);
+    }
+
+    template <class T, class Container>
+	bool operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
+		return (lhs.c < rhs.c);
+	}
 
     template <class T, class Container>
     bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {

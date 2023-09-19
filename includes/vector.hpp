@@ -6,7 +6,7 @@
 /*   By: athirion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 13:42:21 by athirion          #+#    #+#             */
-/*   Updated: 2023/02/27 17:25:38 by athirion         ###   ########.fr       */
+/*   Updated: 2023/02/28 07:51:21 by athirion         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -387,14 +387,12 @@ namespace ft {
 
 				iterator erase(iterator position) {
 
-					size_type i = 0;
 					ft::vector<value_type> temp(*this);
 					iterator pos = temp.begin() + ft::distance(this->begin(), position);
 					this->clear();
 					iterator it = temp.begin();
 					for (; it != pos; it ++) {
 						this->push_back(*it);
-						i ++;
 					}
 					it++;
 					for (; it != temp.end(); it ++)
