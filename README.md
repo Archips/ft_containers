@@ -2,6 +2,10 @@
 
 This project is a C++ implementation of several containers from the Standard Template Library (STL). The primary goal is to create custom versions of these containers while adhering to the structure and conventions of the original containers. The project follows the C++98 standard and aims to provide C++98 features, excluding any newer functionalities. Additionally, it includes some fundamental C++11 features, like SFINAE, to deepen your understanding of template metaprogramming.
 
+## Score
+
+-  125%
+
 ## Project Highlights
 
 - Implements custom versions of the following STL containers: vector, map, and stack.
